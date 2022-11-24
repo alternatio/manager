@@ -1,0 +1,12 @@
+@import '/styles/variables';
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: $white;
+}
+
+.enterWrapper {
+  padding: 0 .5rem;
+}

@@ -1,0 +1,23 @@
+@import '/styles/variables';
+
+.Header {
+  width: 100%;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.rightPart {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatarImage {
+  width: 2rem;
+}

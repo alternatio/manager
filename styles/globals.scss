@@ -1,0 +1,42 @@
+@import '/styles/variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Neue Machina", sans-serif;
+  letter-spacing: -.06em;
+  line-height: 100%;
+}
+
+::selection {
+  background: $white;
+  mix-blend-mode: difference;
+  color: $black;
+}
+
+html {
+  font-size: 20px;
+}
+
+html,
+body,
+#__next {
+  width: 100%;
+}
+
+%reset {
+  background: none;
+  outline: none;
+  border: none;
+}
+
+a,
+button {
+  @extend %reset;
+  cursor: pointer;
+}
+
+input {
+  @extend %reset;
+}
