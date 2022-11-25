@@ -1,60 +1,7 @@
 @import '/styles/variables';
 
-
-.intro {
-  position: relative;
+.content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30rem;
-}
-.cube {
-  border-radius: 1rem;
-  width: 20rem;
-  aspect-ratio: 1/1;
-  background: $black;
-  position: absolute;
-  &:nth-child(1n) {
-    background: $blue;
-    left: 20%;
-    top: 30%;
-  }
-  &:nth-child(2n) {
-    background: $red;
-    left: 37.5%;
-    top: 20%;
-  }
-  &:nth-child(3n) {
-    background: $yellow;
-    left: 55%;
-    top: 10%;
-  }
-}
-
-.helloWord {
-  font-size: 7rem;
-  font-weight: 700;
-  line-height: 85%;
-  text-indent: 4rem;
-  color: $white;
-  text-transform: uppercase;
-  mix-blend-mode: difference;
-  height: 100%;
-  z-index: 1;
-  min-width: 41rem;
-}
-
-.helloDescription {
-  font-size: 3rem;
-  font-weight: 500;
-  line-height: 85%;
-  text-align: right;
-  color: $white;
-  text-transform: uppercase;
-  mix-blend-mode: difference;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 5rem;
-  z-index: 1;
+  flex-direction: column;
+  gap: 15rem;
 }

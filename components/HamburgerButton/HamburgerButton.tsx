@@ -9,8 +9,9 @@ interface HamburgerButtonInterface {
 
 const transition = {
   type: 'spring',
-  duration: 0.15,
-  stiffness: 100,
+  stiffness: 80,
+  damping: 10,
+  restDelta: 0,
 }
 
 export const HamburgerButton: FC<HamburgerButtonInterface> = memo(

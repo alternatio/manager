@@ -1,22 +1,20 @@
 import style from '../styles/pages/Home.module.scss'
 import { memo } from 'react'
+import { NextPage } from 'next'
 import { Wrapper } from '../components/Wrapper/Wrapper'
 import { Header } from '../components/Header/Header'
+import { Intro } from '../components/Intro/Intro'
+import { Percents } from '../components/Percents/Percents'
+import { Trader } from '../components/Trader/Trader'
 
-const Home = () => {
+const Home: NextPage = () => {
   return (
     <Wrapper maxWidth={'66rem'}>
       <Header />
-      <div className={style.intro}>
-        <h2 className={style.helloWord}>
-          Manage your work
-        </h2>
-        <p className={style.helloDescription}>
-          Покажет, какую работу вы выполните
-        </p>
-        <div className={style.cube}/>
-        <div className={style.cube}/>
-        <div className={style.cube}/>
+      <div className={style.content}>
+        <Intro />
+        <Percents />
+        <Trader />
       </div>
     </Wrapper>
   )
