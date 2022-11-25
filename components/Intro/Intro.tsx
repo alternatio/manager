@@ -21,14 +21,17 @@ const Cube: FC<{ color: string; index: number }> = memo(({ color, index }) => {
       className={style.cube}
     >
       <AnimatePresence>
-        {hover && <motion.div
-          className={style.imageWrapper}
-          transition={{duration: .15}}
-          initial={{opacity: 0}}
-          animate={{opacity: 1}}
-          exit={{opacity: 0}}>
-          <Image className={style.gif} src={getRandomGif()} alt={'gif'} />
-        </motion.div>}
+        {hover && (
+          <motion.div
+            className={style.imageWrapper}
+            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Image className={style.gif} src={getRandomGif()} alt={'gif'} />
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   )
