@@ -6,17 +6,12 @@ interface WrapperInterface {
   maxWidth: '86rem' | '66rem'
 }
 
-export const Wrapper: FC<WrapperInterface> = memo(
-  (props) => {
-    return (
-      <div className={style.wrapper}>
-        <div
-          style={{ width: `min(100%, ${props.maxWidth})` }}
-          className={style.enterWrapper}
-        >
-          {props.children}
-        </div>
+export const Wrapper: FC<WrapperInterface> = memo((props) => {
+  return (
+    <div className={style.wrapper}>
+      <div style={{ width: `min(100%, ${props.maxWidth})` }} className={style.enterWrapper}>
+        {props.children}
       </div>
-    )
-  }
-)
+    </div>
+  )
+})

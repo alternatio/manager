@@ -1,0 +1,14 @@
+@import '/styles/variables';
+
+.Footer {
+  padding: 3rem 0;
+  border-top: $black solid .25rem;
+  display: flex;
+  justify-content: space-between;
+}
+.part {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2rem;
+}

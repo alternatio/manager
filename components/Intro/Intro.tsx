@@ -2,12 +2,12 @@ import { FC, memo, useState } from 'react'
 import style from '/styles/components/Intro.module.scss'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
+import { getRandomNumber } from '../../functions/getRandomNumber'
 
 const colorsOfCubes: string[] = ['#0011ff', '#ff0033', '#ffee00']
 
 const getRandomGif = () => {
-  const randomNumber = Math.round(Math.random() * (6 - 1) + 1)
-  return require(`/public/gifs/worker${randomNumber}.gif`)
+  return require(`/public/gifs/worker${getRandomNumber(1, 6)}.gif`)
 }
 
 const Cube: FC<{ color: string; index: number }> = memo(({ color, index }) => {
@@ -16,8 +16,8 @@ const Cube: FC<{ color: string; index: number }> = memo(({ color, index }) => {
   return (
     <div
       onMouseEnter={() => handleHover(true)}
-      onMouseLeave={() => setTimeout(() => handleHover(false), 500)}
-      style={{ background: color, transform: `translateY(-${index * 4}rem)` }}
+      onMouseLeave={() => setTimeout(() => handleHover(false), 100)}
+      style={{ background: color, transform: `translateY(-${index * 6}rem)` }}
       className={style.cube}
     >
       <AnimatePresence>

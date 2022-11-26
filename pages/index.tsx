@@ -15,6 +15,7 @@ const Home: NextPage = () => {
         <Intro />
         <Percents />
         <Trader />
+        <div></div>
       </div>
     </Wrapper>
   )

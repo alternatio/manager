@@ -22,7 +22,7 @@ html::-webkit-scrollbar-thumb {
 
 
 html {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 html,
@@ -47,3 +47,9 @@ button {
 input {
   @extend %reset;
 }
+
+//@media (max-width: 650px) {
+//  html {
+//    font-size: 2.76vw;
+//  }
+//}

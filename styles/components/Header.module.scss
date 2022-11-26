@@ -23,33 +23,3 @@
 .avatarImage {
   width: 2rem;
 }
-
-.hamburger {
-  display: flex;
-  flex-direction: column;
-  gap: .25rem;
-  padding: .5rem;
-  border-radius: .5rem;
-  background: $white;
-  box-shadow: 0 .5rem 1rem rgba($black, .1);
-  position: absolute;
-  top: 3.5rem;
-  right: 3rem;
-  z-index: 10;
-}
-
-.button {
-  padding: .5rem;
-  gap: .25rem;
-  display: flex;
-  align-items: center;
-  font-weight: 700;
-  transition: .25s $cubic;
-  border-radius: .5rem;
-  &:hover {
-    background: $almost-white;
-  }
-  &:active {
-    background: transparent;
-  }
-}
