@@ -9,7 +9,9 @@ export const Footer = memo(() => {
       </div>
       <div className={style.part}>
         <span>Разработчик: alternatio</span>
-        <a className={style.link} href='https://vk.com/modiris'>VK</a>
+        <a className={style.link} href='https://vk.com/modiris'>
+          VK
+        </a>
         <a className={style.link} href=''></a>
       </div>
     </div>
