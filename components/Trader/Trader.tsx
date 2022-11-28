@@ -1,10 +1,10 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { FC, memo, useState } from 'react'
 import style from '/styles/components/Trader.module.scss'
 
 import humanFriendlyGif from '/public/gifs/worker.gif'
 import madeForPeopleGif from '/public/gifs/wow.gif'
-import Image from 'next/image'
+import { Gif } from '../Gif/Gif'
 
 export const Trader: FC = memo(() => {
   const [humanFriendlyHover, handleHumanFriendlyHover] = useState<boolean>(false)
@@ -20,18 +20,7 @@ export const Trader: FC = memo(() => {
           onMouseLeave={() => handleHumanFriendlyHover(false)}
         >
           *human-friendly,
-          <AnimatePresence>
-            {humanFriendlyHover && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
-              >
-                <Image className={style.image} src={humanFriendlyGif} alt={'gif'} />
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <Gif hover={humanFriendlyHover} full={false} gif={humanFriendlyGif} />
         </motion.span>{' '}
         practical, not commercial,{' '}
         <motion.span
@@ -39,24 +28,14 @@ export const Trader: FC = memo(() => {
           onMouseEnter={() => handleMadeForPeopleHover(true)}
           onMouseLeave={() => handleMadeForPeopleHover(false)}
         >
-          *made {' '}
-          <AnimatePresence>
-          {madeForPeopleHover && (
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-            >
-              <Image className={style.image} src={madeForPeopleGif} alt={'gif'} />
-            </motion.span>
-          )}
-        </AnimatePresence>
+          *made <Gif hover={madeForPeopleHover} full={false} gif={madeForPeopleGif} />
           for people!
         </motion.span>
       </div>
       <div className={style.start}>
-        <p className={style.text}>Начните пользоваться <br/> прямо сейчас</p>
+        <p className={style.text}>
+          Начните пользоваться <br /> прямо сейчас
+        </p>
         <button className={style.button}>Начать</button>
       </div>
     </div>

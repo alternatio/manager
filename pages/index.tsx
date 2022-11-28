@@ -6,6 +6,7 @@ import { Header } from '../components/Header/Header'
 import { Intro } from '../components/Intro/Intro'
 import { Percents } from '../components/Percents/Percents'
 import { Trader } from '../components/Trader/Trader'
+import { Footer } from '../components/Footer/Footer'
 
 const Home: NextPage = () => {
   return (
@@ -15,7 +16,7 @@ const Home: NextPage = () => {
         <Intro />
         <Percents />
         <Trader />
-        <div></div>
+        <Footer />
       </div>
     </Wrapper>
   )

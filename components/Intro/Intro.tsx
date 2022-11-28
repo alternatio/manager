@@ -1,41 +1,8 @@
-import { FC, memo, useState } from 'react'
+import { FC, memo } from 'react'
 import style from '/styles/components/Intro.module.scss'
-import Image from 'next/image'
-import { AnimatePresence, motion } from 'framer-motion'
-import { getRandomNumber } from '../../functions/getRandomNumber'
+import { Cube } from '../CubeOfIntro/Cube'
 
 const colorsOfCubes: string[] = ['#0011ff', '#ff0033', '#ffee00']
-
-const getRandomGif = () => {
-  return require(`/public/gifs/worker${getRandomNumber(1, 6)}.gif`)
-}
-
-const Cube: FC<{ color: string; index: number }> = memo(({ color, index }) => {
-  const [hover, handleHover] = useState<boolean>(false)
-
-  return (
-    <div
-      onMouseEnter={() => handleHover(true)}
-      onMouseLeave={() => setTimeout(() => handleHover(false), 100)}
-      style={{ background: color, transform: `translateY(-${index * 6}rem)` }}
-      className={style.cube}
-    >
-      <AnimatePresence>
-        {hover && (
-          <motion.div
-            className={style.imageWrapper}
-            transition={{ duration: 0.15 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <Image className={style.gif} src={getRandomGif()} alt={'gif'} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-})
 
 export const Intro: FC = memo(() => {
   return (

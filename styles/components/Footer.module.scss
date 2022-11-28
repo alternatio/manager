@@ -2,13 +2,26 @@
 
 .Footer {
   padding: 3rem 0;
-  border-top: $black solid .25rem;
+  border-top: $black solid 0.25rem;
   display: flex;
   justify-content: space-between;
 }
 .part {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: flex-end;
   gap: 2rem;
+  & * {
+    font-family: JetBrains Mono, monospace;
+    font-weight: 500;
+  }
+}
+
+.link {
+  color: $blue;
+  transition: $cubic 0.3s;
+  &:hover {
+    transform: translateY(-0.2rem);
+  }
 }
