@@ -1,7 +1,7 @@
 import { FC, memo } from 'react'
 import style from '/styles/components/HamburgerButton.module.scss'
 import { motion } from 'framer-motion'
-import { transitionSpringSlow } from '../../functions/transitions'
+import { transitionSpringSlow } from '../../../functions/transitions'
 
 interface HamburgerButtonInterface {
   hamburgerIsOpen: boolean

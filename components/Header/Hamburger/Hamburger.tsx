@@ -1,6 +1,6 @@
 import { FC, memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { transitionSpringMedium } from '../../functions/transitions'
+import { transitionSpringMedium } from '../../../functions/transitions'
 import style from '/styles/components/Hamburger.module.scss'
 
 interface HamburgerInterface {

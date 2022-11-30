@@ -13,11 +13,14 @@
   background: $yellow;
 }
 
-html::-webkit-scrollbar {
+#__next::-webkit-scrollbar {
   width: .5rem;
   background: $almost-white;
+  @media (max-width: 600px) {
+    width: 0;
+  }
 }
-html::-webkit-scrollbar-thumb {
+#__next::-webkit-scrollbar-thumb {
   background: $black;
 }
 
@@ -30,6 +33,15 @@ html,
 body,
 #__next {
   width: 100%;
+  height: 100%;
+}
+#__next {
+  overflow-y: auto;
+  position: relative;
+}
+
+body {
+  background: $white;
 }
 
 %reset {
@@ -43,6 +55,10 @@ button {
   @extend %reset;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 700;
+  &:hover {
+    transform: scaleY(.9);
+  }
 }
 
 input {

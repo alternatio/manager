@@ -1,6 +1,6 @@
 import { FC, memo, useState } from 'react'
 import style from '/styles/components/Cube.module.scss'
-import { Gif } from '../Gif/Gif'
+import { Gif } from '../../Gif/Gif'
 
 export const Cube: FC<{ color: Readonly<string>; index: Readonly<number> }> = memo(
   ({ color, index }) => {

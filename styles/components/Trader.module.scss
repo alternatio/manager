@@ -9,10 +9,12 @@
 .pleasant {
   text-indent: 2rem;
   font-size: 6rem;
-  line-height: 92%;
+  line-height: 99%;
   font-weight: 700;
   text-transform: uppercase;
   user-select: none;
+  text-align: justify;
+  position: relative;
 }
 
 .accent {
@@ -21,6 +23,7 @@
 
 .image {
   position: absolute;
+  max-width: 80vw;
 }
 
 .start {
@@ -29,6 +32,7 @@
   justify-content: flex-end;
   gap: 3rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .text {
@@ -40,9 +44,12 @@
 }
 .button {
   height: 100%;
+  min-height: 2.5rem;
+  max-height: 3.5rem;
   display: flex;
   align-items: center;
-  padding: 0 6rem;
+  justify-content: center;
+  width: min(100%, 18rem);
   background: $black;
   color: $white;
   font-size: 1.75rem;
@@ -50,15 +57,21 @@
   text-transform: uppercase;
   transition: $cubic 0.4s 0.1s;
 
-  box-shadow: 0 0 $red;
+  //box-shadow: 0 0 $blue;
   &:hover {
     border-radius: 0.5rem;
-    box-shadow: 0 0.5rem $red;
-    transform: translateY(-0.5rem);
+    transform: translateY(-0.5rem) translateX(-0.5rem);
+    //box-shadow: 0 0.5rem $blue;
   }
   &:active {
     transition: 0.1s;
-    transform: translateY(0);
-    box-shadow: 0 0 $red;
+    transform: translateY(0) translateX(0);
+    //box-shadow: 0 0 $blue;
+  }
+}
+
+@media (max-width: 1030px) {
+  .pleasant {
+    font-size: 9vw;
   }
 }

@@ -31,7 +31,7 @@ export const Percents: FC = memo(() => {
       </div>
       <div className={style.textBlock}>
         <p className={style.text}>
-          Project Manager помогает вам назначать главные задачи, ставить цели и определять
+          <span className={style.accent}>Project Manager</span> помогает вам назначать главные задачи, ставить цели и определять
           последовательность работы.
         </p>
       </div>

@@ -2,8 +2,8 @@ import { FC, memo, useState } from 'react'
 import style from '/styles/components/Header.module.scss'
 import avatarIcon from '/public/icons/avatar.svg'
 import Image from 'next/image'
-import { HamburgerButton } from '../HamburgerButton/HamburgerButton'
-import { Hamburger } from '../Hamburger/Hamburger'
+import { HamburgerButton } from './HamburgerButton/HamburgerButton'
+import { Hamburger } from './Hamburger/Hamburger'
 
 export const Header: FC = memo(() => {
   const [hamburgerIsOpen, handleHamburger] = useState<boolean>(false)
