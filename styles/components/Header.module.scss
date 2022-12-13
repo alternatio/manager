@@ -9,6 +9,16 @@
   position: relative;
 }
 
+.leftPart {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.organization {
+  color: $gray;
+}
+
 .logo {
   font-weight: 700;
   font-size: 2rem;

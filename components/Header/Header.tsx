@@ -5,14 +5,19 @@ import Image from 'next/image'
 import { HamburgerButton } from './HamburgerButton/HamburgerButton'
 import { Hamburger } from './Hamburger/Hamburger'
 
-export const Header: FC = memo(() => {
+interface HeaderInterface {
+  organization?: string
+}
+
+export const Header: FC<HeaderInterface> = memo(({ organization }) => {
   const [hamburgerIsOpen, handleHamburger] = useState<boolean>(false)
 
   return (
     <div className={style.Header}>
       <Hamburger hamburgerIsOpen={hamburgerIsOpen} />
       <div className={style.leftPart}>
-        <div className={style.logo}>PM</div>
+        <span className={style.logo}>PM</span>
+        {organization && <span className={style.organization}>{organization}</span>}
       </div>
       <div className={style.rightPart}>
         <div className={style.nameOfAccount}></div>

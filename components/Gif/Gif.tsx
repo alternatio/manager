@@ -20,7 +20,7 @@ export const Gif: FC<GifInterface> = memo(({ hover, full, gif }) => {
       {hover && (
         <motion.span
           className={full ? style.fullWrapper : style.wrapper}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.4 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
