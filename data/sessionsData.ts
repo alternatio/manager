@@ -1,9 +1,9 @@
 // kanban block interface
 export interface sessionDataBlockI {
   title: string
-  isRequired: boolean
-  isUrgent: boolean
-  text: string
+  isRequired?: boolean
+  isUrgent?: boolean
+  text?: string
 }
 
 // kanban column interface
@@ -21,7 +21,7 @@ export interface sessionDataTableI {
 // kanban full data interface
 export interface sessionsDataI {
   title: string
-  blocks?: sessionDataTableI[]
+  tables?: sessionDataTableI[]
 }
 
 // kanban full data

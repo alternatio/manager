@@ -24,6 +24,14 @@ interface TableI {
   setData: Dispatch<SetStateAction<sessionsDataI[]>>
 }
 
+const addTable = (setData: Dispatch<SetStateAction<sessionsDataI[]>>) => {
+  setData((prevState) => [...prevState, { title: '...' }])
+}
+
+const addColumn = (setData: Dispatch<SetStateAction<sessionsDataI[]>>) => {
+
+}
+
 const Table: FC<TableI> = memo((props) => {
   const [menuIsOpen, handleMenu] = useState<boolean>(false)
   const [renameTitle, handleRenameTitle] = useState<boolean>(false)
@@ -38,7 +46,7 @@ const Table: FC<TableI> = memo((props) => {
                 className={style.input}
                 defaultValue={props.data[props.index].title}
                 onChange={(e) => {
-                  let backupData = props.data
+                  const backupData = props.data
                   backupData[props.index].title = e.target.value
                   props.setData(backupData)
                 }}
@@ -113,9 +121,7 @@ const Organization: NextPage = () => {
             )
           })}
           <div
-            onClick={() => {
-              setData((prevState) => [...prevState, { title: 'Новая таблица' }])
-            }}
+            onClick={() => addTable(setData)}
             className={style.addTable}
           >
             <Image className={style.icon} src={cross} alt={'cross'} />
