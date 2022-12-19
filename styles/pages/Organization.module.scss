@@ -38,6 +38,7 @@
   cursor: pointer;
   border-radius: .5rem;
   transition: $cubic .3s;
+  user-select: none;
   &:hover {
     background: $almost-white;
     opacity: 1;

@@ -1,8 +1,8 @@
 import { FC, memo } from 'react'
-import { getRandomNumber } from '../../functions/getRandomNumber'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
 import style from '/styles/components/Gif.module.scss'
+import { getRandomNumber } from '../../functions/global'
 
 interface GifInterface {
   hover: Readonly<boolean>
@@ -20,7 +20,7 @@ export const Gif: FC<GifInterface> = memo(({ hover, full, gif }) => {
       {hover && (
         <motion.span
           className={full ? style.fullWrapper : style.wrapper}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.25 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
