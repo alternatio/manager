@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
-import { sessionDataTableI, sessionsDataI } from '../data/sessionsData'
 import { getRandomId } from './global'
+import { sessionDataBlockI, sessionDataColumnI, sessionDataTableI } from '../data/sessionsData'
 
 export class addBlocks {
   // add attempts
@@ -25,11 +25,11 @@ export class addBlocks {
   }
 }
 
-// add table
+// add item (table or column)
 export const addItemToData = (
-  setData: Dispatch<SetStateAction<any[]>>,
+  setData: Dispatch<SetStateAction<sessionDataTableI[] | sessionDataColumnI[]>>,
   data: any[],
-  title: string = 'Item'
+  title: string = 'Common'
 ) => {
   let attempts = 0
 
@@ -37,7 +37,7 @@ export const addItemToData = (
     const id = getRandomId(2)
     const addBlock = () => {
       if (data.filter((obj) => obj.id === id).length === 0) {
-        setData((prevState: any) => [...prevState, { id, title }])
+        setData((prevState) => [...prevState, { id, title }])
       } else {
         addBlocks.addAttempts(attempts, tryAddBlock)
       }
@@ -50,16 +50,28 @@ export const addItemToData = (
 
 // add block
 export const addBlock = (
-  setData: Dispatch<SetStateAction<any[]>>,
-  data: any[],
+  setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
+  data: sessionDataBlockI[],
   title: string = 'Block',
+  isRequired: boolean = false,
+  isUrgent: boolean = false,
+  text: string = '',
   status: number = 0
 ) => {
   let attempts = 0
 
   const tryAddBlock = () => {
     const id = getRandomId(2)
-    const addBlock = () => {}
+    const addBlock = () => {
+      if (data.filter((obj) => obj.id === id).length === 0) {
+        setData((prevState: any) => [
+          ...prevState,
+          { id, title, status, isRequired, isUrgent, text },
+        ])
+      } else {
+        addBlocks.addAttempts(attempts, tryAddBlock)
+      }
+    }
     addBlocks.checkAttempts(attempts, addBlock)
   }
 
