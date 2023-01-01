@@ -3,7 +3,7 @@ import style from '/styles/components/Wrapper.module.scss'
 
 interface WrapperInterface {
   children?: ReactNode
-  maxWidth: '86rem' | '66rem'
+  maxWidth: '110rem' | '86rem' | '66rem'
 }
 
 export const Wrapper: FC<WrapperInterface> = memo((props) => {

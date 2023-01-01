@@ -5,6 +5,7 @@ import arrow from '/public/icons/arrow.svg'
 import Image from 'next/image'
 import { sessionsData } from '../../../data/sessionsData'
 import { NextRouter, useRouter } from 'next/router'
+import { getRandomId } from '../../../functions/global'
 
 type AddSessionPopupPropsRouter = {
   handleAddSessionPopup: Function
@@ -31,24 +32,46 @@ export class AddSessionPopup extends PureComponent<AddSessionPopupProps, AddSess
     nameOfOrganization: '',
   }
 
-  closePopup = () => this.props.handleAddSessionPopup(false)
+  keyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      this.addOrganization()
+    }
+    if (e.key === 'Escape') {
+      this.closePopup()
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.keyDown)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keyDown)
+  }
+
+  closePopup = () => {
+    this.props.handleAddSessionPopup(false)
+  }
 
   setNameOfOrganization = (name: string) => {
     this.setState({ nameOfOrganization: name })
+  }
+
+  setNameIsVoid = (value: boolean) => {
+    this.setState({ nameIsVoid: value })
   }
 
   addOrganization = () => {
     const nameVoid = this.state.nameOfOrganization === ''
     this.validation(nameVoid)
     if (!nameVoid) {
-      sessionsData.push({ title: this.state.nameOfOrganization })
+      sessionsData.push({ id: getRandomId(), title: this.state.nameOfOrganization })
       this.props.router.push(`/organization/${this.state.nameOfOrganization}`)
     }
-    console.log(!this.state.nameIsVoid, sessionsData)
   }
 
   validation = (nameVoid: boolean) => {
-    nameVoid ? this.setState({ nameIsVoid: true }) : this.setState({ nameIsVoid: false })
+    nameVoid ? this.setNameIsVoid(true) : this.setNameIsVoid(false)
   }
 
   render() {

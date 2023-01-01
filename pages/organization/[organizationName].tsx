@@ -23,16 +23,16 @@ const Organization: NextPage = memo(() => {
       <Head>
         <title>{router.query.organizationName}</title>
       </Head>
-      <Wrapper maxWidth={'86rem'}>
+      <Wrapper maxWidth={'110rem'}>
         <Header
           organization={
             typeof router.query.organizationName === 'string' ? router.query.organizationName : ''
           }
         />
         <main className={style.main}>
-          {data.map((value, index) => {
+          {data.map((table, index) => {
             return (
-              <Table key={index} title={value.title} index={index} data={data} setData={setData} />
+              <Table key={index} title={table.title} index={index} data={data} setData={setData}  id={table.id}/>
             )
           })}
           <div
