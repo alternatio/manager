@@ -7,6 +7,7 @@ import { sessionsDataI } from '../../../data/sessionsData'
 import search from '/public/icons/search.svg'
 import { KebabButton } from '../../Kebab/Kebab'
 import topArrow from '/public/icons/topArrow.svg'
+import { motion } from 'framer-motion'
 
 interface HeaderTableI {
   index: number
@@ -16,7 +17,7 @@ interface HeaderTableI {
   handleMenu: Dispatch<SetStateAction<boolean>>
   setData: Dispatch<SetStateAction<sessionsDataI[]>>
   handleTableOpen: Dispatch<SetStateAction<boolean>>
-  handleRenameTitle:  Dispatch<SetStateAction<boolean>>
+  handleRenameTitle: Dispatch<SetStateAction<boolean>>
 }
 
 const HeaderTable: FC<HeaderTableI> = memo((props) => {
@@ -49,7 +50,10 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
           menuIsOpen={props.menuIsOpen}
         />
       </div>
-      <button onClick={() => props.handleTableOpen((prevState) => !prevState)} className={style.arrow}>
+      <button
+        onClick={() => props.handleTableOpen((prevState) => !prevState)}
+        className={style.arrow}
+      >
         <Image src={topArrow} alt={'arrow'} />
       </button>
     </header>

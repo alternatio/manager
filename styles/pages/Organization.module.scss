@@ -39,6 +39,7 @@
   border-radius: .5rem;
   transition: $cubic .3s;
   user-select: none;
+  white-space: pre;
   &:hover {
     background: $almost-white;
     opacity: 1;
@@ -167,20 +168,67 @@
   width: 100%;
   min-width: max(calc(25% - .5rem), 20rem);
   height: 100%;
-
   padding: 0 .75rem;
   border-right: $pre-white solid .05rem;
-
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+.columnMain {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.columnTitle {
+  color: $pre-black;
+  font-weight: 500;
+  font-size: 1.25rem;
+  white-space: pre;
+}
+
+.columnBlockCounter {
+  padding: .5rem;
+  aspect-ratio: 2/1;
+  border-radius: .5rem;
+  background: $black;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
 .block {
   width: 100%;
-  padding: 1.5rem 1rem;
   border-radius: 1rem;
   background: $white;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.05);
-  max-height: 15rem;
+}
+
+.blockBody {
+  max-height: 20rem;
+  overflow: hidden;
+  text-align: justify;
+}
+
+.blockInnerWrapper {
+  width: 100%;
+  padding: 1rem 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.blockTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+
 }

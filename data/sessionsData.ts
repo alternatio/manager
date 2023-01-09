@@ -3,8 +3,9 @@ export interface sessionDataBlockI {
   id: string
   title: string
   status: number
-  isRequired?: boolean
-  isUrgent?: boolean
+  color: string
+  isRequired: boolean
+  isUrgent: boolean
   text?: string
 }
 

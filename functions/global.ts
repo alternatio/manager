@@ -38,3 +38,56 @@ export const getRandomId = (
   return result
 }
 
+/*
+  colors for function getRandomColor
+*/
+const colors: string[] = [
+  '#ffee00',
+  '#ff0033',
+  '#0011ff',
+  '#ff6600',
+  '#00ffaa',
+  '#ff0088',
+  '#000'
+]
+
+const preGenerateColors: string[] = [
+  'ff',
+  '00',
+  '88'
+]
+
+/*
+  get random color
+  isFullRandom - ignoring an array of colors and generating full random colors
+*/
+export const getRandomColor = (
+  arrayOfColors: string[] = colors,
+  isFullRandom: boolean = false,
+  generateColorsArray: string[] = preGenerateColors
+): string => {
+  let result = ''
+  if (isFullRandom) {
+    result += '#'
+    for (let i = 0; i < 3; i++)
+      result += generateColorsArray[getRandomNumber(0, generateColorsArray.length - 1)]
+  } else {
+    result = arrayOfColors[getRandomNumber(0, arrayOfColors.length - 1)]
+  }
+  return result
+}
+
+
+const randomText = [
+  'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+  'Fuga, maxime nulla!',
+  'Accusamus, animi deserunt enim est et ex facilis molestiae nulla odio optio quae quas rerum similique sit tenetur.',
+  'Reiciendis!'
+]
+
+export const getRandomText = (length: number = 10): string => {
+  let result = ''
+  for (let i = 0; i <= length; i++)
+    result += randomText[getRandomNumber(0, randomText.length - 1)]
+  return result
+}

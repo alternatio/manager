@@ -6,13 +6,11 @@ import {
 } from '../../../data/sessionsData'
 import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
-import Image from 'next/image'
-import cross from '/public/icons/cross.svg'
 import Column from '../Column/Column'
-import { addItemToData } from '../../../functions/addBlocks'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
+import ButtonAddColumn from '../Buttons/ButtonAddColumn'
 
 interface TableI extends sessionDataTableI {
   id: string
@@ -31,15 +29,19 @@ const Table: FC<TableI> = memo((props) => {
 
   const tableVariants: Variants = {
     visible: {
-      maxHeight: '80vh',
+      height: 'auto',
+      opacity: 1,
+      transform: 'scaleX(1)',
     },
     hidden: {
-      maxHeight: '0vh',
+      height: '0',
+      opacity: 0,
+      transform: 'scaleX(.95)',
     },
   }
 
   return (
-    <div className={style.table}>
+    <motion.div initial={{ height: '0' }} animate={{ height: 'auto' }} className={style.table}>
       <HeaderTable
         data={props.data}
         index={props.index}
@@ -56,9 +58,10 @@ const Table: FC<TableI> = memo((props) => {
             initial={'hidden'}
             animate={'visible'}
             exit={'hidden'}
-            transition={{ type: cubicBezier(0.35, 0.35, 0.5, 1), duration: 1 }}
+            transition={{ type: cubicBezier(0.35, 0.35, 0.5, 1), duration: 0.75 }}
             variants={tableVariants}
             className={style.tableMain}
+            layout={'size'}
           >
             <div className={style.tableMainInner}>
               {columns.map((column, index) => {
@@ -69,23 +72,16 @@ const Table: FC<TableI> = memo((props) => {
                     title={column.title}
                     blocks={blocks}
                     setBlocks={setBlocks}
-                    index={index}/>
+                    index={index}
+                  />
                 )
               })}
-              <div
-                onClick={() => {
-                  addItemToData(setColumns, columns)
-                }}
-                className={style.addColumn}
-              >
-                <Image className={style.icon} src={cross} alt={'cross'} />
-                <span>Добавить Колонку</span>
-              </div>
+              <ButtonAddColumn columns={columns} setColumns={setColumns}/>
             </div>
           </motion.main>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 })
 

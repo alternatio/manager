@@ -1,18 +1,14 @@
 import { memo, useState } from 'react'
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
-import Image from 'next/image'
 import Head from 'next/head'
 import style from '/styles/pages/Organization.module.scss'
-
 import { Wrapper } from '../../components/Wrapper/Wrapper'
 import { Header } from '../../components/Header/Header'
-
-import cross from '/public/icons/cross.svg'
-
 import { sessionsDataI } from '../../data/sessionsData'
-import { addItemToData } from '../../functions/addBlocks'
 import Table from '../../components/Organization/Table/Table'
+import { motion } from 'framer-motion'
+import ButtonAddTable from '../../components/Organization/Buttons/ButtonAddTable'
 
 const Organization: NextPage = memo(() => {
   const [data, setData] = useState<sessionsDataI[]>([])
@@ -29,22 +25,14 @@ const Organization: NextPage = memo(() => {
             typeof router.query.organizationName === 'string' ? router.query.organizationName : ''
           }
         />
-        <main className={style.main}>
+        <motion.main className={style.main}>
           {data.map((table, index) => {
             return (
-              <Table key={index} title={table.title} index={index} data={data} setData={setData}  id={table.id}/>
+              <Table key={index} title={table.title} index={index} data={data} setData={setData} id={table.id}/>
             )
           })}
-          <div
-            onClick={() => {
-              addItemToData(setData, data)
-            }}
-            className={style.addTable}
-          >
-            <Image className={style.icon} src={cross} alt={'cross'} />
-            <span>Добавить таблицу</span>
-          </div>
-        </main>
+        <ButtonAddTable data={data} setData={setData} />
+        </motion.main>
       </Wrapper>
     </>
   )

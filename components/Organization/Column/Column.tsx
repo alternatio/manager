@@ -2,9 +2,8 @@ import { Dispatch, FC, memo, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import Block from '../Block/Block'
-import { addBlock } from '../../../functions/addBlocks'
-import Image from 'next/image'
-import cross from '/public/icons/cross.svg'
+import { motion, Variants } from 'framer-motion'
+import ButtonAddBlock from '../Buttons/ButtonAddBlock'
 
 interface ColumnI extends sessionDataColumnI {
   id: string
@@ -15,23 +14,52 @@ interface ColumnI extends sessionDataColumnI {
 }
 
 const Column: FC<ColumnI> = memo((props) => {
+  const columnVariants: Variants = {
+    open: {
+      width: '100%',
+      minWidth: 'max(calc(25% - .5rem), 20rem)',
+    },
+    close: {
+      width: '0%',
+      minWidth: '0%',
+    },
+  }
+
   return (
-    <div className={style.column}>
-      {props.blocks.map((block, index) => {
-        return <Block key={index} id={block.id} title={block.title} status={block.status} />
-      })}
-      {props.index === 0 && (
-        <div
-          onClick={() => {
-            addBlock(props.setBlocks, props.blocks)
-          }}
-          className={style.addBlock}
-        >
-          <Image className={style.icon} src={cross} alt={'cross'} />
-          <span>Добавить Блок</span>
+    <motion.div
+      initial={'close'}
+      animate={'open'}
+      transition={{ duration: 0.3 }}
+      variants={columnVariants}
+      className={style.column}
+      layout={'size'}
+    >
+      <motion.div layout={'preserve-aspect'} className={style.columnHeader}>
+        <div className={style.columnTitle}>{`${props.index + 1}. ${props.title}`}</div>
+        <div className={style.columnBlockCounter}>
+          {props.blocks.filter((obj) => obj.status === props.index).length}
         </div>
-      )}
-    </div>
+      </motion.div>
+      <motion.main className={style.columnMain} layout={'size'}>
+        {props.blocks
+          .filter((obj) => obj.status === props.index)
+          .map((block, index) => {
+            return (
+              <Block
+                key={index}
+                id={block.id}
+                title={block.title}
+                status={block.status}
+                color={block.color}
+                isRequired={block.isRequired}
+                isUrgent={block.isUrgent}
+                text={block.text}
+              />
+            )
+          })}
+        <ButtonAddBlock blocks={props.blocks} setBlocks={props.setBlocks} index={props.index} />
+      </motion.main>
+    </motion.div>
   )
 })
 
