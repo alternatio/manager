@@ -24,11 +24,11 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
               props.setBlocks,
               props.blocks,
               props.index,
-              getRandomColor(undefined, true),
+              getRandomColor(),
               'Block',
               false,
               false,
-              getRandomText(getRandomNumber(1, 6))
+              getRandomText(getRandomNumber(1, 10))
             )
           }}
           className={style.addBlock}

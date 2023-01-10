@@ -88,6 +88,6 @@ const randomText = [
 export const getRandomText = (length: number = 10): string => {
   let result = ''
   for (let i = 0; i <= length; i++)
-    result += randomText[getRandomNumber(0, randomText.length - 1)]
+    result += randomText[getRandomNumber(0, randomText.length - 1)] + ' '
   return result
 }
