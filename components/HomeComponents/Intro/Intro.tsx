@@ -17,3 +17,5 @@ export const Intro: FC = memo(() => {
     </div>
   )
 })
+
+Intro.displayName = 'Intro' 

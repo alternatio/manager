@@ -18,3 +18,5 @@ export const Cube: FC<{ color: Readonly<string>; index: Readonly<number> }> = me
     )
   }
 )
+
+Cube.displayName = 'Cube'
