@@ -11,7 +11,7 @@ export const Intro: FC = memo(() => {
       <p className={style.helloDescription}>Покажет, какую работу вы выполните</p>
       <div className={style.cubes}>
         {colorsOfCubes.map((value, index) => {
-          return <Cube color={value} index={index} />
+          return <Cube key={index} color={value} index={index} />
         })}
       </div>
     </div>

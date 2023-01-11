@@ -28,4 +28,5 @@ const ButtonAddColumn: FC<ButtonAddColumnI> = memo((props) => {
   )
 })
 
+ButtonAddColumn.displayName = 'button add column'
 export default ButtonAddColumn

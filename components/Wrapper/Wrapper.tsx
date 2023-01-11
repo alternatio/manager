@@ -15,3 +15,5 @@ export const Wrapper: FC<WrapperInterface> = memo((props) => {
     </div>
   )
 })
+
+Wrapper.displayName = 'wrapper'

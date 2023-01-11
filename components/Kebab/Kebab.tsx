@@ -15,3 +15,5 @@ export const KebabButton: FC<KebabButtonI> = memo((props) => {
     </button>
   )
 })
+
+KebabButton.displayName = 'Kebab button'

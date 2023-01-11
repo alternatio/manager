@@ -31,3 +31,5 @@ export const HamburgerButton: FC<HamburgerButtonInterface> = memo(
     )
   }
 )
+
+HamburgerButton.displayName = 'Hamburger button'

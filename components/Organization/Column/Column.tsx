@@ -63,4 +63,5 @@ const Column: FC<ColumnI> = memo((props) => {
   )
 })
 
+Column.displayName = 'column'
 export default Column

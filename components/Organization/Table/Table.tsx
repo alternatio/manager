@@ -85,4 +85,5 @@ const Table: FC<TableI> = memo((props) => {
   )
 })
 
+Table.displayName = 'Table'
 export default Table

@@ -27,4 +27,5 @@ const ButtonAddTable: FC<ButtonAddTable> = memo((props) => {
   )
 })
 
+ButtonAddTable.displayName = 'button add table'
 export default ButtonAddTable

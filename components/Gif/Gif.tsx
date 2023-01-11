@@ -35,3 +35,5 @@ export const Gif: FC<GifInterface> = memo(({ hover, full, gif }) => {
     </AnimatePresence>
   )
 })
+
+Gif.displayName = 'Gif'

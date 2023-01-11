@@ -60,4 +60,5 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
   )
 })
 
+HeaderTable.displayName = 'Header of table'
 export default HeaderTable

@@ -24,3 +24,5 @@ export const Hamburger: FC<HamburgerInterface> = memo(({hamburgerIsOpen}) => {
     </AnimatePresence>
   )
 })
+
+Hamburger.displayName = 'Hamburger'

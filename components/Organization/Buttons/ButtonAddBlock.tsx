@@ -41,4 +41,5 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
   )
 })
 
+ButtonAddBlock.displayName = 'button add block'
 export default ButtonAddBlock

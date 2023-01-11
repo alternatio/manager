@@ -39,4 +39,5 @@ const PopupTable: FC<PopupTableI> = memo((props) => {
   )
 })
 
+PopupTable.displayName = 'popup of table'
 export default PopupTable

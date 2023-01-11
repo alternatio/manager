@@ -57,6 +57,7 @@
   @extend %add;
   width: 100%;
   min-width: max(calc(25% - .5rem), 20rem);
+  max-height: 80vh;
 
   padding: .5rem 1rem;
   font-size: .9rem;

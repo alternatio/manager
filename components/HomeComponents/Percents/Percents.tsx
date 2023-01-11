@@ -20,9 +20,9 @@ export const Percents: FC = memo(() => {
   return (
     <div className={style.Percents}>
       <div className={style.blocks}>
-        {blocks.map((object) => {
+        {blocks.map((object, index) => {
           return (
-            <div className={style.block}>
+            <div key={index} className={style.block}>
               <div className={style.cube}>{object.percents}</div>
               <p className={style.blockText}>{object.nameOfBlock}</p>
             </div>
@@ -38,3 +38,5 @@ export const Percents: FC = memo(() => {
     </div>
   )
 })
+
+Percents.displayName = 'Percents'

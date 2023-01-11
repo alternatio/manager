@@ -39,7 +39,7 @@ const Block: FC<sessionDataBlockI> = (props) => {
             {props.text}
           </div>
           <div className={style.blockTime}>
-            {/*{props.id + ' ' + props.status + ' ' + props.color}*/}
+            {props.id + ' ' + props.status + ' ' + props.color}
           </div>
         </div>
       </motion.div>

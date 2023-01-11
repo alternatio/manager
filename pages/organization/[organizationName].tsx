@@ -17,7 +17,7 @@ const Organization: NextPage = memo(() => {
   return (
     <>
       <Head>
-        <title>{router.query.organizationName}</title>
+        <title>{router.query.organizationName || 'Home'}</title>
       </Head>
       <Wrapper maxWidth={'110rem'}>
         <Header
@@ -38,4 +38,5 @@ const Organization: NextPage = memo(() => {
   )
 })
 
+Organization.displayName = 'Organization'
 export default Organization

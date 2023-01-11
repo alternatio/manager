@@ -27,3 +27,5 @@ export const Header: FC<HeaderInterface> = memo(({ organization }) => {
     </div>
   )
 })
+
+Header.displayName = 'Header'
