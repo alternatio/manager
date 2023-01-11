@@ -76,7 +76,7 @@ const Table: FC<TableI> = memo((props) => {
                   />
                 )
               })}
-              <ButtonAddColumn columns={columns} setColumns={setColumns}/>
+              <ButtonAddColumn columns={columns} setColumns={setColumns} />
             </div>
           </motion.main>
         )}

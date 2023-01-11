@@ -18,4 +18,4 @@ export const Intro: FC = memo(() => {
   )
 })
 
-Intro.displayName = 'Intro' 
+Intro.displayName = 'Intro'

@@ -1,4 +1,3 @@
-
 /*
   value = min >= <= max
 */
@@ -46,7 +45,7 @@ const colors: string[] = [
   '#ff0033',
   '#0011ff',
   '#ff6600',
-  '#00ffaa',
+  '#00ffcc',
   '#ff0088',
   '#aa00ff',
   '#6600ff',
@@ -81,16 +80,47 @@ export const getRandomColor = (
 }
 
 
+/*
+  texts for function getRandomText
+*/
 const randomText = [
-  'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-  'Fuga, maxime nulla!',
-  'Accusamus, animi deserunt enim est et ex facilis molestiae nulla odio optio quae quas rerum similique sit tenetur.',
-  'Reiciendis!'
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  'Risus viverra adipiscing at in.',
+  'Tristique sollicitudin nibh sit amet commodo nulla facilisi nullam.',
+  'Volutpat consequat mauris nunc congue nisi vitae. Malesuada fames ac turpis egestas sed.',
+  'Vulputate enim nulla aliquet porttitor lacus.',
+  'Bibendum at varius vel pharetra vel turpis nunc. Eu turpis egestas pretium aenean pharetra magna ac.',
+  'Viverra maecenas accumsan lacus vel facilisis volutpat est velit.',
+  'Rhoncus aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant.'
 ]
 
+/*
+  get random text with custom length
+*/
 export const getRandomText = (length: number = 10): string => {
   let result = ''
   for (let i = 0; i <= length; i++)
     result += randomText[getRandomNumber(0, randomText.length - 1)] + ' '
   return result
+}
+
+/*
+  get current date
+*/
+export const getCurrentDate = () => {
+  const date = new Date()
+
+  const arrayDates: string[] = [
+    date.getHours().toString(),
+    ':',
+    date.getMinutes().toString(),
+    ' ',
+    date.getDate().toString(),
+    '.',
+    (date.getMonth() + 1).toString(),
+    '.',
+    date.getFullYear().toString()
+  ]
+
+  return arrayDates.join('')
 }

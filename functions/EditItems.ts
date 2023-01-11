@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react'
-import { getRandomColor, getRandomId } from './global'
+import { getCurrentDate, getRandomColor, getRandomId } from './global'
 import {
   sessionDataBlockI,
   sessionDataColumnI,
@@ -35,17 +35,34 @@ export const addBlock = (
   title: string = 'Block',
   isRequired: boolean = false,
   isUrgent: boolean = false,
-  text: string = ''
+  text: string = '',
+  dateToComplete: string = ''
 ) => {
+  if(!dateToComplete) dateToComplete = getCurrentDate()
+
   const tryAddBlock = () => {
     const id = getRandomId(4)
     const addBlock = () => {
       if (data.filter((obj) => obj.id === id).length === 0) {
-        setData((prevState) => [...prevState, { id, title, status, isRequired, isUrgent, text, color }])
+        setData((prevState) => [
+          ...prevState,
+          { id, title, status, isRequired, isUrgent, text, color, dateToComplete },
+        ])
       }
     }
     addBlock()
   }
 
   tryAddBlock()
+}
+
+// delete item
+export const deleteItem = (
+  setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
+  data: sessionDataBlockI[],
+  id: string
+  ) => {
+  const dataWithDeletedItem = data.filter(obj => obj.id === id).map((item, index) => {
+    console.log(item)
+  })
 }

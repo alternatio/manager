@@ -1,7 +1,7 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataColumnI } from '../../../data/sessionsData'
-import { addItemToData } from '../../../functions/addItems'
+import { addItemToData } from '../../../functions/EditItems'
 import Image from 'next/image'
 import cross from '/public/icons/cross.svg'
 

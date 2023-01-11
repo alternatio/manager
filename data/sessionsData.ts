@@ -6,7 +6,8 @@ export interface sessionDataBlockI {
   color: string
   isRequired: boolean
   isUrgent: boolean
-  text?: string
+  text: string
+  dateToComplete: string
 }
 
 // kanban column interface

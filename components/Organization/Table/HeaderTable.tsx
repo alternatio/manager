@@ -7,7 +7,6 @@ import { sessionsDataI } from '../../../data/sessionsData'
 import search from '/public/icons/search.svg'
 import { KebabButton } from '../../Kebab/Kebab'
 import topArrow from '/public/icons/topArrow.svg'
-import { motion } from 'framer-motion'
 
 interface HeaderTableI {
   index: number
@@ -51,7 +50,9 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
         />
       </div>
       <button
-        onClick={() => props.handleTableOpen((prevState) => !prevState)}
+        onClick={() => {
+          props.handleTableOpen((prevState) => !prevState)
+        }}
         className={style.arrow}
       >
         <Image src={topArrow} alt={'arrow'} />

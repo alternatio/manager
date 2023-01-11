@@ -32,7 +32,6 @@ const Column: FC<ColumnI> = memo((props) => {
       transition={{ duration: 0.3 }}
       variants={columnVariants}
       className={style.column}
-      layout={'size'}
     >
       <motion.div layout={'preserve-aspect'} className={style.columnHeader}>
         <div className={style.columnTitle}>{`${props.index + 1}. ${props.title}`}</div>
@@ -54,6 +53,7 @@ const Column: FC<ColumnI> = memo((props) => {
                 isRequired={block.isRequired}
                 isUrgent={block.isUrgent}
                 text={block.text}
+                dateToComplete={block.dateToComplete}
               />
             )
           })}

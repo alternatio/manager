@@ -1,4 +1,4 @@
-import { addItemToData } from '../../../functions/addItems'
+import { addItemToData } from '../../../functions/EditItems'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
 import cross from '/public/icons/cross.svg'

@@ -2,7 +2,7 @@ import { Dispatch, FC, memo, SetStateAction } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
-import rename from '/public/icons/rename.svg'
+import edit from '/public/icons/edit.svg'
 import trash from '/public/icons/trash.svg'
 
 interface PopupTableI {
@@ -26,7 +26,7 @@ const PopupTable: FC<PopupTableI> = memo((props) => {
             onClick={() => props.handleRenameTitle(!props.renameTitle)}
             className={style.menuButton}
           >
-            <Image className={style.icon} src={rename} alt={'rename'} />
+            <Image className={style.icon} src={edit} alt={'rename'} />
             <span>Переименовать</span>
           </button>
           <button className={style.menuButton}>

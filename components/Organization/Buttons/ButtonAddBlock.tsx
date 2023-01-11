@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { getRandomColor, getRandomNumber, getRandomText } from '../../../functions/global'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI } from '../../../data/sessionsData'
-import { addBlock } from '../../../functions/addItems'
+import { addBlock } from '../../../functions/EditItems'
 import Image from 'next/image'
 import cross from '/public/icons/cross.svg'
 
@@ -28,7 +28,8 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
               'Block',
               false,
               false,
-              getRandomText(getRandomNumber(1, 10))
+              getRandomText(getRandomNumber(1, 10)),
+
             )
           }}
           className={style.addBlock}

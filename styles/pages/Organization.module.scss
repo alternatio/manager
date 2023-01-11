@@ -179,6 +179,8 @@
 .columnMain {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
   gap: 1rem;
 }
 
@@ -214,6 +216,27 @@
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.05);
 }
 
+.statesOfBlock {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.isRequiredBlock,
+.isUrgentBlock {
+  padding: .5rem 1rem;
+  border-radius: 5rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.isRequiredBlock {
+  background: $yellow;
+}
+.isUrgentBlock {
+  background: $cyan;
+}
+
 .blockBody {
   max-height: 20rem;
   overflow: hidden;
@@ -231,5 +254,19 @@
 .blockTitle {
   font-size: 1.25rem;
   font-weight: 700;
+}
 
+.blockTime {
+  color: $gray;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.controller {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
 }
