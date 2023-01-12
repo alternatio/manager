@@ -61,7 +61,6 @@ const Table: FC<TableI> = memo((props) => {
             transition={{ type: cubicBezier(0.35, 0.35, 0.5, 1), duration: 0.75 }}
             variants={tableVariants}
             className={style.tableMain}
-            layout={'size'}
           >
             <div className={style.tableMainInner}>
               {columns.map((column, index) => {

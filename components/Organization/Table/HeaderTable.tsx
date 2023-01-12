@@ -39,7 +39,7 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
         ) : (
           <span className={style.headerTitle}>{props.data[props.index].title}</span>
         )}
-        <button>
+        <button className={style.buttonWithIcon}>
           <Image className={style.icon} src={search} alt={'search'} />
         </button>
         <KebabButton handleMenu={props.handleMenu} menuIsOpen={props.menuIsOpen} />
@@ -53,9 +53,9 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
         onClick={() => {
           props.handleTableOpen((prevState) => !prevState)
         }}
-        className={style.arrow}
+        className={`${style.arrow} ${style.buttonWithIcon}`}
       >
-        <Image src={topArrow} alt={'arrow'} />
+        <Image className={style.icon} src={topArrow} alt={'arrow'} />
       </button>
     </header>
   )

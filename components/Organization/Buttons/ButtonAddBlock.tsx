@@ -10,26 +10,25 @@ import cross from '/public/icons/cross.svg'
 interface ButtonAddBlockI {
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
-  index: number
+  idOfColumn: string
 }
 
 const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
   return (
     <>
       {props.blocks.length <= 300 && (
-        <motion.div
-          layout={'preserve-aspect'}
+        <motion.div layoutScroll={false}
           onClick={() => {
             addBlock(
               props.setBlocks,
               props.blocks,
-              props.index,
+              props.idOfColumn,
               getRandomColor(),
               'Block',
               false,
               false,
               getRandomText(getRandomNumber(1, 10)),
-
+              undefined
             )
           }}
           className={style.addBlock}

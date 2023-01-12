@@ -60,6 +60,9 @@ button {
   &:hover {
     transform: scaleY(.9);
   }
+  &:active {
+    transform: scaleY(.8);
+  }
 }
 
 input {

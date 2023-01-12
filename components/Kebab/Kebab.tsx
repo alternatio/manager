@@ -10,7 +10,7 @@ interface KebabButtonI {
 
 export const KebabButton: FC<KebabButtonI> = memo((props) => {
   return (
-    <button onClick={() => props.handleMenu(!props.menuIsOpen)}>
+    <button className={style.buttonWithIcon} onClick={() => props.handleMenu(!props.menuIsOpen)}>
       <Image className={style.icon} src={kebab} alt={'kebab'} />
     </button>
   )

@@ -13,24 +13,17 @@ export const addItemToData = (
   data: any[],
   title: string = 'Common'
 ) => {
-  const tryAddBlock = () => {
-    const id = getRandomId(4)
-    const addBlock = () => {
-      if (data.filter((obj) => obj.id === id).length === 0) {
-        setData((prevState) => [...prevState, { id, title }])
-      }
-    }
-    addBlock()
+  const id = getRandomId(4)
+  if (data.filter((obj) => obj.id === id).length === 0) {
+    setData((prevState) => [...prevState, { id, title }])
   }
-
-  tryAddBlock()
 }
 
 // add block
 export const addBlock = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
-  status: number = 0,
+  status: string,
   color: string = getRandomColor(),
   title: string = 'Block',
   isRequired: boolean = false,
@@ -38,22 +31,15 @@ export const addBlock = (
   text: string = '',
   dateToComplete: string = ''
 ) => {
-  if(!dateToComplete) dateToComplete = getCurrentDate()
+  if (!dateToComplete) dateToComplete = getCurrentDate()
 
-  const tryAddBlock = () => {
-    const id = getRandomId(4)
-    const addBlock = () => {
-      if (data.filter((obj) => obj.id === id).length === 0) {
-        setData((prevState) => [
-          ...prevState,
-          { id, title, status, isRequired, isUrgent, text, color, dateToComplete },
-        ])
-      }
-    }
-    addBlock()
+  const id = getRandomId(4)
+  if (data.filter((obj) => obj.id === id).length === 0) {
+    setData((prevState) => [
+      ...prevState,
+      { id, title, status, isRequired, isUrgent, text, color, dateToComplete },
+    ])
   }
-
-  tryAddBlock()
 }
 
 // delete item
@@ -61,8 +47,29 @@ export const deleteItem = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
   id: string
-  ) => {
-  const dataWithDeletedItem = data.filter(obj => obj.id === id).map((item, index) => {
-    console.log(item)
+) => {
+  const resultData: sessionDataBlockI[] = []
+  data
+    .filter((obj) => obj.id !== id)
+    .forEach((item) => {
+      resultData.push(item)
+    })
+  setData(resultData)
+}
+
+// rename item
+export const renameItem = (
+  setData: Dispatch<SetStateAction<any[]>>,
+  data: any[],
+  id: string,
+  title: string
+) => {
+  const resultData: any[] = data
+  resultData.map((item) => {
+    if (item.id === id) {
+      item.title = title
+    }
   })
+  console.log(resultData)
+  setData(resultData)
 }

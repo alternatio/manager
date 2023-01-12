@@ -1,14 +1,29 @@
 import style from '/styles/pages/Organization.module.scss'
-import { FC } from 'react'
+import { Dispatch, FC, memo, SetStateAction } from 'react'
 import { sessionDataBlockI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import trash from '/public/icons/trash.svg'
 import edit from '/public/icons/edit.svg'
+import rename from '/public/icons/rename.svg'
 import Image from 'next/image'
+import { deleteItem, renameItem } from '../../../functions/EditItems'
 
 // without memo!
 
-const Block: FC<sessionDataBlockI> = (props) => {
+interface BlockI extends sessionDataBlockI {
+  id: string
+  title: string
+  status: string
+  color: string
+  isRequired: boolean
+  isUrgent: boolean
+  text: string
+  dateToComplete: string
+  blocks: sessionDataBlockI[]
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
+}
+
+const Block: FC<BlockI> = memo((props) => {
   const blockVariants: Variants = {
     open: {
       opacity: 1,
@@ -38,7 +53,7 @@ const Block: FC<sessionDataBlockI> = (props) => {
         variants={blockVariants}
         transition={{ duration: 0.4 }}
         className={style.block}
-        // layout={'preserve-aspect'}
+        layout={'preserve-aspect'}
         layoutId={props.id}
       >
         <div className={style.blockInnerWrapper}>
@@ -53,18 +68,23 @@ const Block: FC<sessionDataBlockI> = (props) => {
           <div className={style.blockTime}>до {props.dateToComplete}</div>
           <div className={style.controller}>
             <button
-              onClick={() => {}}
-              className={style.controllerButton}>
+              onClick={() => {deleteItem(props.setBlocks, props.blocks, props.id)}}
+              className={style.buttonWithIcon}>
               <Image src={trash} alt={'trash'}/>
             </button>
-            <button className={style.controllerButton}>
+            <button className={style.buttonWithIcon}>
               <Image src={edit} alt={'edit'} />
+            </button>
+            <button
+              onClick={() => {renameItem(props.setBlocks, props.blocks, props.id, '123')}}
+              className={style.buttonWithIcon}>
+              <Image src={rename} alt={'rename'} />
             </button>
           </div>
         </div>
       </motion.div>
     </AnimatePresence>
   )
-}
+})
 
 export default Block
