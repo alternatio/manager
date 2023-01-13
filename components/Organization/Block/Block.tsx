@@ -87,4 +87,5 @@ const Block: FC<BlockI> = memo((props) => {
   )
 })
 
+Block.displayName = 'Block'
 export default Block
