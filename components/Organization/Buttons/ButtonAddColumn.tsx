@@ -3,7 +3,7 @@ import style from '/styles/pages/Organization.module.scss'
 import { sessionDataColumnI } from '../../../data/sessionsData'
 import { addItemToData } from '../../../functions/EditItems'
 import Image from 'next/image'
-import cross from '/public/icons/cross.svg'
+import { crossIcon } from '../../../functions/importIcons'
 
 interface ButtonAddColumnI {
   columns: sessionDataColumnI[]
@@ -20,7 +20,7 @@ const ButtonAddColumn: FC<ButtonAddColumnI> = memo((props) => {
           }}
           className={style.addColumn}
         >
-          <Image className={style.icon} src={cross} alt={'cross'} />
+          <Image className={style.icon} src={crossIcon} alt={'cross'} />
           <span>Добавить Колонку</span>
         </div>
       )}

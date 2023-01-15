@@ -1,19 +1,21 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
-import PopupTable from './popupTable'
 import { sessionsDataI } from '../../../data/sessionsData'
 
-import search from '/public/icons/search.svg'
 import { KebabButton } from '../../Kebab/Kebab'
-import topArrow from '/public/icons/topArrow.svg'
+import { motion } from 'framer-motion'
+import Popup from '../Popup/smallPopup/Popup'
+import PopupButton from '../Popup/smallPopup/PopupButton'
+import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../../functions/importIcons'
 
 interface HeaderTableI {
   index: number
-  menuIsOpen: boolean
+  popupIsOpen: boolean
   renameTitle: boolean
+  tableIsOpen: boolean
   data: sessionsDataI[]
-  handleMenu: Dispatch<SetStateAction<boolean>>
+  handlePopup: Dispatch<SetStateAction<boolean>>
   setData: Dispatch<SetStateAction<sessionsDataI[]>>
   handleTableOpen: Dispatch<SetStateAction<boolean>>
   handleRenameTitle: Dispatch<SetStateAction<boolean>>
@@ -21,7 +23,9 @@ interface HeaderTableI {
 
 const HeaderTable: FC<HeaderTableI> = memo((props) => {
   return (
-    <header className={style.header}>
+    <motion.header
+      // animate={props.tableIsOpen ? {borderBottom: '#000 solid .2rem'} : {borderBottom: '#000 solid 0rem'}}
+      className={style.header}>
       <div className={style.headerLeftPart}>
         {props.renameTitle ? (
           <label className={style.label}>
@@ -40,14 +44,17 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
           <span className={style.headerTitle}>{props.data[props.index].title}</span>
         )}
         <button className={style.buttonWithIcon}>
-          <Image className={style.icon} src={search} alt={'search'} />
+          <Image className={style.icon} src={searchIcon} alt={'search'} />
         </button>
-        <KebabButton handleMenu={props.handleMenu} menuIsOpen={props.menuIsOpen} />
-        <PopupTable
-          handleRenameTitle={props.handleRenameTitle}
-          renameTitle={props.renameTitle}
-          menuIsOpen={props.menuIsOpen}
-        />
+        <KebabButton handlePopup={props.handlePopup} />
+        <Popup popupVisible={props.popupIsOpen} handlePopup={props.handlePopup} position={'right'}>
+          <PopupButton icon={renameIcon} onClickCallback={() => {}}>
+            Переименовать таблицу
+          </PopupButton>
+          <PopupButton icon={trashIcon} onClickCallback={() => {}}>
+            Удалить таблицу
+          </PopupButton>
+        </Popup>
       </div>
       <button
         onClick={() => {
@@ -55,9 +62,14 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
         }}
         className={`${style.arrow} ${style.buttonWithIcon}`}
       >
-        <Image className={style.icon} src={topArrow} alt={'arrow'} />
+        <motion.div
+          className={style.innerWrapperButton}
+          animate={props.tableIsOpen ? { rotate: '0deg' } : { rotate: '180deg' }}
+        >
+          <Image className={style.icon} src={topArrowIcon} alt={'arrow'} />
+        </motion.div>
       </button>
-    </header>
+    </motion.header>
   )
 })
 

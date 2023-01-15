@@ -5,7 +5,7 @@ import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI } from '../../../data/sessionsData'
 import { addBlock } from '../../../functions/EditItems'
 import Image from 'next/image'
-import cross from '/public/icons/cross.svg'
+import { crossIcon } from '../../../functions/importIcons'
 
 interface ButtonAddBlockI {
   blocks: sessionDataBlockI[]
@@ -33,7 +33,7 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
           }}
           className={style.addBlock}
         >
-          <Image className={style.icon} src={cross} alt={'cross'} />
+          <Image className={style.icon} src={crossIcon} alt={'cross'} />
           <span>Добавить Блок</span>
         </motion.div>
       )}

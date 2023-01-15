@@ -1,17 +1,16 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import Image from 'next/image'
 import style from '/styles/pages/Organization.module.scss'
-import kebab from '/public/icons/kebab.svg'
+import { kebabIcon } from '../../functions/importIcons'
 
 interface KebabButtonI {
-  handleMenu: Dispatch<SetStateAction<boolean>>
-  menuIsOpen: boolean
+  handlePopup: Dispatch<SetStateAction<boolean>>
 }
 
 export const KebabButton: FC<KebabButtonI> = memo((props) => {
   return (
-    <button className={style.buttonWithIcon} onClick={() => props.handleMenu(!props.menuIsOpen)}>
-      <Image className={style.icon} src={kebab} alt={'kebab'} />
+    <button className={style.buttonWithIcon} onClick={() => props.handlePopup(prev => !prev)}>
+      <Image className={style.icon} src={kebabIcon} alt={'kebab'} />
     </button>
   )
 })

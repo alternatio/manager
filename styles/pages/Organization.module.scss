@@ -12,6 +12,12 @@
   }
 }
 
+.icon, .icon * {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #fff;
+}
+
 .buttonWithIcon {
   @extend %buttonWithIcon;
   &:hover {
@@ -20,6 +26,11 @@
   &:active {
     transform: scaleY(.75) scaleX(1.2);
   }
+}
+
+.innerWrapperButton {
+  width: 100%;
+  height: 100%;
 }
 
 .main {
@@ -105,33 +116,6 @@
   position: relative;
 }
 
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  padding: .5rem;
-  background: $white;
-  border: $black solid .2rem;
-  border-radius: 1rem;
-  position: absolute;
-  left: calc(100% + 1rem);
-  top: 0;
-  z-index: 5;
-}
-
-.menuButton {
-  border-radius: 1rem;
-  padding: .5rem;
-  transition: $cubic .25s;
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  white-space: nowrap;
-  &:hover {
-    background: $almost-white;
-  }
-}
-
 .label {
   padding: .33rem;
   border-radius: .5rem;
@@ -192,6 +176,8 @@
   min-width: max(calc(25% - .5rem), 20rem);
   //max-height: 80vh;
   //overflow-y: auto;
+
+  //overflow-x: hidden;
   min-height: 100%;
   padding: 0 .75rem;
   border-right: $pre-white solid .05rem;
@@ -247,6 +233,7 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  position: relative;
 }
 
 .columnBlockCounter {
@@ -265,7 +252,7 @@
   width: 100%;
   border-radius: 1rem;
   background: $white;
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.05);
+  box-shadow: 0 .5rem 1rem #8883;
 }
 
 .statesOfBlock {
@@ -321,4 +308,31 @@
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: .5rem;
+  //background: $white;
+  background: $white;
+  border: $black solid .2rem;
+  border-radius: 1rem;
+  position: absolute;
+  top: .5rem;
+  z-index: 5;
+}
+
+.popupButton {
+  border-radius: 1rem;
+  padding: .5rem;
+  transition: $cubic .25s;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  white-space: nowrap;
+  &:hover {
+    background: $almost-white;
+  }
 }

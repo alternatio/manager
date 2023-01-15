@@ -21,7 +21,7 @@ interface TableI extends sessionDataTableI {
 }
 
 const Table: FC<TableI> = memo((props) => {
-  const [menuIsOpen, handleMenu] = useState<boolean>(false)
+  const [popupIsOpen, handlePopup] = useState<boolean>(false)
   const [renameTitle, handleRenameTitle] = useState<boolean>(false)
   const [tableIsOpen, handleTableOpen] = useState<boolean>(true)
   const [columns, setColumns] = useState<sessionDataColumnI[]>([])
@@ -29,12 +29,12 @@ const Table: FC<TableI> = memo((props) => {
 
   const tableVariants: Variants = {
     visible: {
-      height: 'auto',
+      height: '70vh',
       opacity: 1,
       transform: 'scaleX(1)',
     },
     hidden: {
-      height: '0',
+      height: '0vh',
       opacity: 0,
       transform: 'scaleX(.95)',
     },
@@ -46,11 +46,12 @@ const Table: FC<TableI> = memo((props) => {
         data={props.data}
         index={props.index}
         setData={props.setData}
-        handleMenu={handleMenu}
+        handlePopup={handlePopup}
         handleRenameTitle={handleRenameTitle}
         handleTableOpen={handleTableOpen}
-        menuIsOpen={menuIsOpen}
+        popupIsOpen={popupIsOpen}
         renameTitle={renameTitle}
+        tableIsOpen={tableIsOpen}
       />
       <AnimatePresence>
         {tableIsOpen && (
@@ -62,7 +63,8 @@ const Table: FC<TableI> = memo((props) => {
             variants={tableVariants}
             className={style.tableMain}
           >
-            <div className={style.tableMainInner}>
+            <div
+              className={style.tableMainInner}>
               {columns.map((column, index) => {
                 return (
                   <Column

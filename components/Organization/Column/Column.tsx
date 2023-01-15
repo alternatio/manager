@@ -1,10 +1,14 @@
 import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
-import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
-import Block from '../Block/Block'
 import { motion, Variants } from 'framer-motion'
-import ButtonAddBlock from '../Buttons/ButtonAddBlock'
 import { KebabButton } from '../../Kebab/Kebab'
+import style from '/styles/pages/Organization.module.scss'
+
+import Block from '../Block/Block'
+import ButtonAddBlock from '../Buttons/ButtonAddBlock'
+import Popup from '../Popup/smallPopup/Popup'
+import PopupButton from '../Popup/smallPopup/PopupButton'
+import { renameIcon, trashIcon } from '../../../functions/importIcons'
 
 interface ColumnI extends sessionDataColumnI {
   id: string
@@ -15,7 +19,7 @@ interface ColumnI extends sessionDataColumnI {
 }
 
 const Column: FC<ColumnI> = memo((props) => {
-  const [KebabIsOpen, handleColumnKebab] = useState<boolean>(false)
+  const [popupIsOpen, handlePopup] = useState<boolean>(false)
 
   const columnVariants: Variants = {
     open: {
@@ -35,17 +39,30 @@ const Column: FC<ColumnI> = memo((props) => {
       transition={{ duration: 0.3 }}
       variants={columnVariants}
       className={style.column}
-      style={{maxHeight: '70vh', overflowY: 'auto'}}
+      style={{maxHeight: '100%', overflowY: 'auto'}}
     >
-      <motion.div
-        className={style.columnHeader}
-        style={{paddingBottom: '.75rem'}}>
+      <motion.div className={style.columnHeader} style={{ paddingBottom: '.75rem' }}>
         <div className={style.columnTitle}>{`${props.index + 1}. ${props.title}`}</div>
         <div className={style.columnRightPart}>
           <div className={style.columnBlockCounter}>
             {props.blocks.filter((obj) => obj.status === props.id).length}
           </div>
-          <KebabButton handleMenu={handleColumnKebab} menuIsOpen={KebabIsOpen} />
+          <KebabButton handlePopup={handlePopup} />
+          <Popup
+            position={'left'}
+            handlePopup={handlePopup}
+            popupVisible={popupIsOpen}>
+            <PopupButton
+              onClickCallback={() => {}}
+              icon={renameIcon}>
+              Переименовать колонку
+            </PopupButton>
+            <PopupButton
+              onClickCallback={() => {}}
+              icon={trashIcon}>
+              Удалить колонку
+            </PopupButton>
+          </Popup>
         </div>
       </motion.div>
       <motion.main className={style.columnMain} layout={'size'}>

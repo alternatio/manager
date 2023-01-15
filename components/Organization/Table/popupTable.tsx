@@ -20,16 +20,16 @@ const PopupTable: FC<PopupTableI> = memo((props) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className={style.menu}
+          className={style.popup}
         >
           <button
             onClick={() => props.handleRenameTitle(!props.renameTitle)}
-            className={style.menuButton}
+            className={style.popupButton}
           >
             <Image className={style.icon} src={edit} alt={'rename'} />
             <span>Переименовать</span>
           </button>
-          <button className={style.menuButton}>
+          <button className={style.popupButton}>
             <Image className={style.icon} src={trash} alt={'trash'} />
             <span>Удалить таблицу</span>
           </button>

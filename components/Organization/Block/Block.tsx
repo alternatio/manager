@@ -2,13 +2,10 @@ import style from '/styles/pages/Organization.module.scss'
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import { sessionDataBlockI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
-import trash from '/public/icons/trash.svg'
-import edit from '/public/icons/edit.svg'
-import rename from '/public/icons/rename.svg'
 import Image from 'next/image'
 import { deleteItem, renameItem } from '../../../functions/EditItems'
-
-// without memo!
+import IconButton from '../global/IconButton'
+import { editIcon, renameIcon, trashIcon } from '../../../functions/importIcons'
 
 interface BlockI extends sessionDataBlockI {
   id: string
@@ -67,19 +64,17 @@ const Block: FC<BlockI> = memo((props) => {
           <div className={style.blockBody}>{props.text}</div>
           <div className={style.blockTime}>до {props.dateToComplete}</div>
           <div className={style.controller}>
-            <button
-              onClick={() => {deleteItem(props.setBlocks, props.blocks, props.id)}}
-              className={style.buttonWithIcon}>
-              <Image src={trash} alt={'trash'}/>
-            </button>
-            <button className={style.buttonWithIcon}>
-              <Image src={edit} alt={'edit'} />
-            </button>
-            <button
-              onClick={() => {renameItem(props.setBlocks, props.blocks, props.id, '123')}}
-              className={style.buttonWithIcon}>
-              <Image src={rename} alt={'rename'} />
-            </button>
+            <IconButton onClickCallback={() => deleteItem(props.setBlocks, props.blocks, props.id)}>
+              <Image className={style.icon} src={trashIcon} alt={'trash'} />
+            </IconButton>
+            <IconButton onClickCallback={() => {}}>
+              <Image className={style.icon} src={editIcon} alt={'edit'} />
+            </IconButton>
+            <IconButton
+              onClickCallback={() => renameItem(props.setBlocks, props.blocks, props.id, '123')}
+            >
+              <Image className={style.icon} src={renameIcon} alt={'rename'} />
+            </IconButton>
           </div>
         </div>
       </motion.div>

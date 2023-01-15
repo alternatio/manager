@@ -4,7 +4,21 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 100%;
+  &::-webkit-scrollbar {
+    width: .75rem;
+    background: $white;
+    @media (max-width: 600px) {
+      width: 0;
+    }
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $black;
+    border: $white solid .2rem;
+    border-radius: .36rem;
+  }
 }
 
 .enterWrapper {
