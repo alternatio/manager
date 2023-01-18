@@ -12,13 +12,11 @@ import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../../functi
 interface HeaderTableI {
   index: number
   popupIsOpen: boolean
-  renameTitle: boolean
   tableIsOpen: boolean
   data: sessionsDataI[]
   handlePopup: Dispatch<SetStateAction<boolean>>
   setData: Dispatch<SetStateAction<sessionsDataI[]>>
   handleTableOpen: Dispatch<SetStateAction<boolean>>
-  handleRenameTitle: Dispatch<SetStateAction<boolean>>
 }
 
 const HeaderTable: FC<HeaderTableI> = memo((props) => {
@@ -27,22 +25,7 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
       // animate={props.tableIsOpen ? {borderBottom: '#000 solid .2rem'} : {borderBottom: '#000 solid 0rem'}}
       className={style.header}>
       <div className={style.headerLeftPart}>
-        {props.renameTitle ? (
-          <label className={style.label}>
-            <input
-              className={style.input}
-              defaultValue={props.data[props.index].title}
-              onChange={(e) => {
-                const backupData = props.data
-                backupData[props.index].title = e.target.value
-                props.setData(backupData)
-              }}
-              type='text'
-            />
-          </label>
-        ) : (
-          <span className={style.headerTitle}>{props.data[props.index].title}</span>
-        )}
+        <span className={style.headerTitle}>{props.data[props.index].title}</span>
         <button className={style.buttonWithIcon}>
           <Image className={style.icon} src={searchIcon} alt={'search'} />
         </button>

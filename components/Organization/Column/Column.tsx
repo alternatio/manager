@@ -20,6 +20,7 @@ interface ColumnI extends sessionDataColumnI {
 
 const Column: FC<ColumnI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
+  const [rename, handleRename] = useState<boolean>(false)
 
   const columnVariants: Variants = {
     open: {

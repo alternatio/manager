@@ -1,6 +1,7 @@
-import { Dispatch, FC, memo, ReactNode, SetStateAction } from 'react'
+import { Dispatch, FC, memo, ReactNode, SetStateAction, useRef } from 'react'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import style from '/styles/pages/Organization.module.scss'
+import { useOnClickOutside } from '../../../../functions/customHooks'
 
 interface PopupI {
   popupVisible: boolean
@@ -21,17 +22,21 @@ const Popup: FC<PopupI> = (props) => {
     },
   }
 
+  const popupRef = useRef(null)
+
+  useOnClickOutside(popupRef, () => props.handlePopup(false), false)
+
   return (
     <AnimatePresence>
       {props.popupVisible && (
         <motion.div
+          ref={popupRef}
           variants={popupVariants}
           initial={'hidden'}
           animate={'visible'}
           exit={'hidden'}
           transition={{ duration: 0.25 }}
           style={props.position === 'left' ? { right: '2rem' } : { left: 'calc(100% + .5rem)' }}
-          onClick={() => props.handlePopup((prevState) => !prevState)}
           className={style.popup}
         >
           {props.children}

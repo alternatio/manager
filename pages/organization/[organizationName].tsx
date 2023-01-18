@@ -5,12 +5,12 @@ import Head from 'next/head'
 import style from '/styles/pages/Organization.module.scss'
 import { Wrapper } from '../../components/Wrapper/Wrapper'
 import { Header } from '../../components/Header/Header'
-import { sessionsDataI } from '../../data/sessionsData'
+import { sessionDataTableI } from '../../data/sessionsData'
 import Table from '../../components/Organization/Table/Table'
 import ButtonAddTable from '../../components/Organization/Buttons/ButtonAddTable'
 
 const Organization: NextPage = memo(() => {
-  const [data, setData] = useState<sessionsDataI[]>([])
+  const [data, setData] = useState<sessionDataTableI[]>([])
   const router = useRouter()
 
   return (

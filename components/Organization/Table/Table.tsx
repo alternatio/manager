@@ -4,7 +4,7 @@ import {
   sessionDataTableI,
   sessionsDataI,
 } from '../../../data/sessionsData'
-import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
+import { Dispatch, FC, memo, SetStateAction, useReducer, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Column from '../Column/Column'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
@@ -22,10 +22,10 @@ interface TableI extends sessionDataTableI {
 
 const Table: FC<TableI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
-  const [renameTitle, handleRenameTitle] = useState<boolean>(false)
   const [tableIsOpen, handleTableOpen] = useState<boolean>(true)
   const [columns, setColumns] = useState<sessionDataColumnI[]>([])
   const [blocks, setBlocks] = useState<sessionDataBlockI[]>([])
+  const [, forceUpdateTable] = useReducer(x => x + 1, 0)
 
   const tableVariants: Variants = {
     visible: {
@@ -47,10 +47,8 @@ const Table: FC<TableI> = memo((props) => {
         index={props.index}
         setData={props.setData}
         handlePopup={handlePopup}
-        handleRenameTitle={handleRenameTitle}
         handleTableOpen={handleTableOpen}
         popupIsOpen={popupIsOpen}
-        renameTitle={renameTitle}
         tableIsOpen={tableIsOpen}
       />
       <AnimatePresence>

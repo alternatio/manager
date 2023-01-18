@@ -15,11 +15,11 @@ const Popup: FC<PopupI> = (props) => {
     <AnimatePresence>
       <motion.div className={style.popupWrapper}>
         <div className={style.bigPopup}>
-
           <button
-            style={props.agreeColorIsRed ? {background: '#ff0033'} : {background: '#000'}}
+            style={props.agreeColorIsRed ? { background: '#ff0033' } : { background: '#000' }}
             onClick={() => props.agreeAction()}
-            className={`${style.bigPopupButton} ${style.button}`}>
+            className={`${style.bigPopupButton} ${style.button}`}
+          >
             Ок
           </button>
         </div>

@@ -17,7 +17,7 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
   return (
     <>
       {props.blocks.length <= 300 && (
-        <motion.div layoutScroll={false}
+        <motion.div
           onClick={() => {
             addBlock(
               props.setBlocks,
