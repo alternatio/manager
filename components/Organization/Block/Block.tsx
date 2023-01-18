@@ -1,5 +1,5 @@
 import style from '/styles/pages/Organization.module.scss'
-import { Dispatch, FC, memo, SetStateAction } from 'react'
+import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import { sessionDataBlockI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
@@ -21,6 +21,8 @@ interface BlockI extends sessionDataBlockI {
 }
 
 const Block: FC<BlockI> = memo((props) => {
+  const [rename, handleRename] = useState<boolean>(false)
+
   const blockVariants: Variants = {
     open: {
       opacity: 1,
