@@ -11,6 +11,7 @@ import { AnimatePresence, motion, Variants } from 'framer-motion'
 import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../Buttons/ButtonAddColumn'
+import EditField from '../EditField/EditField'
 
 interface TableI extends sessionDataTableI {
   id: string
@@ -26,6 +27,8 @@ const Table: FC<TableI> = memo((props) => {
   const [columns, setColumns] = useState<sessionDataColumnI[]>([])
   const [blocks, setBlocks] = useState<sessionDataBlockI[]>([])
   const [, forceUpdateTable] = useReducer(x => x + 1, 0)
+  const [blockIdEdit, setBlockIdEdit] = useState<string>('')
+  const [search, handleSearch] = useState<boolean>(false)
 
   const tableVariants: Variants = {
     visible: {
@@ -51,6 +54,7 @@ const Table: FC<TableI> = memo((props) => {
         popupIsOpen={popupIsOpen}
         tableIsOpen={tableIsOpen}
       />
+      <EditField blockId={blockIdEdit} blocks={blocks} setBlocks={setBlocks} setBlockIdEdit={setBlockIdEdit}/>
       <AnimatePresence>
         {tableIsOpen && (
           <motion.main
@@ -72,6 +76,8 @@ const Table: FC<TableI> = memo((props) => {
                     blocks={blocks}
                     setBlocks={setBlocks}
                     index={index}
+                    blockIdEdit={blockIdEdit}
+                    setBlockIdEdit={setBlockIdEdit}
                   />
                 )
               })}

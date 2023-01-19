@@ -8,6 +8,7 @@ import { Header } from '../../components/Header/Header'
 import { sessionDataTableI } from '../../data/sessionsData'
 import Table from '../../components/Organization/Table/Table'
 import ButtonAddTable from '../../components/Organization/Buttons/ButtonAddTable'
+import EditField from '../../components/Organization/EditField/EditField'
 
 const Organization: NextPage = memo(() => {
   const [data, setData] = useState<sessionDataTableI[]>([])

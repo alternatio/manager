@@ -23,13 +23,15 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
   return (
     <motion.header
       // animate={props.tableIsOpen ? {borderBottom: '#000 solid .2rem'} : {borderBottom: '#000 solid 0rem'}}
-      className={style.header}>
+      className={style.header}
+    >
       <div className={style.headerLeftPart}>
         <span className={style.headerTitle}>{props.data[props.index].title}</span>
         <button className={style.buttonWithIcon}>
           <Image className={style.icon} src={searchIcon} alt={'search'} />
         </button>
         <KebabButton handlePopup={props.handlePopup} />
+
         <Popup popupVisible={props.popupIsOpen} handlePopup={props.handlePopup} position={'right'}>
           <PopupButton icon={renameIcon} onClickCallback={() => {}}>
             Переименовать таблицу

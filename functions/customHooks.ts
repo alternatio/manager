@@ -7,7 +7,10 @@ export const useOnClickOutside = (
 ) => {
   useEffect(() => {
     const listener = (event: Event) => {
-      if (!ref.current || (containsNotClose && ref.current.contains(event.target))) return
+      if (!ref.current || (containsNotClose && ref.current.contains(event.target))) {
+        return
+      }
+      console.log(ref)
       handler(event)
     }
     window.addEventListener('mousedown', listener)

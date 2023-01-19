@@ -16,6 +16,8 @@ interface ColumnI extends sessionDataColumnI {
   index: number
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
+  blockIdEdit: string
+  setBlockIdEdit: Dispatch<SetStateAction<string>>
 }
 
 const Column: FC<ColumnI> = memo((props) => {
@@ -40,7 +42,7 @@ const Column: FC<ColumnI> = memo((props) => {
       transition={{ duration: 0.3 }}
       variants={columnVariants}
       className={style.column}
-      style={{maxHeight: '100%', overflowY: 'auto'}}
+      style={{ maxHeight: '100%', overflowY: 'auto' }}
     >
       <motion.div className={style.columnHeader} style={{ paddingBottom: '.75rem' }}>
         <div className={style.columnTitle}>{`${props.index + 1}. ${props.title}`}</div>
@@ -49,18 +51,11 @@ const Column: FC<ColumnI> = memo((props) => {
             {props.blocks.filter((obj) => obj.status === props.id).length}
           </div>
           <KebabButton handlePopup={handlePopup} />
-          <Popup
-            position={'left'}
-            handlePopup={handlePopup}
-            popupVisible={popupIsOpen}>
-            <PopupButton
-              onClickCallback={() => {}}
-              icon={renameIcon}>
+          <Popup position={'left'} handlePopup={handlePopup} popupVisible={popupIsOpen}>
+            <PopupButton onClickCallback={() => {}} icon={renameIcon}>
               Переименовать колонку
             </PopupButton>
-            <PopupButton
-              onClickCallback={() => {}}
-              icon={trashIcon}>
+            <PopupButton onClickCallback={() => {}} icon={trashIcon}>
               Удалить колонку
             </PopupButton>
           </Popup>
@@ -83,6 +78,8 @@ const Column: FC<ColumnI> = memo((props) => {
                 dateToComplete={block.dateToComplete}
                 blocks={props.blocks}
                 setBlocks={props.setBlocks}
+                blockIdEdit={props.blockIdEdit}
+                setBlockIdEdit={props.setBlockIdEdit}
               />
             )
           })}
