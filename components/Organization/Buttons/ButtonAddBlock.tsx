@@ -1,6 +1,6 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import { motion } from 'framer-motion'
-import { getRandomColor, getRandomNumber, getRandomText } from '../../../functions/global'
+import { getRandomColor } from '../../../functions/global'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI } from '../../../data/sessionsData'
 import { addBlock } from '../../../functions/EditItems'
@@ -24,10 +24,10 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
               props.blocks,
               props.idOfColumn,
               getRandomColor(),
-              'Block',
+              'Новый блок',
               false,
               false,
-              getRandomText(getRandomNumber(1, 10)),
+              'Задание которое кто-то напишет, а кто-то выполнит.',
               undefined
             )
           }}

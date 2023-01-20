@@ -1,11 +1,12 @@
 import style from '/styles/pages/Organization.module.scss'
-import { Dispatch, FC, memo, SetStateAction, useEffect, useRef, useState } from 'react'
-import { sessionDataBlockI } from '../../../data/sessionsData'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
-import { deleteItem } from '../../../functions/EditItems'
+import { deleteItem, swapStatus } from '../../../functions/EditItems'
 import IconButton from '../global/IconButton'
 import { arrowIcon, editIcon, trashIcon } from '../../../functions/importIcons'
+import { randomColors } from '../../../functions/global'
 
 interface BlockI extends sessionDataBlockI {
   id: string
@@ -16,14 +17,17 @@ interface BlockI extends sessionDataBlockI {
   isUrgent: boolean
   text: string
   dateToComplete: string
+  columns: sessionDataColumnI[]
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
   isSelected?: boolean
+  forceUpdate?: Function
+  corner?: 'left' | 'right' | null
 }
 
-const Block: FC<BlockI> = memo((props) => {
+const Block: FC<BlockI> = (props) => {
   const [title, setTitle] = useState<string>(props.title)
   const [text, setText] = useState<string>(props.text)
   const [color, setColor] = useState<string>(props.color)
@@ -34,12 +38,14 @@ const Block: FC<BlockI> = memo((props) => {
   const blockVariants: Variants = {
     open: {
       opacity: 1,
-      borderTop: `${props.color} solid .5rem`,
-      // maxHeight: '10rem'
+      borderTop: `${props.isSelected ? color : props.color} solid .5rem`,
+      // minHeight: '13rem',
+      // maxHeight: '13rem'
     },
     close: {
       opacity: 0,
-      borderTop: `${props.color} solid 0rem`,
+      borderTop: `${props.isSelected ? color : props.color} solid 0rem`,
+      // minHeight: '0rem',
       // maxHeight: '0rem'
     },
   }
@@ -61,9 +67,10 @@ const Block: FC<BlockI> = memo((props) => {
           variants={blockVariants}
           transition={{ duration: 0.4 }}
           className={style.block}
-          layout={'preserve-aspect'}
-          layoutId={props.id}
+          // layout={'preserve-aspect'}
+          // layoutId={props.id}
         >
+          {/*<div>{Math.random()}</div>*/}
           <div className={style.blockInnerWrapper}>
             {!props.isSelected ? (
               <div className={style.blockTitle}>{props.title}</div>
@@ -89,11 +96,11 @@ const Block: FC<BlockI> = memo((props) => {
                 <label className={style.labelCheckbox}>
                   <input
                     className={`${style.checkbox} ${style.isUrgentCheckbox}`}
-                    onChange={(e) => handleIsRequired(e.target.checked)}
-                    checked={isRequired}
+                    onChange={(e) => handleIsUrgent(e.target.checked)}
+                    checked={isUrgent}
                     type={'checkbox'}
                     data-content={'Важно'}
-                    value={'isUrgentCheckbox'}
+                    name={'isUrgentCheckbox'}
                   />
                 </label>
                 <label className={style.labelCheckbox}>
@@ -103,9 +110,29 @@ const Block: FC<BlockI> = memo((props) => {
                     checked={isRequired}
                     type={'checkbox'}
                     data-content={'Срочно'}
-                    value={'isRequiredCheckbox'}
+                    name={'isRequiredCheckbox'}
                   />
                 </label>
+              </div>
+            )}
+            {props.isSelected && (
+              <div className={style.blockColorsSelect}>
+                <div className={style.labelsRadios}>
+                  {randomColors.map((value, index) => {
+                    return (
+                      <label key={index} className={style.labelRadio}>
+                        <input
+                          className={style.inputRadio}
+                          defaultChecked={value === props.color}
+                          type='radio'
+                          style={{ background: value }}
+                          checked={color === value}
+                          onChange={() => setColor(value)}
+                        />
+                      </label>
+                    )
+                  })}
+                </div>
               </div>
             )}
             {!props.isSelected ? (
@@ -115,6 +142,7 @@ const Block: FC<BlockI> = memo((props) => {
                     ? { maxHeight: 'none', paddingBottom: '1.5rem' }
                     : { maxHeight: '10rem', paddingBottom: '0rem' }
                 }
+                // animate={}
                 className={style.blockBody}
               >
                 {props.text}
@@ -125,10 +153,25 @@ const Block: FC<BlockI> = memo((props) => {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   className={style.textarea}
+                  maxLength={1000}
                 ></textarea>
               </label>
             )}
-            <div className={style.blockTime}>до {props.dateToComplete}</div>
+            {props.isSelected ? (
+              <div className={`${style.blockTime} ${style.blockTimeChanger}`}>
+                выполнить до
+                <label className={style.label}>
+                  <input
+                    className={style.blockTimeInput}
+                    value={dateToComplete}
+                    onChange={(e) => setDateToComplete(e.target.value)}
+                    type='text'
+                  />
+                </label>
+              </div>
+            ) : (
+              <div className={style.blockTime}>до {props.dateToComplete}</div>
+            )}
             <div className={style.controller}>
               {!props.isSelected && (
                 <>
@@ -140,17 +183,50 @@ const Block: FC<BlockI> = memo((props) => {
                   <IconButton onClickCallback={() => props.setBlockIdEdit(props.id)}>
                     <Image className={style.icon} src={editIcon} alt={'edit'} />
                   </IconButton>
-                  <IconButton onClickCallback={() => {}}>
-                    <Image className={style.icon} src={arrowIcon} alt={'arrow left'} />
-                  </IconButton>
-                  <IconButton onClickCallback={() => {}}>
-                    <div
-                      style={{ transform: 'rotateY(180deg)' }}
-                      className={style.innerWrapperButton}
+
+                  {props.corner !== 'left' && (
+                    <IconButton
+                      onClickCallback={() => {
+                        swapStatus(
+                          props.setBlocks,
+                          props.blocks,
+                          props.columns,
+                          'left',
+                          props.id,
+                          props.status
+                        )
+                        setTimeout(() => {
+                          props.forceUpdate && props.forceUpdate()
+                        }, 200)
+                      }}
                     >
-                      <Image className={style.icon} src={arrowIcon} alt={'arrow right'} />
-                    </div>
-                  </IconButton>
+                      <Image className={style.icon} src={arrowIcon} alt={'arrow left'} />
+                    </IconButton>
+                  )}
+                  {props.corner !== 'right' && (
+                    <IconButton
+                      onClickCallback={() => {
+                        swapStatus(
+                          props.setBlocks,
+                          props.blocks,
+                          props.columns,
+                          'right',
+                          props.id,
+                          props.status
+                        )
+                        setTimeout(() => {
+                          props.forceUpdate && props.forceUpdate()
+                        }, 200)
+                      }}
+                    >
+                      <div
+                        style={{ transform: 'rotateY(180deg)' }}
+                        className={style.innerWrapperButton}
+                      >
+                        <Image className={style.icon} src={arrowIcon} alt={'arrow right'} />
+                      </div>
+                    </IconButton>
+                  )}
                 </>
               )}
             </div>
@@ -158,13 +234,32 @@ const Block: FC<BlockI> = memo((props) => {
               <>
                 <div className={style.blockBottomButtons}>
                   <button
-                    onClick={() => {}}
+                    onClick={() => props.setBlockIdEdit('')}
                     className={`${style.button} ${style.blockBottomButton}`}
                   >
                     Отмена
                   </button>
                   <button
-                    onClick={() => {}}
+                    onClick={() => {
+                      let resultData = props.blocks
+                      let currentBlock = resultData.find((block) => block.id === props.id)
+                      if (currentBlock) {
+                        currentBlock = {
+                          id: props.id,
+                          status: props.status,
+                          title,
+                          isUrgent,
+                          isRequired,
+                          text,
+                          dateToComplete,
+                          color,
+                        }
+                        resultData = resultData.filter((block) => block.id !== props.id)
+                        resultData.push(currentBlock)
+                        props.setBlocks(resultData)
+                        props.setBlockIdEdit('')
+                      }
+                    }}
                     className={`${style.button} ${style.blockBottomButton}`}
                   >
                     Сохранить
@@ -177,7 +272,7 @@ const Block: FC<BlockI> = memo((props) => {
       )}
     </AnimatePresence>
   )
-})
+}
 
 Block.displayName = 'Block'
 export default Block

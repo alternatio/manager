@@ -1,4 +1,4 @@
-import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
+import { Dispatch, DispatchWithoutAction, FC, memo, SetStateAction, useState } from 'react'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import { motion, Variants } from 'framer-motion'
 import { KebabButton } from '../../Kebab/Kebab'
@@ -14,10 +14,13 @@ interface ColumnI extends sessionDataColumnI {
   id: string
   title: string
   index: number
+  columns: sessionDataColumnI[]
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
+  corner: 'left' | 'right' | null
+  forceUpdate?: Function
 }
 
 const Column: FC<ColumnI> = memo((props) => {
@@ -42,7 +45,7 @@ const Column: FC<ColumnI> = memo((props) => {
       transition={{ duration: 0.3 }}
       variants={columnVariants}
       className={style.column}
-      style={{ maxHeight: '100%', overflowY: 'auto' }}
+      style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}
     >
       <motion.div className={style.columnHeader} style={{ paddingBottom: '.75rem' }}>
         <div className={style.columnTitle}>{`${props.index + 1}. ${props.title}`}</div>
@@ -61,7 +64,10 @@ const Column: FC<ColumnI> = memo((props) => {
           </Popup>
         </div>
       </motion.div>
-      <motion.main className={style.columnMain} layout={'size'}>
+      <motion.main
+        className={style.columnMain}
+        // layout={'size'}
+      >
         {props.blocks
           .filter((obj) => obj.status === props.id)
           .map((block, index) => {
@@ -80,6 +86,9 @@ const Column: FC<ColumnI> = memo((props) => {
                 setBlocks={props.setBlocks}
                 blockIdEdit={props.blockIdEdit}
                 setBlockIdEdit={props.setBlockIdEdit}
+                columns={props.columns}
+                forceUpdate={props.forceUpdate}
+                corner={props.corner}
               />
             )
           })}

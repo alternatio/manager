@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, DispatchWithoutAction, FC, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
-import { sessionDataBlockI } from '../../../data/sessionsData'
+import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import Block from '../Block/Block'
 
 interface EditFieldI {
+  columns: sessionDataColumnI[]
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
   blockId: string
@@ -21,11 +22,11 @@ const EditField: FC<EditFieldI> = (props) => {
           exit={{ opacity: 0 }}
           className={style.editField}
         >
-          <div
-            onClick={() => props.setBlockIdEdit('')}
-            className={style.backgroundEditBlock}>
+          {/*<div*/}
+          {/*  onClick={() => props.setBlockIdEdit('')}*/}
+          {/*  className={style.backgroundEditBlock}>*/}
 
-          </div>
+          {/*</div>*/}
           <motion.div className={style.editBlock}>
             {props.blocks
               .filter((block) => block.id === props.blockId)
@@ -46,6 +47,7 @@ const EditField: FC<EditFieldI> = (props) => {
                     setBlockIdEdit={props.setBlockIdEdit}
                     blockIdEdit={props.blockId}
                     isSelected={true}
+                    columns={props.columns}
                   />
                 )
               })}

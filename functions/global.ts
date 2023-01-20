@@ -40,7 +40,7 @@ export const getRandomId = (
 /*
   colors for function getRandomColor
 */
-const colors: string[] = [
+export const randomColors: string[] = [
   '#ffee00',
   '#ff0033',
   '#0011ff',
@@ -64,7 +64,7 @@ const preGenerateColors: string[] = [
   isFullRandom - ignoring an array of colors and generating full random colors
 */
 export const getRandomColor = (
-  arrayOfColors: string[] = colors,
+  arrayOfColors: string[] = randomColors,
   isFullRandom: boolean = false,
   generateColorsArray: string[] = preGenerateColors
 ): string => {
@@ -124,3 +124,28 @@ export const getCurrentDate = () => {
 
   return arrayDates.join('')
 }
+
+// const randomTableTitles = [
+//   'Отдел продаж',
+//   'Промышленный отдел',
+//   'Убийственный отдел',
+//   'Отдел переработки отходов',
+//   'PR отдел',
+//   'HR отдел'
+// ]
+//
+// const randomColumnTitles = [
+//   'Техподдержка',
+//   'Работа с клиентами',
+//   'Разработка',
+//   ''
+// ]
+//
+// const randomBlockTitles = [
+//   'Сделать поддержку новых устройств',
+//   ''
+// ]
+//
+// export const getRandomTitle = () => {
+//
+// }

@@ -70,6 +70,57 @@ export const renameItem = (
       item.title = title
     }
   })
-  console.log(resultData)
+  // console.log(resultData)
   setData(resultData)
+}
+
+// swap status of block
+export const swapStatus = (
+  setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
+  data: sessionDataBlockI[],
+  columns: sessionDataColumnI[],
+  direction: 'left' | 'right',
+  id: string,
+  status: string
+) => {
+  let indexOfSelectedColumn
+  let idOfSelectedColumn: string = ''
+  let currentBlock: sessionDataBlockI | undefined
+  let resultData: sessionDataBlockI[] = JSON.parse(JSON.stringify(data))
+
+  columns.map((column, index) => {
+    if (column.id === status) {
+      indexOfSelectedColumn = index
+    }
+  })
+
+  const getCurrentBlock = () => {
+    currentBlock = resultData.find(block => block.id === id)
+    if (currentBlock) {
+      console.log(currentBlock.status, idOfSelectedColumn)
+      currentBlock.status = idOfSelectedColumn
+    }
+  }
+
+  const swapBlock = () => {
+    console.log(resultData)
+    setData(resultData)
+  }
+
+  console.log(indexOfSelectedColumn)
+
+  if (typeof indexOfSelectedColumn === 'number') {
+    if ((direction === 'left') && columns[indexOfSelectedColumn - 1]) {
+      idOfSelectedColumn = columns[indexOfSelectedColumn - 1].id
+      getCurrentBlock()
+      swapBlock()
+    }
+    if ((direction === 'right') && columns[indexOfSelectedColumn + 1]) {
+      idOfSelectedColumn = columns[indexOfSelectedColumn + 1].id
+      getCurrentBlock()
+      swapBlock()
+    }
+  } else {
+    console.log('indexOfSelectedColumn = 0')
+  }
 }

@@ -7,7 +7,7 @@ import {
 import { Dispatch, FC, memo, SetStateAction, useReducer, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Column from '../Column/Column'
-import { AnimatePresence, motion, Variants } from 'framer-motion'
+import { AnimatePresence, AnimateSharedLayout, motion, Variants } from 'framer-motion'
 import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../Buttons/ButtonAddColumn'
@@ -26,7 +26,7 @@ const Table: FC<TableI> = memo((props) => {
   const [tableIsOpen, handleTableOpen] = useState<boolean>(true)
   const [columns, setColumns] = useState<sessionDataColumnI[]>([])
   const [blocks, setBlocks] = useState<sessionDataBlockI[]>([])
-  const [, forceUpdateTable] = useReducer(x => x + 1, 0)
+  // const [, forceUpdateTable] = useReducer(() => {}, {name: 1})
   const [blockIdEdit, setBlockIdEdit] = useState<string>('')
   const [search, handleSearch] = useState<boolean>(false)
 
@@ -54,7 +54,13 @@ const Table: FC<TableI> = memo((props) => {
         popupIsOpen={popupIsOpen}
         tableIsOpen={tableIsOpen}
       />
-      <EditField blockId={blockIdEdit} blocks={blocks} setBlocks={setBlocks} setBlockIdEdit={setBlockIdEdit}/>
+      <EditField
+        blockId={blockIdEdit}
+        blocks={blocks}
+        setBlocks={setBlocks}
+        setBlockIdEdit={setBlockIdEdit}
+        columns={columns}
+      />
       <AnimatePresence>
         {tableIsOpen && (
           <motion.main
@@ -65,22 +71,29 @@ const Table: FC<TableI> = memo((props) => {
             variants={tableVariants}
             className={style.tableMain}
           >
-            <div
-              className={style.tableMainInner}>
-              {columns.map((column, index) => {
-                return (
-                  <Column
-                    key={index}
-                    id={column.id}
-                    title={column.title}
-                    blocks={blocks}
-                    setBlocks={setBlocks}
-                    index={index}
-                    blockIdEdit={blockIdEdit}
-                    setBlockIdEdit={setBlockIdEdit}
-                  />
-                )
-              })}
+            <div className={style.tableMainInner}>
+              <AnimateSharedLayout>
+                {columns.map((column, index) => {
+                  let corner: 'left' | 'right' | null = null
+                  index === 0 && (corner = 'left')
+                  index === columns.length - 1 && (corner = 'right')
+                  return (
+                    <Column
+                      key={index}
+                      id={column.id}
+                      title={column.title}
+                      blocks={blocks}
+                      setBlocks={setBlocks}
+                      index={index}
+                      blockIdEdit={blockIdEdit}
+                      setBlockIdEdit={setBlockIdEdit}
+                      columns={columns}
+                      corner={corner}
+                      // forceUpdate={forceUpdateTable}
+                    />
+                  )
+                })}
+              </AnimateSharedLayout>
               <ButtonAddColumn columns={columns} setColumns={setColumns} />
             </div>
           </motion.main>
