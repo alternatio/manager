@@ -64,14 +64,28 @@ export const renameItem = (
   id: string,
   title: string
 ) => {
-  const resultData: any[] = data
-  resultData.map((item) => {
+  // const resultData = data.map((item) => {
+  //       if (item.id === id) {
+  //         return {
+  //           ...item,
+  //           title: title,
+  //         }
+  //       } else {
+  //         return item
+  //       }
+  //     })
+
+  const resultData = data
+
+  resultData.forEach(item => {
     if (item.id === id) {
       item.title = title
     }
   })
-  // console.log(resultData)
-  setData(resultData)
+
+  setData(
+    resultData
+  )
 }
 
 // swap status of block
@@ -95,7 +109,7 @@ export const swapStatus = (
   })
 
   const getCurrentBlock = () => {
-    currentBlock = resultData.find(block => block.id === id)
+    currentBlock = resultData.find((block) => block.id === id)
     if (currentBlock) {
       console.log(currentBlock.status, idOfSelectedColumn)
       currentBlock.status = idOfSelectedColumn
@@ -110,12 +124,12 @@ export const swapStatus = (
   console.log(indexOfSelectedColumn)
 
   if (typeof indexOfSelectedColumn === 'number') {
-    if ((direction === 'left') && columns[indexOfSelectedColumn - 1]) {
+    if (direction === 'left' && columns[indexOfSelectedColumn - 1]) {
       idOfSelectedColumn = columns[indexOfSelectedColumn - 1].id
       getCurrentBlock()
       swapBlock()
     }
-    if ((direction === 'right') && columns[indexOfSelectedColumn + 1]) {
+    if (direction === 'right' && columns[indexOfSelectedColumn + 1]) {
       idOfSelectedColumn = columns[indexOfSelectedColumn + 1].id
       getCurrentBlock()
       swapBlock()

@@ -1,4 +1,11 @@
-import { Dispatch, DispatchWithoutAction, FC, memo, SetStateAction, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  memo,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import { motion, Variants } from 'framer-motion'
 import { KebabButton } from '../../Kebab/Kebab'
@@ -9,12 +16,14 @@ import ButtonAddBlock from '../Buttons/ButtonAddBlock'
 import Popup from '../Popup/smallPopup/Popup'
 import PopupButton from '../Popup/smallPopup/PopupButton'
 import { renameIcon, trashIcon } from '../../../functions/importIcons'
+import { renameItem } from '../../../functions/EditItems'
 
 interface ColumnI extends sessionDataColumnI {
   id: string
   title: string
   index: number
   columns: sessionDataColumnI[]
+  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
   blockIdEdit: string
@@ -26,6 +35,7 @@ interface ColumnI extends sessionDataColumnI {
 const Column: FC<ColumnI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
   const [rename, handleRename] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>('')
 
   const columnVariants: Variants = {
     open: {
@@ -38,6 +48,17 @@ const Column: FC<ColumnI> = memo((props) => {
     },
   }
 
+  const keyEvent = (event: KeyboardEvent) => {
+    if ((event.key === 'Enter') && rename) {
+      renameItem(props.setColumns, props.columns, props.id, title)
+      handleRename(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keypress', (event) => keyEvent(event))
+  }, [rename, title])
+
   return (
     <motion.div
       initial={'close'}
@@ -48,14 +69,28 @@ const Column: FC<ColumnI> = memo((props) => {
       style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}
     >
       <motion.div className={style.columnHeader} style={{ paddingBottom: '.75rem' }}>
-        <div className={style.columnTitle}>{`${props.index + 1}. ${props.title}`}</div>
+        <div className={style.columnTitle}>
+          {props.index + 1}.{' '}
+          {rename ? (
+            <label className={style.label}>
+              <input
+                className={style.input}
+                value={title || props.title}
+                onChange={(e) => setTitle(e.target.value)}
+                type='text'
+              />
+            </label>
+          ) : (
+            props.title
+          )}
+        </div>
         <div className={style.columnRightPart}>
           <div className={style.columnBlockCounter}>
             {props.blocks.filter((obj) => obj.status === props.id).length}
           </div>
           <KebabButton handlePopup={handlePopup} />
           <Popup position={'left'} handlePopup={handlePopup} popupVisible={popupIsOpen}>
-            <PopupButton onClickCallback={() => {}} icon={renameIcon}>
+            <PopupButton onClickCallback={() => handleRename(true)} icon={renameIcon}>
               Переименовать колонку
             </PopupButton>
             <PopupButton onClickCallback={() => {}} icon={trashIcon}>
@@ -64,10 +99,7 @@ const Column: FC<ColumnI> = memo((props) => {
           </Popup>
         </div>
       </motion.div>
-      <motion.main
-        className={style.columnMain}
-        // layout={'size'}
-      >
+      <motion.main className={style.columnMain} layout={'size'}>
         {props.blocks
           .filter((obj) => obj.status === props.id)
           .map((block, index) => {

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Dispatch, DispatchWithoutAction, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import Block from '../Block/Block'

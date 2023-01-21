@@ -1,5 +1,5 @@
 import style from '/styles/pages/Organization.module.scss'
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
@@ -27,7 +27,7 @@ interface BlockI extends sessionDataBlockI {
   corner?: 'left' | 'right' | null
 }
 
-const Block: FC<BlockI> = (props) => {
+const Block: FC<BlockI> = memo((props) => {
   const [title, setTitle] = useState<string>(props.title)
   const [text, setText] = useState<string>(props.text)
   const [color, setColor] = useState<string>(props.color)
@@ -44,7 +44,7 @@ const Block: FC<BlockI> = (props) => {
     },
     close: {
       opacity: 0,
-      borderTop: `${props.isSelected ? color : props.color} solid 0rem`,
+      borderTop: `${props.isSelected ? color : props.color} solid .5rem`,
       // minHeight: '0rem',
       // maxHeight: '0rem'
     },
@@ -68,7 +68,7 @@ const Block: FC<BlockI> = (props) => {
           transition={{ duration: 0.4 }}
           className={style.block}
           // layout={'preserve-aspect'}
-          // layoutId={props.id}
+          layoutId={props.id}
         >
           {/*<div>{Math.random()}</div>*/}
           <div className={style.blockInnerWrapper}>
@@ -272,7 +272,7 @@ const Block: FC<BlockI> = (props) => {
       )}
     </AnimatePresence>
   )
-}
+})
 
 Block.displayName = 'Block'
 export default Block

@@ -4,7 +4,7 @@ import {
   sessionDataTableI,
   sessionsDataI,
 } from '../../../data/sessionsData'
-import { Dispatch, FC, memo, SetStateAction, useReducer, useState } from 'react'
+import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Column from '../Column/Column'
 import { AnimatePresence, AnimateSharedLayout, motion, Variants } from 'framer-motion'
@@ -54,25 +54,25 @@ const Table: FC<TableI> = memo((props) => {
         popupIsOpen={popupIsOpen}
         tableIsOpen={tableIsOpen}
       />
-      <EditField
-        blockId={blockIdEdit}
-        blocks={blocks}
-        setBlocks={setBlocks}
-        setBlockIdEdit={setBlockIdEdit}
-        columns={columns}
-      />
-      <AnimatePresence>
-        {tableIsOpen && (
-          <motion.main
-            initial={'hidden'}
-            animate={'visible'}
-            exit={'hidden'}
-            transition={{ type: cubicBezier(0.35, 0.35, 0.5, 1), duration: 0.75 }}
-            variants={tableVariants}
-            className={style.tableMain}
-          >
-            <div className={style.tableMainInner}>
-              <AnimateSharedLayout>
+      <AnimateSharedLayout>
+        <EditField
+          blockId={blockIdEdit}
+          blocks={blocks}
+          setBlocks={setBlocks}
+          setBlockIdEdit={setBlockIdEdit}
+          columns={columns}
+        />
+        <AnimatePresence>
+          {tableIsOpen && (
+            <motion.main
+              initial={'hidden'}
+              animate={'visible'}
+              exit={'hidden'}
+              transition={{ type: cubicBezier(0.35, 0.35, 0.5, 1), duration: 0.75 }}
+              variants={tableVariants}
+              className={style.tableMain}
+            >
+              <div className={style.tableMainInner}>
                 {columns.map((column, index) => {
                   let corner: 'left' | 'right' | null = null
                   index === 0 && (corner = 'left')
@@ -90,15 +90,16 @@ const Table: FC<TableI> = memo((props) => {
                       columns={columns}
                       corner={corner}
                       // forceUpdate={forceUpdateTable}
+                      setColumns={setColumns}
                     />
                   )
                 })}
-              </AnimateSharedLayout>
-              <ButtonAddColumn columns={columns} setColumns={setColumns} />
-            </div>
-          </motion.main>
-        )}
-      </AnimatePresence>
+                <ButtonAddColumn columns={columns} setColumns={setColumns} />
+              </div>
+            </motion.main>
+          )}
+        </AnimatePresence>
+      </AnimateSharedLayout>
     </motion.div>
   )
 })
