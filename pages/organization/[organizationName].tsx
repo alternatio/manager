@@ -27,10 +27,17 @@ const Organization: NextPage = memo(() => {
         <main className={style.main}>
           {data.map((table, index) => {
             return (
-              <Table key={index} title={table.title} index={index} data={data} setData={setData} id={table.id}/>
+              <Table
+                key={index}
+                title={table.title}
+                index={index}
+                data={data}
+                setData={setData}
+                id={table.id}
+              />
             )
           })}
-        <ButtonAddTable data={data} setData={setData} />
+          <ButtonAddTable data={data} setData={setData} />
         </main>
       </Wrapper>
     </>

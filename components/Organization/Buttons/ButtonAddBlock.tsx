@@ -10,7 +10,7 @@ import { crossIcon } from '../../../functions/importIcons'
 interface ButtonAddBlockI {
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
-  idOfColumn: string
+  positionOfColumn: number
 }
 
 const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
@@ -18,11 +18,12 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
     <>
       {props.blocks.length <= 300 && (
         <motion.div
+          style={{ order: 10 }}
           onClick={() => {
             addBlock(
               props.setBlocks,
               props.blocks,
-              props.idOfColumn,
+              props.positionOfColumn,
               getRandomColor(),
               'Новый блок',
               false,

@@ -3,7 +3,7 @@ export interface sessionDataBlockI {
   id: string
   title: string
   // status is current column id
-  status: string
+  status: number
   color: string
   isRequired: boolean
   isUrgent: boolean

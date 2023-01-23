@@ -11,7 +11,7 @@ import { randomColors } from '../../../functions/global'
 interface BlockI extends sessionDataBlockI {
   id: string
   title: string
-  status: string
+  status: number
   color: string
   isRequired: boolean
   isUrgent: boolean
@@ -25,6 +25,7 @@ interface BlockI extends sessionDataBlockI {
   isSelected?: boolean
   forceUpdate?: Function
   corner?: 'left' | 'right' | null
+  index: number
 }
 
 const Block: FC<BlockI> = memo((props) => {
@@ -38,13 +39,17 @@ const Block: FC<BlockI> = memo((props) => {
   const blockVariants: Variants = {
     open: {
       opacity: 1,
-      borderTop: `${props.isSelected ? color : props.color} solid .5rem`,
+      borderTop: `${props.isSelected ? color : props.color} solid ${
+        props.isSelected ? '.75rem' : '.5rem'
+      }`,
       // minHeight: '13rem',
       // maxHeight: '13rem'
     },
     close: {
       opacity: 0,
-      borderTop: `${props.isSelected ? color : props.color} solid .5rem`,
+      borderTop: `${props.isSelected ? color : props.color} solid ${
+        props.isSelected ? '.75rem' : '.5rem'
+      }`,
       // minHeight: '0rem',
       // maxHeight: '0rem'
     },
@@ -60,15 +65,15 @@ const Block: FC<BlockI> = memo((props) => {
           style={
             props.isRequired || props.isUrgent
               ? props.isRequired && props.isUrgent
-                ? { order: -11 }
-                : { order: -10 }
-              : undefined
+                ? { order: -1100 }
+                : { order: -1099 }
+              : { order: props.index }
           }
           variants={blockVariants}
           transition={{ duration: 0.4 }}
           className={style.block}
-          // layout={'preserve-aspect'}
-          layoutId={props.id}
+          layout={'preserve-aspect'}
+          // layoutId={props.id}
         >
           {/*<div>{Math.random()}</div>*/}
           <div className={style.blockInnerWrapper}>
@@ -95,22 +100,22 @@ const Block: FC<BlockI> = memo((props) => {
               <div className={style.labelsCheckboxes}>
                 <label className={style.labelCheckbox}>
                   <input
-                    className={`${style.checkbox} ${style.isUrgentCheckbox}`}
-                    onChange={(e) => handleIsUrgent(e.target.checked)}
-                    checked={isUrgent}
-                    type={'checkbox'}
-                    data-content={'Важно'}
-                    name={'isUrgentCheckbox'}
-                  />
-                </label>
-                <label className={style.labelCheckbox}>
-                  <input
                     className={`${style.checkbox} ${style.isRequiredCheckbox}`}
                     onChange={(e) => handleIsRequired(e.target.checked)}
                     checked={isRequired}
                     type={'checkbox'}
-                    data-content={'Срочно'}
+                    data-content={'Важно'}
                     name={'isRequiredCheckbox'}
+                  />
+                </label>
+                <label className={style.labelCheckbox}>
+                  <input
+                    className={`${style.checkbox} ${style.isUrgentCheckbox}`}
+                    onChange={(e) => handleIsUrgent(e.target.checked)}
+                    checked={isUrgent}
+                    type={'checkbox'}
+                    data-content={'Срочно'}
+                    name={'isUrgentCheckbox'}
                   />
                 </label>
               </div>
@@ -190,14 +195,9 @@ const Block: FC<BlockI> = memo((props) => {
                         swapStatus(
                           props.setBlocks,
                           props.blocks,
-                          props.columns,
                           'left',
                           props.id,
-                          props.status
                         )
-                        setTimeout(() => {
-                          props.forceUpdate && props.forceUpdate()
-                        }, 200)
                       }}
                     >
                       <Image className={style.icon} src={arrowIcon} alt={'arrow left'} />
@@ -209,14 +209,9 @@ const Block: FC<BlockI> = memo((props) => {
                         swapStatus(
                           props.setBlocks,
                           props.blocks,
-                          props.columns,
                           'right',
                           props.id,
-                          props.status
                         )
-                        setTimeout(() => {
-                          props.forceUpdate && props.forceUpdate()
-                        }, 200)
                       }}
                     >
                       <div

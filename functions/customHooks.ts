@@ -10,7 +10,6 @@ export const useOnClickOutside = (
       if (!ref.current || (containsNotClose && ref.current.contains(event.target))) {
         return
       }
-      console.log(ref)
       handler(event)
     }
     window.addEventListener('mousedown', listener)

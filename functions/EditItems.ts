@@ -7,11 +7,21 @@ import {
   sessionsDataI,
 } from '../data/sessionsData'
 
-// add item (table or column)
-export const addItemToData = (
-  setData: Dispatch<SetStateAction<sessionsDataI[] | sessionDataTableI[] | sessionDataColumnI[]>>,
+export const addItem = (
+  setData: Dispatch<SetStateAction<sessionsDataI[] | sessionDataTableI[]>>,
   data: any[],
-  title: string = 'Common'
+  title: string = 'Table'
+) => {
+  const id = getRandomId(4)
+  if (data.filter((obj) => obj.id === id).length === 0) {
+    setData((prevState) => [...prevState, { id, title }])
+  }
+}
+
+export const addColumn = (
+  setData: Dispatch<SetStateAction<sessionDataColumnI[]>>,
+  data: sessionDataColumnI[],
+  title: string = 'Column'
 ) => {
   const id = getRandomId(4)
   if (data.filter((obj) => obj.id === id).length === 0) {
@@ -23,7 +33,7 @@ export const addItemToData = (
 export const addBlock = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
-  status: string,
+  status: number,
   color: string = getRandomColor(),
   title: string = 'Block',
   isRequired: boolean = false,
@@ -64,77 +74,20 @@ export const renameItem = (
   id: string,
   title: string
 ) => {
-  // const resultData = data.map((item) => {
-  //       if (item.id === id) {
-  //         return {
-  //           ...item,
-  //           title: title,
-  //         }
-  //       } else {
-  //         return item
-  //       }
-  //     })
-
-  const resultData = data
-
-  resultData.forEach(item => {
-    if (item.id === id) {
-      item.title = title
-    }
-  })
-
-  setData(
-    resultData
-  )
+  const resultData = [...data]
+  resultData.find((item) => item.id === id).title = title
+  setData(resultData)
 }
 
 // swap status of block
 export const swapStatus = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
-  columns: sessionDataColumnI[],
   direction: 'left' | 'right',
-  id: string,
-  status: string
+  id: string
 ) => {
-  let indexOfSelectedColumn
-  let idOfSelectedColumn: string = ''
-  let currentBlock: sessionDataBlockI | undefined
-  let resultData: sessionDataBlockI[] = JSON.parse(JSON.stringify(data))
-
-  columns.map((column, index) => {
-    if (column.id === status) {
-      indexOfSelectedColumn = index
-    }
-  })
-
-  const getCurrentBlock = () => {
-    currentBlock = resultData.find((block) => block.id === id)
-    if (currentBlock) {
-      console.log(currentBlock.status, idOfSelectedColumn)
-      currentBlock.status = idOfSelectedColumn
-    }
-  }
-
-  const swapBlock = () => {
-    console.log(resultData)
-    setData(resultData)
-  }
-
-  console.log(indexOfSelectedColumn)
-
-  if (typeof indexOfSelectedColumn === 'number') {
-    if (direction === 'left' && columns[indexOfSelectedColumn - 1]) {
-      idOfSelectedColumn = columns[indexOfSelectedColumn - 1].id
-      getCurrentBlock()
-      swapBlock()
-    }
-    if (direction === 'right' && columns[indexOfSelectedColumn + 1]) {
-      idOfSelectedColumn = columns[indexOfSelectedColumn + 1].id
-      getCurrentBlock()
-      swapBlock()
-    }
-  } else {
-    console.log('indexOfSelectedColumn = 0')
-  }
+  const resultData = [...data]
+  // @ts-ignore
+  resultData.find((block) => block.id === id).status += direction === 'left' ? -1 : 1
+  setData(resultData)
 }

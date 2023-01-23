@@ -1,4 +1,4 @@
-import { addItemToData } from '../../../functions/EditItems'
+import { addItem } from '../../../functions/EditItems'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
 import { Dispatch, FC, memo, SetStateAction } from 'react'
@@ -16,7 +16,7 @@ const ButtonAddTable: FC<ButtonAddTable> = memo((props) => {
       {props.data.length <= 20 && (
         <div
           onClick={() => {
-            addItemToData(props.setData, props.data)
+            addItem(props.setData, props.data)
           }}
           className={style.addTable}
         >

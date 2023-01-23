@@ -1,7 +1,7 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataColumnI } from '../../../data/sessionsData'
-import { addItemToData } from '../../../functions/EditItems'
+import { addColumn, addItem } from '../../../functions/EditItems'
 import Image from 'next/image'
 import { crossIcon } from '../../../functions/importIcons'
 
@@ -16,9 +16,10 @@ const ButtonAddColumn: FC<ButtonAddColumnI> = memo((props) => {
       {props.columns.length <= 19 && (
         <div
           onClick={() => {
-            addItemToData(props.setColumns, props.columns)
+            addColumn(props.setColumns, props.columns)
           }}
           className={style.addColumn}
+          style={{ order: 50 }}
         >
           <Image className={style.icon} src={crossIcon} alt={'cross'} />
           <span>Добавить Колонку</span>
