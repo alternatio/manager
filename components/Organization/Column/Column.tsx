@@ -9,7 +9,7 @@ import ButtonAddBlock from '../Buttons/ButtonAddBlock'
 import Popup from '../Popup/smallPopup/Popup'
 import PopupButton from '../Popup/smallPopup/PopupButton'
 import { renameIcon, trashIcon } from '../../../functions/importIcons'
-import { renameItem } from '../../../functions/EditItems'
+import { deleteColumn, renameItem } from '../../../functions/EditItems'
 import { useOnClickOutside } from '../../../functions/customHooks'
 
 interface ColumnI extends sessionDataColumnI {
@@ -44,16 +44,16 @@ const Column: FC<ColumnI> = memo((props) => {
     },
   }
 
-  const keyEvent = (event: KeyboardEvent) => {
-    if (event.key === 'Enter' && rename) {
-      renameItem(props.setColumns, props.columns, props.id, title)
-      handleRename(false)
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('keypress', (event) => keyEvent(event))
-  }, [rename, title])
+  // const keyEvent = (event: KeyboardEvent) => {
+  //   if (event.key === 'Enter' && rename) {
+  //     renameItem(props.setColumns, props.columns, props.id, title)
+  //     handleRename(false)
+  //   }
+  // }
+  //
+  // useEffect(() => {
+  //   document.addEventListener('keypress', (event) => keyEvent(event))
+  // }, [rename, title])
 
   useOnClickOutside(ref, () => {
     renameItem(props.setColumns, props.columns, props.id, title)
@@ -88,14 +88,14 @@ const Column: FC<ColumnI> = memo((props) => {
         </div>
         <div className={style.columnRightPart}>
           <div className={style.columnBlockCounter}>
-            {props.blocks.filter((obj) => obj.status === props.position).length}
+            {props.blocks.filter((obj) => obj.status === props.id).length}
           </div>
           <KebabButton handlePopup={handlePopup} />
           <Popup position={'left'} handlePopup={handlePopup} popupVisible={popupIsOpen}>
             <PopupButton onClickCallback={() => handleRename(true)} icon={renameIcon}>
               Переименовать колонку
             </PopupButton>
-            <PopupButton onClickCallback={() => {}} icon={trashIcon}>
+            <PopupButton onClickCallback={() => deleteColumn(props.setColumns, props.columns, props.id, props.setBlocks, props.blocks)} icon={trashIcon}>
               Удалить колонку
             </PopupButton>
           </Popup>
@@ -103,14 +103,14 @@ const Column: FC<ColumnI> = memo((props) => {
       </motion.div>
       <motion.main className={style.columnMain} layout={'size'}>
         {props.blocks
-          .filter((obj) => obj.status === props.position)
+          .filter((obj) => obj.status === props.id)
           .map((block, index) => {
             return (
               <Block
                 key={index}
                 id={block.id}
                 title={block.title}
-                status={block.status}
+                status={block.id}
                 color={block.color}
                 isRequired={block.isRequired}
                 isUrgent={block.isUrgent}
@@ -127,7 +127,7 @@ const Column: FC<ColumnI> = memo((props) => {
               />
             )
           })}
-        <ButtonAddBlock blocks={props.blocks} setBlocks={props.setBlocks} positionOfColumn={props.position} />
+        <ButtonAddBlock blocks={props.blocks} setBlocks={props.setBlocks} idOfColumn={props.id} />
       </motion.main>
     </motion.div>
   )

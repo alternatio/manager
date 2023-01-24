@@ -29,10 +29,6 @@ const Table: FC<TableI> = memo((props) => {
   const [columns, setColumns] = useState<sessionDataColumnI[]>([])
   const [blocks, setBlocks] = useState<sessionDataBlockI[]>([])
   const [blockIdEdit, setBlockIdEdit] = useState<string>('')
-  const [title, setTitle] = useState<string>('')
-  const [rename, handleRename] = useState<boolean>(false)
-  const [search, handleSearch] = useState<boolean>(false)
-  const ref = useRef(null)
 
   const tableVariants: Variants = {
     visible: {
@@ -46,24 +42,6 @@ const Table: FC<TableI> = memo((props) => {
       transform: 'scaleX(.95)',
     },
   }
-
-  // const keyEvent = (event: KeyboardEvent, setData: Dispatch<SetStateAction<any[]>>, data: any[], id: string, title: string) => {
-  //
-  // }
-  //
-  // useEffect(() => {
-  //   document.addEventListener('keypress', (event) => {
-  //     if (event.key === 'Enter' && rename) {
-  //       renameItem(setData, data, id, title)
-  //       handleRename(false)
-  //     }
-  //   })
-  // }, [rename, title])
-
-  useOnClickOutside(ref, () => {
-    renameItem(props.setData, props.data, props.id, title)
-    handleRename(false)
-  })
 
   return (
     <motion.div initial={{ height: '0' }} animate={{ height: 'auto' }} className={style.table}>
@@ -94,7 +72,7 @@ const Table: FC<TableI> = memo((props) => {
               variants={tableVariants}
               className={style.tableMain}
             >
-              <div className={style.tableMainInner}>
+              <motion.div className={style.tableMainInner} layout={'size'}>
                 {columns.map((column, index) => {
                   let corner: 'left' | 'right' | null = null
                   index === 0 && (corner = 'left')
@@ -118,7 +96,7 @@ const Table: FC<TableI> = memo((props) => {
                   )
                 })}
                 <ButtonAddColumn columns={columns} setColumns={setColumns} />
-              </div>
+              </motion.div>
             </motion.main>
           )}
         </AnimatePresence>

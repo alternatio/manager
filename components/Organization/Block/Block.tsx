@@ -3,7 +3,7 @@ import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
-import { deleteItem, swapStatus } from '../../../functions/EditItems'
+import { deleteBlock, swapStatus } from '../../../functions/EditItems'
 import IconButton from '../global/IconButton'
 import { arrowIcon, editIcon, trashIcon } from '../../../functions/importIcons'
 import { randomColors } from '../../../functions/global'
@@ -11,7 +11,7 @@ import { randomColors } from '../../../functions/global'
 interface BlockI extends sessionDataBlockI {
   id: string
   title: string
-  status: number
+  status: string
   color: string
   isRequired: boolean
   isUrgent: boolean
@@ -72,7 +72,7 @@ const Block: FC<BlockI> = memo((props) => {
           variants={blockVariants}
           transition={{ duration: 0.4 }}
           className={style.block}
-          layout={'preserve-aspect'}
+          // layout={'preserve-aspect'}
           // layoutId={props.id}
         >
           {/*<div>{Math.random()}</div>*/}
@@ -181,7 +181,7 @@ const Block: FC<BlockI> = memo((props) => {
               {!props.isSelected && (
                 <>
                   <IconButton
-                    onClickCallback={() => deleteItem(props.setBlocks, props.blocks, props.id)}
+                    onClickCallback={() => deleteBlock(props.setBlocks, props.blocks, props.id)}
                   >
                     <Image className={style.icon} src={trashIcon} alt={'trash'} />
                   </IconButton>

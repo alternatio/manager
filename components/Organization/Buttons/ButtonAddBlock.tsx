@@ -10,7 +10,7 @@ import { crossIcon } from '../../../functions/importIcons'
 interface ButtonAddBlockI {
   blocks: sessionDataBlockI[]
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
-  positionOfColumn: number
+  idOfColumn: string
 }
 
 const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
@@ -23,7 +23,7 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
             addBlock(
               props.setBlocks,
               props.blocks,
-              props.positionOfColumn,
+              props.idOfColumn,
               getRandomColor(),
               'Новый блок',
               false,

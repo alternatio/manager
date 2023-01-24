@@ -33,7 +33,7 @@ export const addColumn = (
 export const addBlock = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
-  status: number,
+  status: string,
   color: string = getRandomColor(),
   title: string = 'Block',
   isRequired: boolean = false,
@@ -53,18 +53,39 @@ export const addBlock = (
 }
 
 // delete item
-export const deleteItem = (
+export const deleteBlock = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
   id: string
 ) => {
-  const resultData: sessionDataBlockI[] = []
-  data
-    .filter((obj) => obj.id !== id)
-    .forEach((item) => {
-      resultData.push(item)
-    })
+  const resultData = data.filter((block) => block.id !== id)
   setData(resultData)
+}
+
+export const deleteColumn = (
+  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>,
+  columns: sessionDataColumnI[],
+  id: string,
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>,
+  blocks: sessionDataBlockI[]
+) => {
+  const resultColumns = columns.filter((column) => column.id !== id)
+  const resultBlocks = blocks.filter(block => block.status !== id)
+  setBlocks(resultBlocks)
+  setColumns(resultColumns)
+}
+
+export const deleteTable = (
+  setTables: Dispatch<SetStateAction<sessionDataTableI[]>>,
+  tables: sessionDataTableI[],
+  id: string,
+  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>,
+  columns: sessionDataColumnI[],
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>,
+  blocks: sessionDataBlockI[]
+) => {
+  const resultTables = tables.filter(table => table.id !== id)
+  setTables(resultTables)
 }
 
 // rename item
