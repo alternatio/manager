@@ -14,6 +14,7 @@ import ButtonAddColumn from '../Buttons/ButtonAddColumn'
 import EditField from '../EditField/EditField'
 import { useOnClickOutside } from '../../../functions/customHooks'
 import { renameItem } from '../../../functions/EditItems'
+import Popup from '../Popup/warningPopup/Popup'
 
 interface TableI extends sessionDataTableI {
   id: string
@@ -53,6 +54,7 @@ const Table: FC<TableI> = memo((props) => {
         handleTableOpen={handleTableOpen}
         popupIsOpen={popupIsOpen}
         tableIsOpen={tableIsOpen}
+        id={props.id}
       />
       <AnimateSharedLayout>
         <EditField
@@ -101,6 +103,7 @@ const Table: FC<TableI> = memo((props) => {
           )}
         </AnimatePresence>
       </AnimateSharedLayout>
+      <Popup />
     </motion.div>
   )
 })

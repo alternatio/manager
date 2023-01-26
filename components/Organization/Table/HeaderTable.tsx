@@ -9,9 +9,10 @@ import Popup from '../Popup/smallPopup/Popup'
 import PopupButton from '../Popup/smallPopup/PopupButton'
 import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../../functions/importIcons'
 import { useOnClickOutside } from '../../../functions/customHooks'
-import { renameItem } from '../../../functions/EditItems'
+import { deleteTable, renameItem } from '../../../functions/EditItems'
 
 interface HeaderTableI {
+  id: string
   index: number
   popupIsOpen: boolean
   tableIsOpen: boolean
@@ -59,7 +60,7 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
           <PopupButton icon={renameIcon} onClickCallback={() => handleRename(true)}>
             Переименовать таблицу
           </PopupButton>
-          <PopupButton icon={trashIcon} onClickCallback={() => {}}>
+          <PopupButton icon={trashIcon} onClickCallback={() => deleteTable(props.setData, props.data, props.id)}>
             Удалить таблицу
           </PopupButton>
         </Popup>

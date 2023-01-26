@@ -70,7 +70,7 @@ export const deleteColumn = (
   blocks: sessionDataBlockI[]
 ) => {
   const resultColumns = columns.filter((column) => column.id !== id)
-  const resultBlocks = blocks.filter(block => block.status !== id)
+  const resultBlocks = blocks.filter((block) => block.status !== id)
   setBlocks(resultBlocks)
   setColumns(resultColumns)
 }
@@ -78,13 +78,9 @@ export const deleteColumn = (
 export const deleteTable = (
   setTables: Dispatch<SetStateAction<sessionDataTableI[]>>,
   tables: sessionDataTableI[],
-  id: string,
-  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>,
-  columns: sessionDataColumnI[],
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>,
-  blocks: sessionDataBlockI[]
+  id: string
 ) => {
-  const resultTables = tables.filter(table => table.id !== id)
+  const resultTables = tables.filter((table) => table.id !== id)
   setTables(resultTables)
 }
 
@@ -105,10 +101,21 @@ export const swapStatus = (
   setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
   data: sessionDataBlockI[],
   direction: 'left' | 'right',
-  id: string
+  id: string,
+  columns: sessionDataColumnI[]
 ) => {
   const resultData = [...data]
-  // @ts-ignore
-  resultData.find((block) => block.id === id).status += direction === 'left' ? -1 : 1
-  setData(resultData)
+  const currentStatusOfBlock: string | undefined = resultData.find(
+    (block) => block.id === id
+  )?.status
+  let currentIndexOfColumn = columns.findIndex(column => column.id === currentStatusOfBlock)
+
+
+
+  console.log(currentIndexOfColumn)
+
+  // // @ts-ignore
+  // resultData.find((block) => block.id === id).status += direction === 'left' ? -1 : 1
+  // console.log(resultData)
+  // setData(resultData)
 }

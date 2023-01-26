@@ -197,6 +197,7 @@ const Block: FC<BlockI> = memo((props) => {
                           props.blocks,
                           'left',
                           props.id,
+                          props.columns
                         )
                       }}
                     >
@@ -211,6 +212,7 @@ const Block: FC<BlockI> = memo((props) => {
                           props.blocks,
                           'right',
                           props.id,
+                          props.columns
                         )
                       }}
                     >
