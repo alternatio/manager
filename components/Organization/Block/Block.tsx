@@ -24,7 +24,7 @@ interface BlockI extends sessionDataBlockI {
   setBlockIdEdit: Dispatch<SetStateAction<string>>
   isSelected?: boolean
   forceUpdate?: Function
-  corner?: 'left' | 'right' | null
+  corner?: 'left' | 'right' | 'none' | null
   index: number
 }
 
@@ -54,6 +54,8 @@ const Block: FC<BlockI> = memo((props) => {
       // maxHeight: '0rem'
     },
   }
+
+  // console.log(props.index, props.blocks.length - 1)
 
   return (
     <AnimatePresence>
@@ -189,31 +191,19 @@ const Block: FC<BlockI> = memo((props) => {
                     <Image className={style.icon} src={editIcon} alt={'edit'} />
                   </IconButton>
 
-                  {props.corner !== 'left' && (
+                  {(props.corner === 'right' || props.corner === null) && (
                     <IconButton
                       onClickCallback={() => {
-                        swapStatus(
-                          props.setBlocks,
-                          props.blocks,
-                          'left',
-                          props.id,
-                          props.columns
-                        )
+                        swapStatus(props.setBlocks, props.blocks, 'left', props.id, props.columns)
                       }}
                     >
                       <Image className={style.icon} src={arrowIcon} alt={'arrow left'} />
                     </IconButton>
                   )}
-                  {props.corner !== 'right' && (
+                  {(props.corner === 'left' || props.corner === null) && (
                     <IconButton
                       onClickCallback={() => {
-                        swapStatus(
-                          props.setBlocks,
-                          props.blocks,
-                          'right',
-                          props.id,
-                          props.columns
-                        )
+                        swapStatus(props.setBlocks, props.blocks, 'right', props.id, props.columns)
                       }}
                     >
                       <div

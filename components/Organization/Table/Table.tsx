@@ -76,9 +76,17 @@ const Table: FC<TableI> = memo((props) => {
             >
               <motion.div className={style.tableMainInner} layout={'size'}>
                 {columns.map((column, index) => {
-                  let corner: 'left' | 'right' | null = null
-                  index === 0 && (corner = 'left')
-                  index === columns.length - 1 && (corner = 'right')
+                  let corner: 'left' | 'right' | 'none' | null = null
+                  if (index === 0) {
+                    corner = 'left'
+                  }
+                  if (index === columns.length - 1 && columns.length !== 1) {
+                    corner = 'right'
+                  }
+                  if (index === 0 && (index === columns.length - 1)) {
+                    corner = 'none'
+                  }
+                  console.log(columns.length)
                   return (
                     <Column
                       key={index}

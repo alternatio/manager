@@ -109,13 +109,12 @@ export const swapStatus = (
     (block) => block.id === id
   )?.status
   let currentIndexOfColumn = columns.findIndex(column => column.id === currentStatusOfBlock)
+  const nextStatusOfColumn = columns[currentIndexOfColumn + (direction === 'left' ? -1 : 1)].id
 
+  // @ts-ignore
+  resultData.find(block => block.id === id).status = nextStatusOfColumn
 
+  console.log(currentIndexOfColumn, nextStatusOfColumn, currentStatusOfBlock)
 
-  console.log(currentIndexOfColumn)
-
-  // // @ts-ignore
-  // resultData.find((block) => block.id === id).status += direction === 'left' ? -1 : 1
-  // console.log(resultData)
-  // setData(resultData)
+  setData(resultData)
 }

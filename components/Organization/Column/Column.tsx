@@ -23,7 +23,7 @@ interface ColumnI extends sessionDataColumnI {
   setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
-  corner: 'left' | 'right' | null
+  corner: 'left' | 'right' | 'none' | null
   forceUpdate?: Function
 }
 

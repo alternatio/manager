@@ -18,7 +18,7 @@ const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
     <>
       {props.blocks.length <= 300 && (
         <motion.div
-          style={{ order: 10 }}
+          style={{ order: 100000 }}
           onClick={() => {
             addBlock(
               props.setBlocks,
