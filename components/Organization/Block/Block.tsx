@@ -70,6 +70,7 @@ const Block: FC<BlockI> = memo((props) => {
                 ? { order: -1100 }
                 : { order: -1099 }
               : { order: props.index }
+              // : { }
           }
           variants={blockVariants}
           transition={{ duration: 0.4 }}
