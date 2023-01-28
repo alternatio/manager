@@ -48,6 +48,7 @@ const EditField: FC<EditFieldI> = (props) => {
                     blockIdEdit={props.blockId}
                     isSelected={true}
                     columns={props.columns}
+                    index={index}
                   />
                 )
               })}
