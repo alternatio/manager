@@ -6,6 +6,9 @@ import Image from 'next/image'
 import { sessionsData } from '../../../data/sessionsData'
 import { NextRouter, useRouter } from 'next/router'
 import { getRandomId } from '../../../functions/global'
+import { db } from '../../../data/firebase/firebase'
+import { addDoc, collection } from '@firebase/firestore'
+import Link from 'next/link'
 
 type AddSessionPopupPropsRouter = {
   handleAddSessionPopup: Function
@@ -17,7 +20,7 @@ type AddSessionPopupProps = {
 }
 
 type AddSessionPopupStates = {
-  nameIsVoid: boolean
+  error: boolean
   nameOfOrganization: string
 }
 
@@ -28,8 +31,9 @@ export const AddSessionPopupRouter = (props: AddSessionPopupPropsRouter) => {
 
 export class AddSessionPopup extends PureComponent<AddSessionPopupProps, AddSessionPopupStates> {
   state = {
-    nameIsVoid: false,
+    error: false,
     nameOfOrganization: '',
+    passwordOfOrganization: ''
   }
 
   keyDown = (e: KeyboardEvent) => {
@@ -57,8 +61,8 @@ export class AddSessionPopup extends PureComponent<AddSessionPopupProps, AddSess
     this.setState({ nameOfOrganization: name })
   }
 
-  setNameIsVoid = (value: boolean) => {
-    this.setState({ nameIsVoid: value })
+  setError = (value: boolean) => {
+    this.setState({ error: value })
   }
 
   addOrganization = () => {
@@ -67,11 +71,28 @@ export class AddSessionPopup extends PureComponent<AddSessionPopupProps, AddSess
     if (!nameVoid) {
       sessionsData.push({ id: getRandomId(), title: this.state.nameOfOrganization })
       this.props.router.push(`/organization/${this.state.nameOfOrganization}`)
+
+      console.log(db)
+
+      try {
+        const docRef = addDoc(collection(db, 'users'), {
+          firstName: 'Nikita'
+        })
+        console.log('doc: ', docRef)
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 
   validation = (nameVoid: boolean) => {
-    nameVoid ? this.setNameIsVoid(true) : this.setNameIsVoid(false)
+    nameVoid ? this.setError(true) : this.setError(false)
+  }
+
+  animateOnValidation = () => {
+    return this.state.error
+      ? { boxShadow: '#ff0033 inset 0 0 0 .2rem' }
+      : { boxShadow: '#ff0033 inset 0 0 0 0' }
   }
 
   render() {
@@ -88,14 +109,11 @@ export class AddSessionPopup extends PureComponent<AddSessionPopupProps, AddSess
             <Image className={style.cancelImage} src={arrow} alt={'arrowBack'} />
           </button>
           <motion.label
-            animate={
-              this.state.nameIsVoid
-                ? { boxShadow: '#ff0033 inset 0 0 0 .2rem' }
-                : { boxShadow: '#ff0033 inset 0 0 0 0' }
-            }
+            animate={this.animateOnValidation()}
             className={style.label}
           >
             <input
+              autoFocus={true}
               onChange={(e) => this.setNameOfOrganization(e.target.value)}
               className={style.inputBold}
               type='text'
@@ -104,7 +122,19 @@ export class AddSessionPopup extends PureComponent<AddSessionPopupProps, AddSess
               required
             />
           </motion.label>
-          {this.state.nameIsVoid && <div className={style.wrongInput}>Введите имя</div>}
+          <motion.label
+            animate={this.animateOnValidation()}
+            className={style.label}
+          >
+            <input
+              onChange={(e) => this.setNameOfOrganization(e.target.value)}
+              className={style.inputBold}
+              type='text'
+              placeholder={'Пароль'}
+              maxLength={50}
+              required
+            />
+          </motion.label>
           <button
             onClick={() => {
               this.addOrganization()
