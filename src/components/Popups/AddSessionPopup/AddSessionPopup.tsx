@@ -85,7 +85,7 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
           placeholder={'Пароль'}
         />
         <p className={style.description}>
-          Если у вас есть организация, выберите в пункте меню "Мои организации", но перед этим вам нужно авторизоваться
+          Если у вас есть организация, выберите в пункте меню Мои организации, но перед этим вам нужно авторизоваться
         </p>
         <button
           onClick={() => {

@@ -5,7 +5,7 @@ import style from './styles/Trader.module.scss'
 import humanFriendlyGif from '/public/gifs/worker.gif'
 import madeForPeopleGif from '/public/gifs/wow.gif'
 import { Gif } from '../../ui/Gif/Gif'
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from '@firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithPopup } from '@firebase/auth'
 import { provider } from '../../../data/firebase/firebase'
 
 type TraderProps = {

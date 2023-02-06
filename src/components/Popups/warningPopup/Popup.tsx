@@ -3,7 +3,7 @@ import { FC, memo } from 'react'
 import style from '../styles/Popup.module.scss'
 
 interface PopupI {
-  acceptFunction: CallableFunction
+  // acceptFunction: CallableFunction
   text?: string
 }
 
