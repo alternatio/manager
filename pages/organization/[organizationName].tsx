@@ -3,11 +3,11 @@ import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import style from '/styles/pages/Organization.module.scss'
-import { Wrapper } from '../../components/Wrapper/Wrapper'
-import { Header } from '../../components/Header/Header'
+import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
+import { Header } from '../../src/modules/Header/Header'
 import { sessionDataTableI } from '../../data/sessionsData'
-import Table from '../../components/Organization/Table/Table'
-import ButtonAddTable from '../../components/Organization/Buttons/ButtonAddTable'
+import Table from '../../src/modules/Table/Table'
+import ButtonAddTable from '../../src/ui/Buttons/ButtonAddTable'
 
 const Organization: NextPage = memo(() => {
   const [data, setData] = useState<sessionDataTableI[]>([])

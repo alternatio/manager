@@ -1,0 +1,76 @@
+@import '/styles/variables';
+
+.wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba($black, 0.1);
+  backdrop-filter: blur(0.25rem);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body {
+  background: $white;
+  border-radius: .5rem;
+  box-shadow: 1rem 1rem 1rem rgba($black, .3);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.cancel {
+  transition: $cubic .2s;
+  &:hover {
+    opacity: .8;
+  }
+}
+
+.label {
+  background: $almost-white;
+  border-radius: .5rem;
+  padding: .75rem;
+}
+
+.wrongInput {
+  align-self: center;
+}
+
+.input {
+  font-size: 1rem;
+}
+
+.inputBold {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.button {
+  align-self: center;
+  background: $black;
+  color: $white;
+  border-radius: .5rem;
+  width: min(100%, 20rem);
+  padding: .5rem;
+  font-size: 1rem;
+  transition: $cubic .3s;
+  font-weight: 700;
+  &:hover {
+    //background: $blue;
+  }
+}
+
+.description {
+  color: $gray;
+  font-weight: 400;
+  font-size: .9rem;
+  max-width: 18rem;
+  text-align: center;
+  align-self: center;
+}

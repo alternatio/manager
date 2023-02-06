@@ -1,0 +1,19 @@
+@import 'styles/variables';
+
+.label {
+  padding: .75rem;
+  background: $almost-white;
+  border-radius: .5rem;
+  width: min(100%, 20rem);
+  cursor: text;
+  align-self: center;
+  transition: $cubic .25s;
+}
+
+.input {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $black;
+  width: 100%;
+  height: 100%;
+}

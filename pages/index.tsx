@@ -1,53 +1,45 @@
 import style from '../styles/pages/Home.module.scss'
-import { memo, PureComponent } from 'react'
-import { Wrapper } from '../components/Wrapper/Wrapper'
-import { Header } from '../components/Header/Header'
-import { Intro } from '../components/HomeComponents/Intro/Intro'
-import { Percents } from '../components/HomeComponents/Percents/Percents'
-import { Trader } from '../components/HomeComponents/Trader/Trader'
-import { Footer } from '../components/Footer/Footer'
-import { AddSessionPopupRouter } from '../components/Header/addSessionPopup/AddSessionPopup'
+import { memo, useEffect, useState } from 'react'
+import { Wrapper } from '../src/ui/Wrapper/Wrapper'
+import { Header } from '../src/modules/Header/Header'
+import { Intro } from '../src/modules/Intro/Intro'
+import { Percents } from '../src/modules/Percents/Percents'
+import { Trader } from '../src/modules/Trader/Trader'
+import Footer from '../src/modules/Footer/Footer'
+import { AddSessionPopup } from '../src/components/Popups/AddSessionPopup/AddSessionPopup'
 import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
+import { NextPage } from 'next'
 
-type HomeStates = {
-  addSessionPopup: boolean
-}
+const Home: NextPage = () => {
+  const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
+  const [userData, setUserData] = useState({})
 
-class Home extends PureComponent<{}, HomeStates> {
-  state = {
-    addSessionPopup: false,
-  }
+  useEffect(() => {
+    console.log(userData)
+  }, [userData])
 
-  handleAddSessionPopup = (state: boolean) => {
-    this.setState({ addSessionPopup: state })
-  }
+  return (
+    <>
+      <Head>
+        <title>PM</title>
+      </Head>
 
-  render() {
-    return (
-      <>
-        <Head>
-          <title>PM</title>
-        </Head>
+      <AnimatePresence>
+        {addSessionPopup && <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} />}
+      </AnimatePresence>
 
-        <AnimatePresence>
-          {this.state.addSessionPopup && (
-            <AddSessionPopupRouter handleAddSessionPopup={this.handleAddSessionPopup} />
-          )}
-        </AnimatePresence>
-
-        <Wrapper maxWidth={'66rem'}>
-          <Header />
-          <div className={style.content}>
-            <Intro />
-            <Percents />
-            <Trader handleAddSessionPopup={this.handleAddSessionPopup} />
-            <Footer />
-          </div>
-        </Wrapper>
-      </>
-    )
-  }
+      <Wrapper maxWidth={'66rem'}>
+        <Header />
+        <div className={style.content}>
+          <Intro />
+          <Percents />
+          <Trader handleAddSessionPopup={handleAddSessionPopup} setUserData={setUserData} />
+          <Footer />
+        </div>
+      </Wrapper>
+    </>
+  )
 }
 
 export default memo(Home)

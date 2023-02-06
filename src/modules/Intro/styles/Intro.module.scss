@@ -1,0 +1,59 @@
+@import '../../../../styles/variables';
+
+.intro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 35rem;
+}
+.cubes {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  align-self: center;
+}
+
+.helloWord {
+  font-size: 7rem;
+  font-weight: 700;
+  line-height: 85%;
+  text-indent: 4rem;
+  color: $white;
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+  height: 100%;
+  z-index: 1;
+  width: min(100%, 41rem);
+  pointer-events: none;
+}
+
+.helloDescription {
+  font-size: 3rem;
+  font-weight: 500;
+  line-height: 85%;
+  text-align: right;
+  color: $white;
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 5rem;
+  z-index: 1;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  width: min(100%, 20rem);
+}
+
+@media (max-width: 760px) {
+  .helloWord {
+    font-size: 20vw;
+    text-indent: 5vw;
+  }
+  .helloDescription {
+    font-size: max(2rem, 7vw);
+  }
+}
