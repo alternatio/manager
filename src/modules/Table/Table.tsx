@@ -4,7 +4,7 @@ import {
   sessionDataTableI,
   sessionsDataI,
 } from '../../../data/sessionsData'
-import { Dispatch, FC, memo, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Column from '../../components/Column/Column'
 import { AnimatePresence, AnimateSharedLayout, motion, Variants } from 'framer-motion'
@@ -12,9 +12,6 @@ import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../../ui/Buttons/ButtonAddColumn'
 import EditField from '../../components/EditField/EditField'
-import { useOnClickOutside } from '../../functions/customHooks'
-import { renameItem } from '../../functions/EditItems'
-import Popup from '../../components/Popups/warningPopup/Popup'
 
 interface TableI extends sessionDataTableI {
   id: string
@@ -111,7 +108,6 @@ const Table: FC<TableI> = memo((props) => {
           )}
         </AnimatePresence>
       </AnimateSharedLayout>
-      <Popup />
     </motion.div>
   )
 })

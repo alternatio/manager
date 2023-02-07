@@ -30,7 +30,23 @@
   gap: 1rem;
 }
 
+.accountText {
+  display: flex;
+  flex-direction: column;
+  font-size: .9rem;
+}
+
+.nameOfAccount {
+  font-weight: 700;
+}
+
+.mailOfAccount {
+  color: $gray;
+}
+
 .avatarImage {
   width: 2rem;
   height: auto;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
 }

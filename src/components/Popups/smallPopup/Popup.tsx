@@ -1,7 +1,9 @@
 import { Dispatch, FC, memo, ReactNode, SetStateAction, useRef } from 'react'
-import { AnimatePresence, motion, Variants } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import style from '../styles/Popup.module.scss'
 import { useOnClickOutside } from '../../../functions/customHooks'
+import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
+import { smallPopupV } from '../../../ui/animations/variants'
 
 interface PopupI {
   popupVisible: boolean
@@ -11,17 +13,6 @@ interface PopupI {
 }
 
 const Popup: FC<PopupI> = (props) => {
-  const popupVariants: Variants = {
-    visible: {
-      opacity: 1,
-      transform: 'translateY(0rem) scale(1)',
-    },
-    hidden: {
-      opacity: 0,
-      transform: 'translateY(-.5rem) scale(.9)',
-    },
-  }
-
   const popupRef = useRef(null)
 
   useOnClickOutside(popupRef, () => props.handlePopup(false), false)
@@ -31,11 +22,9 @@ const Popup: FC<PopupI> = (props) => {
       {props.popupVisible && (
         <motion.div
           ref={popupRef}
-          variants={popupVariants}
-          initial={'hidden'}
-          animate={'visible'}
-          exit={'hidden'}
-          transition={{ duration: 0.25 }}
+          variants={smallPopupV}
+          {...commonAnimation}
+          transition={commonTransition()}
           style={props.position === 'left' ? { right: '2rem' } : { left: 'calc(100% + .5rem)' }}
           className={style.popup}
         >

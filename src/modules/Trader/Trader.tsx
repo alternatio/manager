@@ -1,16 +1,16 @@
 import { motion } from 'framer-motion'
-import { PureComponent } from 'react'
+import { Dispatch, PureComponent, SetStateAction } from 'react'
 import style from './styles/Trader.module.scss'
-
 import humanFriendlyGif from '/public/gifs/worker.gif'
 import madeForPeopleGif from '/public/gifs/wow.gif'
 import { Gif } from '../../ui/Gif/Gif'
-import { getAuth, GoogleAuthProvider, signInWithPopup } from '@firebase/auth'
-import { provider } from '../../../data/firebase/firebase'
+import { User } from '@firebase/auth'
+import { signInWithGooglePopup } from '../../functions/firestore'
 
 type TraderProps = {
   handleAddSessionPopup: Function
-  setUserData: Function
+  setUserData: Dispatch<SetStateAction<User | null>>
+  userData: User | null
 }
 
 type TraderStates = {
@@ -34,25 +34,11 @@ export class Trader extends PureComponent<TraderProps, TraderStates> {
 
   start = () => {
 
-    const auth = getAuth()
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-
-
-        const user = result.user;
-
-        console.log(token, user)
-
-      })
-      .catch((error) => {
-        GoogleAuthProvider.credentialFromError(error);
-      })
-
-    console.log()
-
-    // this.props.handleAddSessionPopup(true)
+    if (!this.props.userData) {
+      signInWithGooglePopup(this.props.setUserData)
+    } else {
+      this.props.handleAddSessionPopup(true)
+    }
   }
 
   render() {

@@ -1,4 +1,4 @@
-import { addItem } from '../../functions/EditItems'
+import { addItem } from '../../functions/editItems'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
 import { Dispatch, FC, memo, SetStateAction } from 'react'

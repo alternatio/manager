@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { getRandomColor } from '../../functions/global'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI } from '../../../data/sessionsData'
-import { addBlock } from '../../functions/EditItems'
+import { addBlock } from '../../functions/editItems'
 import Image from 'next/image'
 import { crossIcon } from '../../functions/importIcons'
 

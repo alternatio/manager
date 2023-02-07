@@ -10,14 +10,17 @@ import { AddSessionPopup } from '../src/components/Popups/AddSessionPopup/AddSes
 import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
 import { NextPage } from 'next'
+import { User } from '@firebase/auth'
 
 const Home: NextPage = () => {
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState<User | null>(null)
 
   useEffect(() => {
-    console.log(userData)
-  }, [userData])
+    const data = localStorage.getItem('user')
+    data && console.log(JSON.parse(data))
+    data && setUserData(JSON.parse(data))
+  }, [])
 
   return (
     <>
@@ -30,11 +33,19 @@ const Home: NextPage = () => {
       </AnimatePresence>
 
       <Wrapper maxWidth={'66rem'}>
-        <Header />
+        <Header
+          userData={userData}
+          setUserData={setUserData}
+          handleAddSessionPopup={handleAddSessionPopup}
+        />
         <div className={style.content}>
           <Intro />
           <Percents />
-          <Trader handleAddSessionPopup={handleAddSessionPopup} setUserData={setUserData} />
+          <Trader
+            handleAddSessionPopup={handleAddSessionPopup}
+            setUserData={setUserData}
+            userData={userData}
+          />
           <Footer />
         </div>
       </Wrapper>

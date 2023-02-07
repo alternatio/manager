@@ -32,3 +32,14 @@ export const popupV: Variants = {
     scaleX: 1.1,
   },
 }
+
+export const smallPopupV: Variants = {
+  on: {
+    opacity: 1,
+    transform: 'translateY(0rem) scale(1)',
+  },
+  off: {
+    opacity: 0,
+    transform: 'translateY(-.5rem) scale(.9)',
+  }
+}

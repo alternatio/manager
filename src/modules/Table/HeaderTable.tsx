@@ -9,7 +9,7 @@ import Popup from '../../components/Popups/smallPopup/Popup'
 import PopupButton from '../../components/Popups/smallPopup/PopupButton'
 import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../functions/importIcons'
 import { useOnClickOutside } from '../../functions/customHooks'
-import { deleteTable, renameItem } from '../../functions/EditItems'
+import { deleteTable, renameItem } from '../../functions/editItems'
 
 interface HeaderTableI {
   id: string
