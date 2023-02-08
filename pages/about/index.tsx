@@ -1,13 +1,13 @@
 import { NextPage } from 'next'
 import { memo, useEffect, useState } from 'react'
-import { Wrapper } from '../src/ui/Wrapper/Wrapper'
-import { Header } from '../src/modules/Header/Header'
+import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
+import { Header } from '../../src/modules/Header/Header'
 import { User } from '@firebase/auth'
 import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
-import { AddSessionPopup } from '../src/components/Popups/AddSessionPopup/AddSessionPopup'
+import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
 
-const About: NextPage = () => {
+const Index: NextPage = () => {
   const [userData, setUserData] = useState<User | null>(null)
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
 
@@ -40,5 +40,5 @@ const About: NextPage = () => {
   )
 }
 
-About.displayName = 'About'
-export default memo(About)
+Index.displayName = 'Index'
+export default memo(Index)

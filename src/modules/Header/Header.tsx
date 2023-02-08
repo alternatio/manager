@@ -7,6 +7,7 @@ import { User } from '@firebase/auth'
 import { avatarIcon } from '../../functions/importIcons'
 import Popup from '../../components/Popups/warningPopup/Popup'
 import { signOutWithGooglePopup } from '../../functions/firestore'
+import Link from 'next/link'
 
 interface HeaderInterface {
   userData: User | null
@@ -30,7 +31,9 @@ export const Header: FC<HeaderInterface> = memo((props) => {
 
       <div className={style.Header}>
         <div className={style.leftPart}>
-          <span className={style.logo}>PM</span>
+          <Link className={style.logo} href={'/'}>
+            PM
+          </Link>
           {props.organization && <span className={style.organization}>{props.organization}</span>}
         </div>
         <div className={style.rightPart}>

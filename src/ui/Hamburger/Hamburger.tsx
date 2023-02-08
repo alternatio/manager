@@ -40,7 +40,11 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
           )}
           {props.userData && (
             <>
-              <button className={style.button}>Мои организации</button>
+              <button className={style.button}>
+                <Link className={style.link} href={'/myOrganizations'}>
+                  Мои организации
+                </Link>
+              </button>
               <button onClick={() => props.handleAddSessionPopup(true)} className={style.button}>
                 Создать доску
               </button>

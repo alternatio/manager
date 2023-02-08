@@ -50,8 +50,14 @@ body {
   outline: none;
   border: none;
 }
+a {
+  @extend %reset;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  color: $black;
+}
 
-a,
 button {
   @extend %reset;
   cursor: pointer;
