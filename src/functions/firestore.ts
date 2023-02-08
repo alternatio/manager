@@ -4,7 +4,6 @@ import { Dispatch, SetStateAction } from 'react'
 import {
   addDoc,
   collection,
-  CollectionReference,
   doc,
   getDoc,
   getDocs,
@@ -12,13 +11,14 @@ import {
 } from '@firebase/firestore'
 import { userInterface } from './interfaces'
 
+// get doc in firestore
 export const getDocInFirestore = async (collectionName: string, docName: string) => {
   return await getDoc(doc(db, collectionName, docName))
 }
 
+// get collection in firestore
 export const getCollectionInFirestore = async (collectionName: string) => {
-  const response = await getDocs(collection(db, collectionName))
-  return response.docs
+  return await getDocs(collection(db, collectionName))
 }
 
 // add item in firestore
