@@ -2,7 +2,7 @@ import { FC, memo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
 import style from './styles/Gif.module.scss'
-import { getRandomNumber } from '../../functions/global'
+import { getRandomNumber } from '../../helpers/global'
 
 interface GifInterface {
   hover: Readonly<boolean>

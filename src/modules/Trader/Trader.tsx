@@ -5,7 +5,7 @@ import humanFriendlyGif from '/public/gifs/worker.gif'
 import madeForPeopleGif from '/public/gifs/wow.gif'
 import { Gif } from '../../ui/Gif/Gif'
 import { User } from '@firebase/auth'
-import { signInWithGooglePopup } from '../../functions/firestore'
+import { signInWithGooglePopup } from '../../helpers/firestore'
 
 type TraderProps = {
   handleAddSessionPopup: Function

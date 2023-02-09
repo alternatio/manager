@@ -1,14 +1,7 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from '@firebase/auth'
 import { db, provider } from '../../data/firebase/firebase'
 import { Dispatch, SetStateAction } from 'react'
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-} from '@firebase/firestore'
+import { addDoc, collection, doc, getDoc, getDocs, setDoc } from '@firebase/firestore'
 import { userInterface } from './interfaces'
 
 // get doc in firestore

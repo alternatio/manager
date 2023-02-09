@@ -1,11 +1,11 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import { motion } from 'framer-motion'
-import { getRandomColor } from '../../functions/global'
+import { getRandomColor } from '../../helpers/global'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockI } from '../../../data/sessionsData'
-import { addBlock } from '../../functions/editItems'
+import { addBlock } from '../../helpers/editItems'
 import Image from 'next/image'
-import { crossIcon } from '../../functions/importIcons'
+import { crossIcon } from '../../helpers/importIcons'
 
 interface ButtonAddBlockI {
   blocks: sessionDataBlockI[]

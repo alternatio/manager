@@ -4,9 +4,9 @@ import Image from 'next/image'
 import { HamburgerButton } from '../../ui/HamburgerButton/HamburgerButton'
 import { Hamburger } from '../../ui/Hamburger/Hamburger'
 import { User } from '@firebase/auth'
-import { avatarIcon } from '../../functions/importIcons'
+import { avatarIcon } from '../../helpers/importIcons'
 import Popup from '../../components/Popups/warningPopup/Popup'
-import { signOutWithGooglePopup } from '../../functions/firestore'
+import { signOutWithGooglePopup } from '../../helpers/firestore'
 import Link from 'next/link'
 
 interface HeaderInterface {

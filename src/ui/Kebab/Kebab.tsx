@@ -1,7 +1,7 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import Image from 'next/image'
 import style from '/styles/pages/Organization.module.scss'
-import { kebabIcon } from '../../functions/importIcons'
+import { kebabIcon } from '../../helpers/importIcons'
 
 interface KebabButtonI {
   handlePopup: Dispatch<SetStateAction<boolean>>

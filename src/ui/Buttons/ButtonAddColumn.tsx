@@ -1,9 +1,9 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataColumnI } from '../../../data/sessionsData'
-import { addColumn, addItem } from '../../functions/editItems'
+import { addColumn, addItem } from '../../helpers/editItems'
 import Image from 'next/image'
-import { crossIcon } from '../../functions/importIcons'
+import { crossIcon } from '../../helpers/importIcons'
 
 interface ButtonAddColumnI {
   columns: sessionDataColumnI[]

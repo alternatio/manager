@@ -7,9 +7,9 @@ import { KebabButton } from '../../ui/Kebab/Kebab'
 import { motion } from 'framer-motion'
 import Popup from '../../components/Popups/smallPopup/Popup'
 import PopupButton from '../../components/Popups/smallPopup/PopupButton'
-import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../functions/importIcons'
-import { useOnClickOutside } from '../../functions/customHooks'
-import { deleteTable, renameItem } from '../../functions/editItems'
+import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../helpers/importIcons'
+import { useOnClickOutside } from '../../helpers/customHooks'
+import { deleteTable, renameItem } from '../../helpers/editItems'
 
 interface HeaderTableI {
   id: string

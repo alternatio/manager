@@ -8,9 +8,9 @@ import Block from '../Block/Block'
 import ButtonAddBlock from '../../ui/Buttons/ButtonAddBlock'
 import Popup from '../Popups/smallPopup/Popup'
 import PopupButton from '../Popups/smallPopup/PopupButton'
-import { renameIcon, trashIcon } from '../../functions/importIcons'
-import { deleteColumn, renameItem } from '../../functions/editItems'
-import { useOnClickOutside } from '../../functions/customHooks'
+import { renameIcon, trashIcon } from '../../helpers/importIcons'
+import { deleteColumn, renameItem } from '../../helpers/editItems'
+import { useOnClickOutside } from '../../helpers/customHooks'
 
 interface ColumnI extends sessionDataColumnI {
   id: string

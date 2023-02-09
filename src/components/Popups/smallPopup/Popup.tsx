@@ -1,7 +1,7 @@
 import { Dispatch, FC, memo, ReactNode, SetStateAction, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import style from '../styles/Popup.module.scss'
-import { useOnClickOutside } from '../../../functions/customHooks'
+import { useOnClickOutside } from '../../../helpers/customHooks'
 import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
 import { smallPopupV } from '../../../ui/animations/variants'
 

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { commonAnimation, transitionSpringMedium } from '../animations/commonAnimations'
 import { hamburgerV } from '../animations/variants'
 import { User } from '@firebase/auth'
-import { signInWithGooglePopup } from '../../functions/firestore'
+import { signInWithGooglePopup } from '../../helpers/firestore'
 
 interface HamburgerInterface {
   userData: User | null

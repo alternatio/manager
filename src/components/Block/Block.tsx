@@ -3,10 +3,10 @@ import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
-import { deleteBlock, swapStatus } from '../../functions/editItems'
+import { deleteBlock, swapStatus } from '../../helpers/editItems'
 import IconButton from '../../ui/Buttons/IconButton'
-import { arrowIcon, editIcon, trashIcon } from '../../functions/importIcons'
-import { randomColors } from '../../functions/global'
+import { arrowIcon, editIcon, trashIcon } from '../../helpers/importIcons'
+import { randomColors } from '../../helpers/global'
 
 interface BlockI extends sessionDataBlockI {
   id: string
