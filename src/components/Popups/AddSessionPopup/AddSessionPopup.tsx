@@ -3,18 +3,23 @@ import style from '../styles/Popup.module.scss'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { sessionsData } from '../../../../data/sessionsData'
+import { sessionsData, sessionsDataI } from '../../../../data/sessionsData'
 import { getRandomId } from '../../../helpers/global'
 import { arrowIcon } from '../../../helpers/importIcons'
-import { db } from '../../../../data/firebase/firebase'
-import { addDoc, collection } from '@firebase/firestore'
 import Input from '../../../ui/Input/Input'
 import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
 import { popupV } from '../../../ui/animations/variants'
+import { User } from '@firebase/auth'
+import { getDocInFirestore, setItemInFirestore } from '../../../helpers/firestore'
+import { DocumentSnapshot } from '@firebase/firestore'
+import { userInterface } from '../../../helpers/interfaces'
 
 interface AddSessionPopupPropsRouter {
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
+  userData: User | null
 }
+
+type sessionsData = { sessions: sessionsDataI[] }
 
 export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
   const [nameOfOrganization, setName] = useState<string>('')
@@ -25,21 +30,46 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
     props.handleAddSessionPopup(false)
   }
 
-  const addOrganization = () => {
-    if (nameOfOrganization && passwordOfOrganization) {
-      sessionsData.push({ id: getRandomId(), title: nameOfOrganization })
-      router.push(`/organization/${nameOfOrganization}`)
+  const addOrganization = async () => {
+    if (nameOfOrganization && passwordOfOrganization && props.userData?.uid) {
+      const docs = (await getDocInFirestore(
+        'sessions',
+        props.userData.uid
+      )) as DocumentSnapshot<sessionsData>
+      const dataOfDocs = docs.data()
+      await router.push(`/organization/${nameOfOrganization}`)
 
-      console.log(collection(db, 'users'))
-
-      try {
-        const docRef = addDoc(collection(db, 'users'), {
-          firstName: 'Nikita',
-        })
-        console.log('doc: ', docRef)
-      } catch (e) {
-        console.error(e)
+      const createSession = async (object: sessionsDataI, userId: string) => {
+        const resultData: sessionsDataI[] = []
+        if (dataOfDocs?.sessions) {
+          resultData.push(...dataOfDocs.sessions, object)
+        } else {
+          resultData.push(object)
+        }
+        await setItemInFirestore('sessions', userId, resultData)
       }
+
+      const sessionObject: sessionsDataI = {
+        id: getRandomId(),
+        title: nameOfOrganization,
+        password: passwordOfOrganization,
+      }
+
+      await createSession(sessionObject, props.userData.uid)
+
+      // if (dataOfDocs) {
+      //   if (dataOfDocs.sessions.find((object) => object.title === nameOfOrganization)) {
+      //     console.log('multi', dataOfDocs)
+      //   } else {
+      //     const sessionObject: sessionsDataI = {
+      //       id: getRandomId(),
+      //       title: nameOfOrganization,
+      //       password: passwordOfOrganization,
+      //     }
+      //     await createSession(sessionObject, props.userData.uid)
+      //     console.log('un multi', dataOfDocs)
+      //   }
+      // }
     }
   }
 
@@ -78,11 +108,7 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
           placeholder={'Название организации'}
           autoFocus={true}
         />
-        <Input
-          value={passwordOfOrganization}
-          setValue={setPassword}
-          placeholder={'Пароль'}
-        />
+        <Input value={passwordOfOrganization} setValue={setPassword} placeholder={'Пароль'} />
         <p className={style.description}>
           Если у вас есть организация, выберите в пункте меню -Мои организации-
         </p>

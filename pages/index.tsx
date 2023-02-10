@@ -29,7 +29,9 @@ const Home: NextPage = () => {
       </Head>
 
       <AnimatePresence>
-        {addSessionPopup && <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} />}
+        {addSessionPopup && (
+          <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
+        )}
       </AnimatePresence>
 
       <Wrapper maxWidth={'66rem'}>

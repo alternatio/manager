@@ -20,13 +20,13 @@ const Index: NextPage = () => {
   return (
     <>
       <Head>
-        <title>
-          О проекте
-        </title>
+        <title>О проекте</title>
       </Head>
 
       <AnimatePresence>
-        {addSessionPopup && <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} />}
+        {addSessionPopup && (
+          <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
+        )}
       </AnimatePresence>
 
       <Wrapper maxWidth={'66rem'}>

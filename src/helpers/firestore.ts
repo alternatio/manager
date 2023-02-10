@@ -1,4 +1,4 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from '@firebase/auth'
+import { getAuth, signInWithPopup, signOut, User } from '@firebase/auth'
 import { db, provider } from '../../data/firebase/firebase'
 import { Dispatch, SetStateAction } from 'react'
 import { addDoc, collection, doc, getDoc, getDocs, setDoc } from '@firebase/firestore'
@@ -36,24 +36,21 @@ export const getItemsFromFirestore = async (
 // sign in app with Google
 export const signInWithGooglePopup = async (setUserData: Dispatch<SetStateAction<User | null>>) => {
   const auth = getAuth()
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user
-      const userObject: userInterface = {
-        uid: user.uid,
-        name: user.displayName,
-        email: user.email,
-        avatar: user.photoURL,
-      }
-      setItemInFirestore('users', user.uid, userObject)
-
-      setUserData(user)
-      localStorage.setItem('user', JSON.stringify(user))
-    })
-    .catch((error) => {
-      console.error(error)
-      GoogleAuthProvider.credentialFromError(error)
-    })
+  try {
+    const response = await signInWithPopup(auth, provider)
+    const user = response.user
+    const userObject: userInterface = {
+      uid: user.uid,
+      name: user.displayName,
+      email: user.email,
+      avatar: user.photoURL,
+    }
+    setItemInFirestore('users', user.uid, userObject)
+    setUserData(user)
+    localStorage.setItem('user', JSON.stringify(user))
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 // sign out in app with Google
@@ -61,14 +58,11 @@ export const signOutWithGooglePopup = async (
   setUserData: Dispatch<SetStateAction<User | null>>
 ) => {
   const auth = getAuth()
-  signOut(auth)
-    .then(() => {
-      setUserData(null)
-      localStorage.removeItem('user')
-      console.log('sign-out successful')
-    })
-    .catch((error) => {
-      console.error(error)
-      GoogleAuthProvider.credentialFromError(error)
-    })
+  try {
+    await signOut(auth)
+    setUserData(null)
+    localStorage.removeItem('user')
+  } catch (error) {
+    console.log(error)
+  }
 }

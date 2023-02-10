@@ -5,22 +5,37 @@ import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
 import Head from 'next/head'
 import { Header } from '../../src/modules/Header/Header'
 import style from '../../styles/pages/MyOrganizations.module.scss'
+import { getDocInFirestore } from '../../src/helpers/firestore'
+import { sessionsDataI } from '../../data/sessionsData'
 
 interface MyOrganizationsProps {}
 
 const Index: NextPage<MyOrganizationsProps> = (props) => {
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
   const [userData, setUserData] = useState<User | null>(null)
+  const [arrayOfProjects, setArrayOfProjects] = useState<unknown>(null)
+
+  // <sessionsDataI[] | null>
 
   useEffect(() => {
     const data = localStorage.getItem('user')
-    data && console.log(JSON.parse(data))
-    data && setUserData(JSON.parse(data))
+    if (data) {
+      const parsedData = JSON.parse(data)
+      setUserData(parsedData)
+
+      getDocInFirestore('sessions', parsedData.uid)
+        .then((response) => {
+          setArrayOfProjects(response.data())
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    }
   }, [])
 
-  const getUserData = () => {
-
-  }
+  useEffect(() => {
+    console.log(arrayOfProjects)
+  }, [arrayOfProjects])
 
   return (
     <>
@@ -35,12 +50,8 @@ const Index: NextPage<MyOrganizationsProps> = (props) => {
           handleAddSessionPopup={handleAddSessionPopup}
         />
         <main className={style.main}>
-          <h2 className={style.title}>
-            Мои организации
-          </h2>
-          <div className={style.organizationsList}>
-
-          </div>
+          <h2 className={style.title}>Мои организации</h2>
+          <div className={style.organizationsList}></div>
         </main>
       </Wrapper>
     </>

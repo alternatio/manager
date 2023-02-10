@@ -29,6 +29,7 @@ export interface sessionDataTableI {
 export interface sessionsDataI {
   id: string
   title: string
+  password: string
   tables?: sessionDataTableI[]
 }
 

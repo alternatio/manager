@@ -31,7 +31,9 @@ const Organization: NextPage = memo(() => {
       </Head>
 
       <AnimatePresence>
-        {addSessionPopup && <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} />}
+        {addSessionPopup && (
+          <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
+        )}
       </AnimatePresence>
 
       <Wrapper maxWidth={'110rem'}>
