@@ -12,7 +12,7 @@ import { popupV } from '../../../ui/animations/variants'
 import { User } from '@firebase/auth'
 import { getDocInFirestore, setItemInFirestore } from '../../../helpers/firestore'
 import { DocumentSnapshot } from '@firebase/firestore'
-import { userInterface } from '../../../helpers/interfaces'
+import { sessionsInterface, userInterface } from '../../../helpers/interfaces'
 
 interface AddSessionPopupPropsRouter {
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
@@ -40,11 +40,15 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
       await router.push(`/organization/${nameOfOrganization}`)
 
       const createSession = async (object: sessionsDataI, userId: string) => {
-        const resultData: sessionsDataI[] = []
+        const resultArray: sessionsDataI[] = []
         if (dataOfDocs?.sessions) {
-          resultData.push(...dataOfDocs.sessions, object)
+          resultArray.push(...dataOfDocs.sessions, object)
         } else {
-          resultData.push(object)
+          resultArray.push(object)
+        }
+        const resultData: sessionsInterface = {
+          owner: userId,
+          sessions: resultArray
         }
         await setItemInFirestore('sessions', userId, resultData)
       }
