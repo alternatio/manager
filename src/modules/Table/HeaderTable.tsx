@@ -60,7 +60,9 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
           <PopupButton icon={renameIcon} onClickCallback={() => handleRename(true)}>
             Переименовать таблицу
           </PopupButton>
-          <PopupButton icon={trashIcon} onClickCallback={() => deleteTable(props.setData, props.data, props.id)}>
+          <PopupButton icon={trashIcon} onClickCallback={() => deleteTable(
+            // @ts-ignore
+            props.setData, props.data, props.id)}>
             Удалить таблицу
           </PopupButton>
         </Popup>
