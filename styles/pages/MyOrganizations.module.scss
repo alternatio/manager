@@ -21,14 +21,3 @@
   gap: 1rem;
   justify-content: center;
 }
-
-.organizationBlock {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  padding: 1rem;
-  background: $white;
-  border-radius: .5rem;
-  box-shadow: 0 .5rem .5rem rgba($black, .1);
-  font-size: 1.2rem;
-}

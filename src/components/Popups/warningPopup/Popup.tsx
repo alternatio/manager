@@ -23,7 +23,7 @@ const Popup: FC<PopupI> = (props) => {
           transition={commonTransition()}
           className={style.wrapper}
         >
-          <div className={style.body}>
+          <div className={`${style.body} ${style.bodyMaxWidth}`}>
             <span className={style.title}>{text}</span>
             <div className={style.buttons}>
               <button

@@ -25,6 +25,12 @@
   gap: 1rem;
 }
 
+.bodyMaxWidth {
+  max-width: 20rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .cancel {
   transition: $cubic .2s;
   &:hover {

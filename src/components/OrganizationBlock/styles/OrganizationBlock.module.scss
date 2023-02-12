@@ -1,0 +1,71 @@
+@import '/styles/variables';
+
+.organizationBlock {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: 1.5rem 2rem;
+  background: $white;
+  border-radius: .5rem;
+  box-shadow: 0 .5rem .5rem rgba($black, .1);
+  font-size: 1rem;
+  width: min(21rem, 100%);
+  border-top: $black solid .4rem;
+  height: fit-content;
+  & h3 {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    white-space: pre;
+    &:after {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      background: linear-gradient(90deg, rgba($white, 0), $white);
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 4rem;
+    }
+  }
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: 500;
+}
+
+.password {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  transition: $cubic .3s;
+}
+
+.buttons {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  justify-content: space-between;
+}
+
+.iconButtons {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.button {
+  background: $black;
+  color: $white;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+}

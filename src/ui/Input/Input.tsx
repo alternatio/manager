@@ -12,6 +12,7 @@ interface InputProps {
   placeholder: string
   autoFocus?: boolean
   disableValidation?: boolean
+  maxLength?: number
 }
 
 const Input: NextPage<InputProps> = (props) => {
@@ -30,7 +31,7 @@ const Input: NextPage<InputProps> = (props) => {
         onChange={(e) => props.setValue(e.target.value)}
         placeholder={props.placeholder}
         autoFocus={props.autoFocus}
-        maxLength={50}
+        maxLength={props.maxLength ? props.maxLength : 50}
         type='text'
       />
     </motion.label>

@@ -9,6 +9,9 @@ import { getDocInFirestore } from '../../src/helpers/firestore'
 import { sessionsInterface } from '../../src/helpers/interfaces'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
+import OrganizationBlock from '../../src/components/OrganizationBlock/OrganizationBlock'
+import IconButton from '../../src/ui/Buttons/IconButton'
+import Image from 'next/image'
 
 interface MyOrganizationsProps {}
 
@@ -17,9 +20,7 @@ const Index: NextPage<MyOrganizationsProps> = (props) => {
   const [userData, setUserData] = useState<User | null>(null)
   const [arrayOfProjects, setArrayOfProjects] = useState<sessionsInterface | null>(null)
 
-  // <sessionsDataI[] | null>
-
-  useEffect(() => {
+  const refreshData = () => {
     const data = localStorage.getItem('user')
     if (data) {
       const parsedData = JSON.parse(data)
@@ -36,6 +37,10 @@ const Index: NextPage<MyOrganizationsProps> = (props) => {
           console.error(error)
         })
     }
+  }
+
+  useEffect(() => {
+    refreshData()
   }, [])
 
   useEffect(() => {
@@ -61,30 +66,18 @@ const Index: NextPage<MyOrganizationsProps> = (props) => {
           handleAddSessionPopup={handleAddSessionPopup}
         />
         <main className={style.main}>
-          <h2 className={style.title}>Мои организации</h2>
+          <h2 className={style.title}>
+            <span>Мои организации</span>
+            <IconButton onClickCallback={() => refreshData()}>
+              <Image src={''} alt={'refresh'} />
+            </IconButton>
+          </h2>
           <motion.div layout={true} className={style.organizationsList}>
-            {arrayOfProjects?.sessions && (
-              arrayOfProjects.sessions.map((session) => {
-                return (
-                  <motion.div layout={true} className={style.organizationBlock}>
-                    <h3 className={style.organizationTitle}>
-                      ID: {session.id}
-                    </h3>
-                    <span>
-                      Имя организации: {session.title}
-                    </span>
-                    <span>
-                      Пароль организации: {session.password}
-                    </span>
-                  </motion.div>
-                )
-              })
-            )}
-            {!arrayOfProjects?.sessions && (
-              <p className={style.description}>
-                У вас нет досок
-              </p>
-            )}
+            {arrayOfProjects?.sessions &&
+              arrayOfProjects.sessions.map((session, index) => {
+                return <OrganizationBlock key={index} session={session} />
+              })}
+            {!arrayOfProjects?.sessions && <p className={style.description}>У вас нет досок</p>}
           </motion.div>
         </main>
       </Wrapper>

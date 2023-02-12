@@ -5,7 +5,7 @@ export interface userInterface {
   avatar: string | null
 }
 
-interface sessionInterface {
+export interface sessionInterface {
   id: string
   title: string
   password: string

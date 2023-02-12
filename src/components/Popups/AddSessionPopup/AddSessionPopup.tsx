@@ -48,7 +48,7 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
         }
         const resultData: sessionsInterface = {
           owner: userId,
-          sessions: resultArray
+          sessions: resultArray,
         }
         await setItemInFirestore('sessions', userId, resultData)
       }
@@ -111,8 +111,14 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
           setValue={setName}
           placeholder={'Название организации'}
           autoFocus={true}
+          maxLength={20}
         />
-        <Input value={passwordOfOrganization} setValue={setPassword} placeholder={'Пароль'} />
+        <Input
+          maxLength={16}
+          value={passwordOfOrganization}
+          setValue={setPassword}
+          placeholder={'Пароль'}
+        />
         <p className={style.description}>
           Если у вас есть организация, выберите в пункте меню -Мои организации-
         </p>
