@@ -16,6 +16,7 @@ const ButtonAddTable: FC<ButtonAddTable> = memo((props) => {
       {props.data.length <= 20 && (
         <div
           onClick={() => {
+            // @ts-ignore
             addItem(props.setData, props.data)
           }}
           className={style.addTable}
