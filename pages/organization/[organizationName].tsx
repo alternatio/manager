@@ -52,13 +52,20 @@ const Organization: NextPage = memo(() => {
                 key={index}
                 title={table.title}
                 index={index}
+                // @ts-ignore
                 data={data}
+                // @ts-ignore
                 setData={setData}
                 id={table.id}
               />
             )
           })}
-          <ButtonAddTable data={data} setData={setData} />
+          <ButtonAddTable
+            // @ts-ignore
+            data={data}
+            // @ts-ignore
+            setData={setData}
+          />
         </main>
       </Wrapper>
     </>
