@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Dispatch, FC, memo, SetStateAction } from 'react'
+import { Dispatch, FC, memo, ReactNode, SetStateAction } from 'react'
 import style from '../styles/Popup.module.scss'
 import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
 import { popupV } from '../../../ui/animations/variants'
 
 interface PopupI {
   text?: string
+  children?: ReactNode
   callback: Function
   warningPopup: boolean
   handleWarningPopup: Dispatch<SetStateAction<boolean>>
@@ -25,6 +26,11 @@ const Popup: FC<PopupI> = (props) => {
         >
           <div className={`${style.body} ${style.bodyMaxWidth}`}>
             <span className={style.title}>{text}</span>
+            {props.children && (
+              <div className={style.title}>
+                {props.children}
+              </div>
+            )}
             <div className={style.buttons}>
               <button
                 onClick={() => {
