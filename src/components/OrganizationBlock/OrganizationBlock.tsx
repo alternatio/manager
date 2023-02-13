@@ -8,18 +8,28 @@ import Image from 'next/image'
 import { editIcon, eyeIcon, trashIcon } from '../../helpers/importIcons'
 import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
+import Input from '../../ui/Input/Input'
+import UpdatePopup from '../Popups/UpdatePopup/UpdatePopup'
+import { staterArrayOfProjectsI } from '../../../pages/myOrganizations'
+import { User } from '@firebase/auth'
+import { setItemInFirestore } from '../../helpers/firestore'
 
 interface OrganizationBlockProps {
   session: sessionInterface
   deleteOrganization: Function
   index: number
   refreshData: Function
+  staterArrayOfProjects: staterArrayOfProjectsI
+  userData: User | null
 }
 
 const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
   const [isCheckPassword, handleIsCheckPassword] = useState<boolean>(false)
-  const [isChangeFields, handleIsChangeFields] = useState<boolean>(false)
   const [warningPopup, handleWarningPopup] = useState<boolean>(false)
+
+  const [popupIsVisible, handlePopupVisible] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>(props.session.title)
+  const [password, setPassword] = useState<string>(props.session.password)
 
   const getDots = (length: number) => {
     let result = ''
@@ -27,6 +37,24 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
       result += '*'
     }
     return result
+  }
+
+  const functionOnUpdate = async () => {
+    if (props.userData?.uid && props.staterArrayOfProjects.arrayOfProjects) {
+      const resultArray = [...props.staterArrayOfProjects.arrayOfProjects.sessions]
+      console.log(props.staterArrayOfProjects.arrayOfProjects.sessions)
+      resultArray[props.index].title = title
+      resultArray[props.index].password = password
+
+      const resultData = {
+        owner: props.userData.uid,
+        sessions: resultArray,
+      }
+
+      console.log(resultArray, resultData)
+      await setItemInFirestore('sessions', props.userData.uid, resultData)
+      // props.refreshData()
+    }
   }
 
   return (
@@ -43,7 +71,14 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         <p>«{props.session.title}»?</p>
       </Popup>
 
-      
+      <UpdatePopup
+        isVisible={popupIsVisible}
+        handleVisible={handlePopupVisible}
+        functionOnUpdate={functionOnUpdate}
+        arrayOfValues={[title, password]}
+        arrayOfFunctions={[setTitle, setPassword]}
+        arrayOfPlaceholders={['Имя', 'Пароль']}
+      />
 
       <motion.div
         variants={{}}
@@ -59,7 +94,9 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         <div className={style.password}>
           <span className={style.title}>Пароль: </span>
           <div className={style.passwordLine}>
-            <span className={style.value}>{isCheckPassword ? props.session.password : getDots(props.session.password.length)}</span>
+            <span className={style.value}>
+              {isCheckPassword ? props.session.password : getDots(props.session.password.length)}
+            </span>
             <IconButton onClickCallback={() => handleIsCheckPassword((prevState) => !prevState)}>
               <Image
                 className={`icon ${style.icon}`}
@@ -75,7 +112,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
             <IconButton onClickCallback={() => handleWarningPopup(true)}>
               <Image className={'icon'} src={trashIcon} alt={'trash'} />
             </IconButton>
-            <IconButton onClickCallback={() => {}}>
+            <IconButton onClickCallback={() => handlePopupVisible((prev) => !prev)}>
               <Image className={'icon'} src={editIcon} alt={'edit'} />
             </IconButton>
           </div>

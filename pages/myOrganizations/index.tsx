@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { memo, useEffect, useState } from 'react'
+import { Dispatch, memo, SetStateAction, useEffect, useState } from 'react'
 import { User } from '@firebase/auth'
 import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
 import Head from 'next/head'
@@ -14,13 +14,21 @@ import IconButton from '../../src/ui/Buttons/IconButton'
 import Image from 'next/image'
 import { refreshIcon } from '../../src/helpers/importIcons'
 
-interface MyOrganizationsProps {}
+export interface staterArrayOfProjectsI {
+  arrayOfProjects: sessionsInterface | null
+  setArrayOfProjects: Dispatch<SetStateAction<sessionsInterface | null>>
+}
 
-const Index: NextPage<MyOrganizationsProps> = (props) => {
+const Index: NextPage = () => {
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
   const [userData, setUserData] = useState<User | null>(null)
   const [arrayOfProjects, setArrayOfProjects] = useState<sessionsInterface | null>(null)
   const [loading, handleLoading] = useState<boolean>(true)
+
+  const staterArrayOfProjects: staterArrayOfProjectsI = {
+    arrayOfProjects,
+    setArrayOfProjects,
+  }
 
   const refreshData = () => {
     handleLoading(true)
@@ -103,10 +111,16 @@ const Index: NextPage<MyOrganizationsProps> = (props) => {
                     deleteOrganization={deleteOrganization}
                     index={index}
                     refreshData={refreshData}
+                    staterArrayOfProjects={staterArrayOfProjects}
+                    userData={userData}
                   />
                 )
               })}
-            {!arrayOfProjects?.sessions.length && !loading && <p className={style.description}>У вас нет досок. Может создать? Это можно сделать в меню сверху</p>}
+            {!arrayOfProjects?.sessions.length && !loading && (
+              <p className={style.description}>
+                У вас нет досок. Может создать? Это можно сделать в меню сверху
+              </p>
+            )}
           </motion.div>
         </main>
       </Wrapper>
