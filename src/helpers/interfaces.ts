@@ -7,11 +7,12 @@ export interface userInterface {
 
 export interface sessionInterface {
   id: string
+  owner: string
   title: string
   password: string
+  users: userInterface[]
 }
 
 export interface sessionsInterface {
-  owner: string
   sessions: sessionInterface[]
 }

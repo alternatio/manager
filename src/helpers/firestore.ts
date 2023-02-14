@@ -1,8 +1,17 @@
 import { getAuth, signInWithPopup, signOut, User } from '@firebase/auth'
 import { db, provider } from '../../data/firebase/firebase'
 import { Dispatch, SetStateAction } from 'react'
-import { addDoc, collection, doc, getDoc, getDocs, setDoc } from '@firebase/firestore'
-import { userInterface } from './interfaces'
+import {
+  addDoc,
+  collection,
+  doc,
+  DocumentSnapshot,
+  getDoc,
+  getDocs,
+  setDoc,
+} from '@firebase/firestore'
+import { sessionInterface, sessionsInterface, userInterface } from './interfaces'
+import { getRandomId } from './global'
 
 // get doc in firestore
 export const getDocInFirestore = async (collectionName: string, docName: string) => {
@@ -45,7 +54,7 @@ export const signInWithGooglePopup = async (setUserData: Dispatch<SetStateAction
       email: user.email,
       avatar: user.photoURL,
     }
-    setItemInFirestore('users', user.uid, userObject)
+    await setItemInFirestore('users', user.uid, userObject)
     setUserData(user)
     localStorage.setItem('user', JSON.stringify(user))
   } catch (error) {
@@ -64,5 +73,47 @@ export const signOutWithGooglePopup = async (
     localStorage.removeItem('user')
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const addSession = async (
+  owner: string,
+  title: string,
+  password: string,
+  currentUser: userInterface
+) => {
+  // get doc
+  const doc = (await getDocInFirestore('sessions', owner)) as DocumentSnapshot<sessionsInterface>
+
+  // prepare data
+  const docData = doc.data()
+
+  // valid input data
+  const validation = (obj: sessionInterface) => {
+    return obj.title === title && obj.password === password
+  }
+  const foundedObject = docData?.sessions.find((obj) => validation(obj))
+
+  // check valid and prepare object and push in firestore
+  if (docData?.sessions && foundedObject) {
+    const sessionData: sessionInterface = {
+      id: foundedObject.id,
+      users: [...foundedObject.users, currentUser],
+      owner,
+      title,
+      password,
+    }
+    const resultData = [...docData.sessions, sessionData]
+    console.log({ sessions: resultData })
+
+    //  TODO: do setter in firestore
+  }
+}
+
+export const createSession = (owner: string, name: string, password: string) => {
+  const sessionData = {
+    owner,
+    name,
+    password,
   }
 }

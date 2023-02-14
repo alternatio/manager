@@ -118,7 +118,7 @@ const Index: NextPage = () => {
               })}
             {!arrayOfProjects?.sessions.length && !loading && (
               <p className={style.description}>
-                У вас нет досок. Может создать? Это можно сделать в меню сверху
+                У вас нет досок. Может создать или присоединиться? Это можно сделать в меню сверху
               </p>
             )}
           </motion.div>

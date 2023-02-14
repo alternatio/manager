@@ -13,6 +13,7 @@ interface HamburgerInterface {
   hamburgerIsOpen: boolean
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
   handleWarningPopup: Dispatch<SetStateAction<boolean>>
+  handleEnterInSessionPopup: Dispatch<SetStateAction<boolean>>
 }
 
 export const Hamburger: FC<HamburgerInterface> = memo((props) => {
@@ -47,6 +48,9 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
               </button>
               <button onClick={() => props.handleAddSessionPopup(true)} className={style.button}>
                 Создать доску
+              </button>
+              <button onClick={() => {}} className={style.button}>
+                Войти в доску
               </button>
               <button
                 onClick={() => props.handleWarningPopup(true)}

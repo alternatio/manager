@@ -19,6 +19,7 @@ interface HeaderInterface {
 export const Header: FC<HeaderInterface> = memo((props) => {
   const [hamburgerIsOpen, handleHamburger] = useState<boolean>(false)
   const [warningPopup, handleWarningPopup] = useState<boolean>(false)
+  const [enterInSessionPopup, handleEnterInSessionPopup] = useState<boolean>(false)
 
   return (
     <>
@@ -28,6 +29,8 @@ export const Header: FC<HeaderInterface> = memo((props) => {
         warningPopup={warningPopup}
         text={'Вы уверены? Выйти?'}
       />
+
+
 
       <div className={style.Header}>
         <div className={style.leftPart}>
@@ -55,6 +58,7 @@ export const Header: FC<HeaderInterface> = memo((props) => {
             handleWarningPopup={handleWarningPopup}
             hamburgerIsOpen={hamburgerIsOpen}
             setUserData={props.setUserData}
+            handleEnterInSessionPopup={handleEnterInSessionPopup}
           />
           <HamburgerButton hamburgerIsOpen={hamburgerIsOpen} handleHamburger={handleHamburger} />
         </div>
