@@ -1,0 +1,16 @@
+@import 'styles/variables';
+
+.button {
+  position: relative;
+  width: fit-content;
+  padding: .4rem .75rem;
+  overflow: hidden;
+}
+
+.buttonBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
