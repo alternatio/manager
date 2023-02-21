@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { FC, memo, ReactNode, useEffect, useState } from 'react'
+import { Dispatch, FC, memo, ReactNode, SetStateAction, useState } from 'react'
 import style from './styles/Button.module.scss'
 import { commonAnimation, commonTransition } from '../animations/commonAnimations'
 import { buttonBackgroundVariants } from './styles/variants'
@@ -7,6 +7,8 @@ import { buttonBackgroundVariants } from './styles/variants'
 type layoutT = {
   backgroundLayoutID: string
   backgroundLayoutColor: string
+  // hoverNumber: number
+  // setHoverNumber: Dispatch<SetStateAction<number>>
 }
 
 interface ButtonProps {
@@ -45,19 +47,22 @@ const Button: FC<ButtonProps> = ({
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
     >
-      <AnimatePresence>
-        {isHover && layout && (
-          <motion.div
-            style={{ backgroundColor: layout.backgroundLayoutColor }}
-            layout={true}
-            layoutId={layout.backgroundLayoutID}
-            variants={buttonBackgroundVariants}
-            transition={commonTransition(.25)}
-            {...commonAnimation}
-            className={style.buttonBackground}
-          />
-        )}
-      </AnimatePresence>
+      {layout && (
+        <AnimatePresence>
+          {isHover && (
+            <motion.div
+              style={{ backgroundColor: layout.backgroundLayoutColor }}
+              layoutId={layout.backgroundLayoutID}
+              layout={true}
+              variants={buttonBackgroundVariants}
+              transition={commonTransition(0.25)}
+              {...commonAnimation}
+              className={style.buttonBackground}
+            />
+          )}
+        </AnimatePresence>
+      )}
+
       <span style={{ color: textColor }} className={style.text}>
         {children}
       </span>

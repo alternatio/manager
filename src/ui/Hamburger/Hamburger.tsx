@@ -22,8 +22,8 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
   const hamburgerButtons: hamburgerButtonsDataInterface[] = [
     {
       children: (
-        <Link className={style.link} href={'/myOrganizations'}>
-          Мои доски
+        <Link className={style.link} href={'/about'}>
+          О компании
         </Link>
       ),
       onClick: () => {},
@@ -71,21 +71,55 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
           className={style.hamburger}
         >
           {hamburgerButtons.map((button, index) => {
-            return (
-              <Button
-                key={index}
-                onClick={button.onClick}
-                backgroundColor={'transparent'}
-                textColor={button.redButton ? '#f03' : '#000'}
-                width={'100%'}
-                layout={{
-                  backgroundLayoutColor: '#eee',
-                  backgroundLayoutID: 'hamburgerButton',
-                }}
-              >
-                {button.children}
-              </Button>
-            )
+            if (button.userDataRequired === null) {
+              return (
+                <Button
+                  key={index}
+                  onClick={button.onClick}
+                  backgroundColor={'transparent'}
+                  textColor={button.redButton ? '#f03' : '#000'}
+                  // width={'100%'}
+                  layout={{
+                    backgroundLayoutColor: '#eee',
+                    backgroundLayoutID: 'hamburgerButton',
+                  }}
+                >
+                  {button.children}
+                </Button>
+              )
+            } else if (button.userDataRequired === (props.userData !== null)) {
+              return (
+                <Button
+                  key={index}
+                  onClick={button.onClick}
+                  backgroundColor={'transparent'}
+                  textColor={button.redButton ? '#f03' : '#000'}
+                  // width={'100%'}
+                  layout={{
+                    backgroundLayoutColor: '#eee',
+                    backgroundLayoutID: 'hamburgerButton',
+                  }}
+                >
+                  {button.children}
+                </Button>
+              )
+            } else if (button.userDataRequired !== (props.userData === null)) {
+              return (
+                <Button
+                  key={index}
+                  onClick={button.onClick}
+                  backgroundColor={'transparent'}
+                  textColor={button.redButton ? '#f03' : '#000'}
+                  // width={'100%'}
+                  layout={{
+                    backgroundLayoutColor: '#eee',
+                    backgroundLayoutID: 'hamburgerButton',
+                  }}
+                >
+                  {button.children}
+                </Button>
+              )
+            }
           })}
         </motion.div>
       )}
