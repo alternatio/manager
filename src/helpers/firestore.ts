@@ -1,26 +1,18 @@
 import { getAuth, signInWithPopup, signOut, User } from '@firebase/auth'
 import { db, provider } from '../../data/firebase/firebase'
 import { Dispatch, SetStateAction } from 'react'
+import { addDoc, collection, doc, getDoc, setDoc } from '@firebase/firestore'
 import {
-  addDoc,
-  collection,
-  doc,
-  DocumentSnapshot,
-  getDoc,
-  getDocs,
-  setDoc,
-} from '@firebase/firestore'
-import { sessionInterface, sessionsInterface, userInterface } from './interfaces'
+  sessionInterface,
+  sessionsInterface,
+  userInterface,
+  userInterfaceWithRole,
+} from './interfaces'
 import { getRandomId } from './global'
 
 // get doc in firestore
 export const getDocInFirestore = async (collectionName: string, docName: string) => {
   return await getDoc(doc(db, collectionName, docName))
-}
-
-// get collection in firestore
-export const getCollectionInFirestore = async (collectionName: string) => {
-  return await getDocs(collection(db, collectionName))
 }
 
 // add item in firestore
@@ -31,15 +23,6 @@ export const addItemInFirestore = async (collectionName: string, data: object) =
 // set item in firestore
 export const setItemInFirestore = async (collectionName: string, docName: string, data: object) => {
   await setDoc(doc(db, collectionName, docName), data)
-}
-
-// get items from firestore and set in state
-export const getItemsFromFirestore = async (
-  collectionName: string,
-  setData: Dispatch<SetStateAction<unknown>>
-) => {
-  const data = await getDocs(collection(db, collectionName))
-  setData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
 }
 
 // sign in app with Google
@@ -76,44 +59,58 @@ export const signOutWithGooglePopup = async (
   }
 }
 
-export const addSession = async (
-  owner: string,
-  title: string,
-  password: string,
-  currentUser: userInterface
+// create organization
+export const createOrganization = async (
+  userData: User | null,
+  nameOfOrganization: string,
+  passwordOfOrganization: string
 ) => {
-  // get doc
-  const doc = (await getDocInFirestore('sessions', owner)) as DocumentSnapshot<sessionsInterface>
+  if (nameOfOrganization && passwordOfOrganization && userData?.uid) {
+    const data = await getDocInFirestore('sessions', userData.uid)
+    const preparedData = data.data() as sessionsInterface | undefined
+    const id = getRandomId()
 
-  // prepare data
-  const docData = doc.data()
-
-  // valid input data
-  const validation = (obj: sessionInterface) => {
-    return obj.title === title && obj.password === password
-  }
-  const foundedObject = docData?.sessions.find((obj) => validation(obj))
-
-  // check valid and prepare object and push in firestore
-  if (docData?.sessions && foundedObject) {
-    const sessionData: sessionInterface = {
-      id: foundedObject.id,
-      users: [...foundedObject.users, currentUser],
-      owner,
-      title,
-      password,
+    const preparedUser: userInterfaceWithRole = {
+      uid: userData.uid,
+      name: userData.displayName,
+      email: userData.email,
+      avatar: userData.photoURL,
+      role: 'Owner',
     }
-    const resultData = [...docData.sessions, sessionData]
-    console.log({ sessions: resultData })
 
-    //  TODO: do setter in firestore
+    const resultObject: sessionInterface = {
+      id,
+      owner: preparedUser.uid,
+      title: nameOfOrganization,
+      password: passwordOfOrganization,
+      users: [preparedUser],
+      tables: [],
+    }
+
+    if (preparedData) {
+      const isValid = preparedData.sessions.find((obj) => obj.id === id) === undefined
+      const resultData: sessionsInterface = {
+        sessions: [...preparedData.sessions, resultObject],
+      }
+
+      if (isValid) {
+        await setItemInFirestore('sessions', preparedUser.uid, resultData)
+      }
+    } else {
+      const resultData: sessionsInterface = {
+        sessions: [resultObject],
+      }
+      await setItemInFirestore('sessions', preparedUser.uid, resultData)
+    }
   }
 }
 
-export const createSession = (owner: string, name: string, password: string) => {
-  const sessionData = {
-    owner,
-    name,
-    password,
+// get user
+export const getUser = (setUserData: Dispatch<SetStateAction<User | null>>) => {
+  const data = localStorage.getItem('user')
+  if (data) {
+    const preparedData = JSON.parse(data) as User
+    setUserData(preparedData)
+    return preparedData
   }
 }

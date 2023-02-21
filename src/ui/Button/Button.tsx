@@ -1,8 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { FC, memo, ReactNode, useState } from 'react'
+import { FC, memo, ReactNode, useEffect, useState } from 'react'
 import style from './styles/Button.module.scss'
 import { commonAnimation, commonTransition } from '../animations/commonAnimations'
 import { buttonBackgroundVariants } from './styles/variants'
+
+type layoutT = {
+  backgroundLayoutID: string
+  backgroundLayoutColor: string
+}
 
 interface ButtonProps {
   onClick?: CallableFunction
@@ -10,35 +15,51 @@ interface ButtonProps {
   disabled?: boolean
   textColor?: string
   backgroundColor?: string
-  backgroundLayoutID?: string
-  backgroundIsLayout?: string
+  padding?: string
+  width?: '100%' | 'fit-content'
+  layout?: layoutT
 }
 
-const Button: FC<ButtonProps> = (props) => {
+const Button: FC<ButtonProps> = ({
+  onClick = () => {},
+  children,
+  disabled,
+  layout,
+  width = 'fit-content',
+  textColor = '#fff',
+  backgroundColor = '#000',
+  padding = '0.5rem 0.8rem',
+}) => {
   const [isHover, handleHover] = useState<boolean>(false)
 
   return (
     <motion.button
-      style={{ backgroundColor: props.backgroundColor }}
-      disabled={props.disabled}
+      style={{
+        backgroundColor: backgroundColor,
+        padding: padding,
+        width: width,
+      }}
+      disabled={disabled}
       className={style.button}
-      onClick={() => props.onClick && props.onClick()}
+      onClick={() => onClick()}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
     >
       <AnimatePresence>
-        {isHover && props.backgroundIsLayout && (
+        {isHover && layout && (
           <motion.div
-            layoutId={props.backgroundLayoutID}
+            style={{ backgroundColor: layout.backgroundLayoutColor }}
+            layout={true}
+            layoutId={layout.backgroundLayoutID}
             variants={buttonBackgroundVariants}
-            transition={commonTransition(0.25)}
+            transition={commonTransition(.25)}
             {...commonAnimation}
             className={style.buttonBackground}
           />
         )}
       </AnimatePresence>
-      <span style={{ color: props.textColor }} className={style.text}>
-        {props.children}
+      <span style={{ color: textColor }} className={style.text}>
+        {children}
       </span>
     </motion.button>
   )

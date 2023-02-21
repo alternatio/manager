@@ -11,15 +11,14 @@ import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
 import { NextPage } from 'next'
 import { User } from '@firebase/auth'
+import { getUser } from '../src/helpers/firestore'
 
 const Home: NextPage = () => {
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
   const [userData, setUserData] = useState<User | null>(null)
 
   useEffect(() => {
-    const data = localStorage.getItem('user')
-    data && console.log(JSON.parse(data))
-    data && setUserData(JSON.parse(data))
+    getUser(setUserData)
   }, [])
 
   return (

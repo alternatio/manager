@@ -5,7 +5,7 @@ import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
 import Head from 'next/head'
 import { Header } from '../../src/modules/Header/Header'
 import style from '../../styles/pages/MyOrganizations.module.scss'
-import { getDocInFirestore, setItemInFirestore } from '../../src/helpers/firestore'
+import { getDocInFirestore, getUser, setItemInFirestore } from '../../src/helpers/firestore'
 import { sessionsInterface } from '../../src/helpers/interfaces'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
@@ -33,12 +33,9 @@ const Index: NextPage = () => {
   const refreshData = () => {
     handleLoading(true)
     setArrayOfProjects(null)
-    const data = localStorage.getItem('user')
+    const data = getUser(setUserData)
     if (data) {
-      const parsedData = JSON.parse(data)
-      setUserData(parsedData)
-
-      getDocInFirestore('sessions', parsedData.uid)
+      getDocInFirestore('sessions', data.uid)
         .then((response) => {
           const data = response.data() as sessionsInterface
           if (data) {
@@ -55,10 +52,6 @@ const Index: NextPage = () => {
   useEffect(() => {
     refreshData()
   }, [])
-
-  useEffect(() => {
-    console.log(arrayOfProjects)
-  }, [arrayOfProjects])
 
   const deleteOrganization = async (indexOfOrganization: number) => {
     const owner = userData?.uid

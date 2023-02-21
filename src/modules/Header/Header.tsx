@@ -30,8 +30,6 @@ export const Header: FC<HeaderInterface> = memo((props) => {
         text={'Вы уверены? Выйти?'}
       />
 
-
-
       <div className={style.Header}>
         <div className={style.leftPart}>
           <Link className={style.logo} href={'/'}>

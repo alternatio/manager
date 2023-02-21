@@ -6,6 +6,8 @@ import { commonAnimation, transitionSpringMedium } from '../animations/commonAni
 import { hamburgerV } from '../animations/variants'
 import { User } from '@firebase/auth'
 import { signInWithGooglePopup } from '../../helpers/firestore'
+import { hamburgerButtonsDataInterface } from '../../helpers/interfaces'
+import Button from '../Button/Button'
 
 interface HamburgerInterface {
   userData: User | null
@@ -17,6 +19,48 @@ interface HamburgerInterface {
 }
 
 export const Hamburger: FC<HamburgerInterface> = memo((props) => {
+  const hamburgerButtons: hamburgerButtonsDataInterface[] = [
+    {
+      children: (
+        <Link className={style.link} href={'/myOrganizations'}>
+          Мои доски
+        </Link>
+      ),
+      onClick: () => {},
+      userDataRequired: null,
+    },
+    {
+      children: 'Войти в аккаунт',
+      onClick: () => signInWithGooglePopup(props.setUserData),
+      userDataRequired: false,
+    },
+    {
+      children: (
+        <Link className={style.link} href={'/myOrganizations'}>
+          Мои доски
+        </Link>
+      ),
+      onClick: () => {},
+      userDataRequired: true,
+    },
+    {
+      children: 'Создать доску',
+      onClick: () => props.handleAddSessionPopup(true),
+      userDataRequired: true,
+    },
+    {
+      children: 'Присоединиться к доске',
+      onClick: () => {},
+      userDataRequired: true,
+    },
+    {
+      children: 'Выйти из аккаунта',
+      onClick: () => props.handleWarningPopup(true),
+      userDataRequired: true,
+      redButton: true,
+    },
+  ]
+
   return (
     <AnimatePresence>
       {props.hamburgerIsOpen && (
@@ -26,40 +70,23 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
           transition={transitionSpringMedium}
           className={style.hamburger}
         >
-          <button className={style.button}>
-            <Link className={style.link} href={'/about'}>
-              О проекте
-            </Link>
-          </button>
-          {!props.userData && (
-            <button
-              onClick={() => signInWithGooglePopup(props.setUserData)}
-              className={style.button}
-            >
-              Войти в аккаунт
-            </button>
-          )}
-          {props.userData && (
-            <>
-              <button className={style.button}>
-                <Link className={style.link} href={'/myOrganizations'}>
-                  Мои организации
-                </Link>
-              </button>
-              <button onClick={() => props.handleAddSessionPopup(true)} className={style.button}>
-                Создать доску
-              </button>
-              <button onClick={() => {}} className={style.button}>
-                Войти в доску
-              </button>
-              <button
-                onClick={() => props.handleWarningPopup(true)}
-                className={`${style.button} ${style.redButton}`}
+          {hamburgerButtons.map((button, index) => {
+            return (
+              <Button
+                key={index}
+                onClick={button.onClick}
+                backgroundColor={'transparent'}
+                textColor={button.redButton ? '#f03' : '#000'}
+                width={'100%'}
+                layout={{
+                  backgroundLayoutColor: '#eee',
+                  backgroundLayoutID: 'hamburgerButton',
+                }}
               >
-                Выйти из аккаунта
-              </button>
-            </>
-          )}
+                {button.children}
+              </Button>
+            )
+          })}
         </motion.div>
       )}
     </AnimatePresence>

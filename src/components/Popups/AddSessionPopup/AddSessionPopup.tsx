@@ -2,85 +2,32 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import style from '../styles/Popup.module.scss'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
-import { sessionsData, sessionsDataI } from '../../../../data/sessionsData'
-import { getRandomId } from '../../../helpers/global'
 import { arrowIcon } from '../../../helpers/importIcons'
 import Input from '../../../ui/Input/Input'
 import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
 import { popupV } from '../../../ui/animations/variants'
+import { createOrganization } from '../../../helpers/firestore'
+import Button from '../../../ui/Button/Button'
+import Text from '../../../ui/Text/Text'
 import { User } from '@firebase/auth'
-import { getDocInFirestore, setItemInFirestore } from '../../../helpers/firestore'
-import { DocumentSnapshot } from '@firebase/firestore'
-import { sessionsInterface, userInterface } from '../../../helpers/interfaces'
 
-interface AddSessionPopupPropsRouter {
+interface AddSessionPopupProps {
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
   userData: User | null
 }
 
-type sessionsData = { sessions: sessionsDataI[] }
-
-export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
+export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
   const [nameOfOrganization, setName] = useState<string>('')
   const [passwordOfOrganization, setPassword] = useState<string>('')
-  const router = useRouter()
 
   const closePopup = () => {
     props.handleAddSessionPopup(false)
   }
 
-  const addOrganization = async () => {
-    if (nameOfOrganization && passwordOfOrganization && props.userData?.uid) {
-      const docs = (await getDocInFirestore(
-        'sessions',
-        props.userData.uid
-      )) as DocumentSnapshot<sessionsData>
-      const dataOfDocs = docs.data()
-      await router.push(`/organization/${nameOfOrganization}`)
-
-      const createSession = async (object: sessionsDataI, userId: string) => {
-        const resultArray: sessionsDataI[] = []
-        if (dataOfDocs?.sessions) {
-          resultArray.push(...dataOfDocs.sessions, object)
-        } else {
-          resultArray.push(object)
-        }
-        const resultData: sessionsInterface = {
-          owner: userId,
-          sessions: resultArray,
-        }
-        await setItemInFirestore('sessions', userId, resultData)
-      }
-
-      const sessionObject: sessionsDataI = {
-        id: getRandomId(),
-        title: nameOfOrganization,
-        password: passwordOfOrganization,
-      }
-
-      await createSession(sessionObject, props.userData.uid)
-
-      // if (dataOfDocs) {
-      //   if (dataOfDocs.sessions.find((object) => object.title === nameOfOrganization)) {
-      //     console.log('multi', dataOfDocs)
-      //   } else {
-      //     const sessionObject: sessionsDataI = {
-      //       id: getRandomId(),
-      //       title: nameOfOrganization,
-      //       password: passwordOfOrganization,
-      //     }
-      //     await createSession(sessionObject, props.userData.uid)
-      //     console.log('un multi', dataOfDocs)
-      //   }
-      // }
-    }
-  }
-
-  const keyDown = (e: KeyboardEvent) => {
+  const keyDown = async (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        addOrganization()
+        await createOrganization(props.userData, nameOfOrganization, passwordOfOrganization)
         break
       case 'Escape':
         closePopup()
@@ -119,17 +66,17 @@ export const AddSessionPopup: FC<AddSessionPopupPropsRouter> = (props) => {
           setValue={setPassword}
           placeholder={'Пароль'}
         />
-        <p className={style.description}>
-          Если у вас есть организация, выберите в пункте меню -Мои организации-
-        </p>
-        <button
-          onClick={() => {
-            addOrganization()
-          }}
-          className={style.button}
+        <Text fontSize={'.9rem'} fontWeight={'400'} color={'#888'} width={'18rem'} align={'center'}>
+          Если у вас есть организация, выберите в пункте меню -Мои доски-
+        </Text>
+        <Button
+          width={'100%'}
+          onClick={() =>
+            createOrganization(props.userData, nameOfOrganization, passwordOfOrganization)
+          }
         >
           Создать
-        </button>
+        </Button>
       </div>
     </motion.div>
   )

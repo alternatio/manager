@@ -12,6 +12,7 @@
 
 ::selection {
   background: $yellow;
+  color: $black;
 }
 
 #__next::-webkit-scrollbar {
@@ -75,6 +76,11 @@ button {
 
 input {
   @extend %reset;
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 //@media (max-width: 650px) {
