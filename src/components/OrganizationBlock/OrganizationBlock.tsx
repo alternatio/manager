@@ -5,14 +5,21 @@ import { sessionInterface } from '../../helpers/interfaces'
 import { commonAnimation, commonTransition } from '../../ui/animations/commonAnimations'
 import IconButton from '../../ui/Buttons/IconButton'
 import Image from 'next/image'
-import { editIcon, eyeIcon, trashIcon } from '../../helpers/importIcons'
+import {
+  blockIcon,
+  columnIcon,
+  editIcon,
+  eyeIcon,
+  tableIcon,
+  trashIcon,
+} from '../../helpers/importIcons'
 import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
 import Input from '../../ui/Input/Input'
 import UpdatePopup from '../Popups/UpdatePopup/UpdatePopup'
 import { staterArrayOfProjectsI } from '../../../pages/myOrganizations'
 import { User } from '@firebase/auth'
-import { setItemInFirestore } from '../../helpers/firestore'
+import { getLink, setItemInFirestore } from '../../helpers/firestore'
 
 interface OrganizationBlockProps {
   session: sessionInterface
@@ -51,10 +58,37 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         sessions: resultArray,
       }
 
-      console.log(resultArray, resultData)
       await setItemInFirestore('sessions', props.userData.uid, resultData)
       // props.refreshData()
     }
+  }
+
+  const getOwner = () => {
+    return props.session.users.find((item) => item.uid === props.session.owner)
+  }
+
+  const getLengthOfTables = () => {
+    return props.session.tables.length
+  }
+
+  const getLengthOfColumns = () => {
+    let lengthOfColumns = 0
+    props.session.tables.forEach((table) => {
+      if (table.columns) {
+        lengthOfColumns += table.columns.length
+      }
+    })
+    return lengthOfColumns
+  }
+
+  const getLengthOfBlocks = () => {
+    let lengthOfBlocks = 0
+    props.session.tables.forEach((table) => {
+      if (table.blocks) {
+        lengthOfBlocks += table.blocks.length
+      }
+    })
+    return lengthOfBlocks
   }
 
   return (
@@ -107,17 +141,55 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
             </IconButton>
           </div>
         </div>
-        <div className={style.buttons}>
-          <div className={style.iconButtons}>
-            <IconButton onClickCallback={() => handleWarningPopup(true)}>
-              <Image className={'icon'} src={trashIcon} alt={'trash'} />
-            </IconButton>
-            <IconButton onClickCallback={() => handlePopupVisible((prev) => !prev)}>
-              <Image className={'icon'} src={editIcon} alt={'edit'} />
-            </IconButton>
+        <div className={style.label}>
+          <span className={style.title}>Создатель: </span>
+          <div className={style.owner}>
+            <Image
+              className={style.avatarOwner}
+              referrerPolicy={'no-referrer'}
+              width={60}
+              height={60}
+              src={getOwner()?.avatar || 'none'}
+              alt={'avatarOwner'}
+            />
+            <div className={style.ownerText}>
+              <span className={style.value}>{getOwner()?.name}</span>
+              <span className={style.value}>{getOwner()?.email}</span>
+            </div>
           </div>
-          <button className={style.button}>
-            <Link href={`organization/${props.session.title}`}>Смотреть</Link>
+        </div>
+        <div className={style.blockOfCounters}>
+          <div className={style.counter}>
+            <Image className={style.counterIcon} src={tableIcon} alt={'table'} />
+            <span className={style.counterText}>{getLengthOfTables()}</span>
+          </div>
+          <div className={style.counter}>
+            <Image className={style.counterIcon} src={columnIcon} alt={'column'} />
+            <span className={style.counterText}>{getLengthOfColumns()}</span>
+          </div>
+          <div className={style.counter}>
+            <Image className={style.counterIcon} src={blockIcon} alt={'block'} />
+            <span className={style.counterText}>{getLengthOfBlocks()}</span>
+          </div>
+        </div>
+        <div className={style.buttons}>
+          {props.userData?.uid === props.session.owner && (
+            <div className={style.iconButtons}>
+              <IconButton onClickCallback={() => handleWarningPopup(true)}>
+                <Image className={'icon'} src={trashIcon} alt={'trash'} />
+              </IconButton>
+              <IconButton onClickCallback={() => handlePopupVisible((prev) => !prev)}>
+                <Image className={'icon'} src={editIcon} alt={'edit'} />
+              </IconButton>
+            </div>
+          )}
+          <button
+            onClick={() => {
+              localStorage.setItem('organization', JSON.stringify(props.session))
+            }}
+            className={style.button}
+          >
+            <Link href={getLink(props.session.owner, props.session.id)}>Смотреть</Link>
           </button>
         </div>
       </motion.div>

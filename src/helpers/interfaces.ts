@@ -1,6 +1,6 @@
-// block
 import { ReactNode } from 'react'
 
+// block
 export interface blockInterface {
   id: string
   title: string

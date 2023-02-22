@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1.5rem 2rem;
+  padding: 2rem 1.5rem;
   background: $white;
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 0.5rem rgba($black, 0.1);
@@ -38,6 +38,7 @@
 .label {
   display: flex;
   flex-direction: column;
+  gap: .2rem;
 }
 
 .title {
@@ -77,8 +78,42 @@
 .button {
   background: $black;
   padding: 0.5rem 1rem;
+  margin-left: auto;
   border-radius: 0.5rem;
   * {
     color: $white;
   }
+}
+
+.owner {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.avatarOwner {
+  width: 2.5rem;
+  height: auto;
+  border-radius: 50%;
+  border: solid #000 2px;
+}
+
+.ownerText {
+  display: flex;
+  flex-direction: column;
+}
+
+.blockOfCounters {
+  margin-top: 1rem;
+  display: flex;
+  align-items: flex-end;
+}
+
+.counter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: .5rem;
 }

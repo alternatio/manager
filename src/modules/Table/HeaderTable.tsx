@@ -10,15 +10,16 @@ import PopupButton from '../../components/Popups/smallPopup/PopupButton'
 import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../helpers/importIcons'
 import { useOnClickOutside } from '../../helpers/customHooks'
 import { deleteTable, renameItem } from '../../helpers/editItems'
+import { tableInterface } from '../../helpers/interfaces'
 
 interface HeaderTableI {
   id: string
   index: number
   popupIsOpen: boolean
   tableIsOpen: boolean
-  data: sessionsDataILegacy[]
+  data: tableInterface[]
   handlePopup: Dispatch<SetStateAction<boolean>>
-  setData: Dispatch<SetStateAction<sessionsDataILegacy[]>>
+  setData: Dispatch<SetStateAction<tableInterface[]>>
   handleTableOpen: Dispatch<SetStateAction<boolean>>
 }
 
@@ -50,7 +51,7 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
             />
           </label>
         ) : (
-          <span className={style.headerTitle}>{props.data[props.index].title}</span>
+          <span className={style.headerTitle}>{props.data[props.index]?.title}</span>
         )}
         <button className={style.buttonWithIcon}>
           <Image className={style.icon} src={searchIcon} alt={'search'} />

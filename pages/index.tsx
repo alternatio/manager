@@ -18,6 +18,7 @@ const Home: NextPage = () => {
   const [userData, setUserData] = useState<User | null>(null)
 
   useEffect(() => {
+    localStorage.removeItem('organization')
     getUser(setUserData)
   }, [])
 

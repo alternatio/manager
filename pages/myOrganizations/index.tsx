@@ -50,6 +50,7 @@ const Index: NextPage = () => {
   }
 
   useEffect(() => {
+    localStorage.removeItem('organization')
     refreshData()
   }, [])
 

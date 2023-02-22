@@ -1,10 +1,12 @@
 import { getAuth, signInWithPopup, signOut, User } from '@firebase/auth'
 import { db, provider } from '../../data/firebase/firebase'
 import { Dispatch, SetStateAction } from 'react'
-import { addDoc, collection, doc, getDoc, setDoc } from '@firebase/firestore'
+import { addDoc, collection, doc, DocumentSnapshot, getDoc, setDoc } from '@firebase/firestore'
 import {
+  columnInterface,
   sessionInterface,
   sessionsInterface,
+  tableInterface,
   userInterface,
   userInterfaceWithRole,
 } from './interfaces'
@@ -62,7 +64,7 @@ export const signOutWithGooglePopup = async (
 
 // get link on session
 export const getLink = (ownerId: string, orgId: string) => {
-  return `organization/${ownerId}&${orgId}`
+  return `/organization/${ownerId}&${orgId}`
 }
 
 // create organization
@@ -97,11 +99,13 @@ export const createOrganization = async (
 
     if (preparedData) {
       const isValid = preparedData.sessions.find((obj) => obj.id === id) === undefined
-      const resultData: sessionsInterface = {
-        sessions: [...preparedData.sessions, resultObject],
+      if (!isValid) {
+        await createOrganization(userData, nameOfOrganization, passwordOfOrganization, router)
       }
-
       if (isValid) {
+        const resultData: sessionsInterface = {
+          sessions: [...preparedData.sessions, resultObject],
+        }
         await setItemInFirestore('sessions', preparedUser.uid, resultData)
         await router.push(link)
       }
@@ -112,6 +116,7 @@ export const createOrganization = async (
       await setItemInFirestore('sessions', preparedUser.uid, resultData)
       await router.push(link)
     }
+    return resultObject
   }
 }
 
@@ -124,3 +129,79 @@ export const getUser = (setUserData: Dispatch<SetStateAction<User | null>>) => {
     return preparedData
   }
 }
+
+// get tables
+export const getSession = async (
+  setTables: Dispatch<SetStateAction<sessionInterface | null>>,
+  userID: string
+) => {
+  const localData = localStorage.getItem('organization')
+  const firestoreData = (await getDocInFirestore(
+    'sessions',
+    userID
+  )) as DocumentSnapshot<sessionsInterface>
+  const preparedFirestoreData = firestoreData.data()
+
+  if (localData && preparedFirestoreData) {
+    const preparedLocalData = JSON.parse(localData) as sessionInterface
+    const result = preparedFirestoreData.sessions.find((item) => item.id === preparedLocalData.id)
+
+    if (!result) {
+      setTables(null)
+      return null
+    }
+    const resultWithUser = result.users.find((item) => item.uid === userID)
+
+    if (!resultWithUser) {
+      setTables(null)
+      return null
+    }
+
+    setTables(result)
+    return result
+  }
+
+  setTables(null)
+  return null
+}
+
+// add table
+export const addTable = async (currentSession: sessionInterface) => {
+  const doc = await getDocInFirestore('sessions', currentSession.owner)
+  let preparedDoc = doc.data() as sessionsInterface
+
+  const table: tableInterface = {
+    id: getRandomId(),
+    title: 'Новая таблица',
+    isVisible: true,
+    columns: [],
+    blocks: [],
+  }
+
+  preparedDoc.sessions
+    .find((session) => session.id === currentSession.id)
+    ?.tables.find((item) => item.id === table.id) && (await addTable(currentSession))
+  preparedDoc.sessions.find((session) => session.id === currentSession.id)?.tables.push(table)
+  await setItemInFirestore('sessions', currentSession.owner, preparedDoc)
+}
+
+// add column
+export const addColumn = async (currentSession: sessionInterface, indexOfTable: number) => {
+  const doc = await getDocInFirestore('sessions', currentSession.owner)
+  let preparedDoc = doc.data() as sessionsInterface
+
+  const column: columnInterface = {
+    id: getRandomId(),
+    title: 'Новая колонка',
+  }
+
+  preparedDoc.sessions
+    .find((session) => session.id === currentSession.id)
+    ?.tables[indexOfTable].columns?.find((item) => item.id === column.id) &&
+    (await addColumn(currentSession, indexOfTable))
+  preparedDoc.sessions
+    .find((session) => session.id === currentSession.id)
+    ?.tables[indexOfTable].columns?.push(column)
+}
+
+// todo: add block

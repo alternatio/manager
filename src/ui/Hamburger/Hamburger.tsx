@@ -88,29 +88,27 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
           transition={transitionSpringMedium}
           className={style.hamburger}
         >
-          <AnimateSharedLayout>
-            {hamburgerButtons.map((button, index) => {
-              if (button.userDataRequired === null) {
-                return (
-                  <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
-                    {button.children}
-                  </Button>
-                )
-              } else if (button.userDataRequired === (props.userData !== null)) {
-                return (
-                  <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
-                    {button.children}
-                  </Button>
-                )
-              } else if (button.userDataRequired !== (props.userData === null)) {
-                return (
-                  <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
-                    {button.children}
-                  </Button>
-                )
-              }
-            })}
-          </AnimateSharedLayout>
+          {hamburgerButtons.map((button, index) => {
+            if (button.userDataRequired === null) {
+              return (
+                <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
+                  {button.children}
+                </Button>
+              )
+            } else if (button.userDataRequired === (props.userData !== null)) {
+              return (
+                <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
+                  {button.children}
+                </Button>
+              )
+            } else if (button.userDataRequired !== (props.userData === null)) {
+              return (
+                <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
+                  {button.children}
+                </Button>
+              )
+            }
+          })}
         </motion.div>
       )}
     </AnimatePresence>

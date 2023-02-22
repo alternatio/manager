@@ -13,6 +13,7 @@ const Index: NextPage = () => {
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
 
   useEffect(() => {
+    localStorage.removeItem('organization')
     getUser(setUserData)
   }, [])
 

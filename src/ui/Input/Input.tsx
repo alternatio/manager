@@ -13,6 +13,7 @@ interface InputProps {
   autoFocus?: boolean
   disableValidation?: boolean
   maxLength?: number
+  setError?: Dispatch<SetStateAction<string>>
 }
 
 const Input: NextPage<InputProps> = (props) => {
@@ -28,7 +29,10 @@ const Input: NextPage<InputProps> = (props) => {
       <input
         className={style.input}
         value={props.value}
-        onChange={(e) => props.setValue(e.target.value)}
+        onChange={(e) => {
+          props.setValue(e.target.value)
+          props.setError && props.setError('')
+        }}
         placeholder={props.placeholder}
         autoFocus={props.autoFocus}
         maxLength={props.maxLength ? props.maxLength : 50}

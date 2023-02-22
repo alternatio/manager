@@ -2,7 +2,6 @@ import {
   sessionDataBlockILegacy,
   sessionDataColumnILegacy,
   sessionDataTableILegacy,
-  sessionsDataILegacy,
 } from '../../../data/sessionsData'
 import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
@@ -12,13 +11,14 @@ import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../../ui/Buttons/ButtonAddColumn'
 import EditField from '../../components/EditField/EditField'
+import { tableInterface } from '../../helpers/interfaces'
 
 interface TableI extends sessionDataTableILegacy {
   id: string
   title: string
   index: number
-  data: sessionsDataILegacy[]
-  setData: Dispatch<SetStateAction<sessionsDataILegacy[]>>
+  data: tableInterface[]
+  setData: Dispatch<SetStateAction<tableInterface[]>>
 }
 
 const Table: FC<TableI> = memo((props) => {

@@ -43,12 +43,12 @@ export const Header: FC<HeaderInterface> = memo((props) => {
             <span className={style.mailOfAccount}>{props.userData?.email}</span>
           </div>
           <Image
-            className={style.avatarImage}
+            className={`${style.avatarImage} ${props.userData && style.avatarImageWithBorder}`}
             src={props.userData?.photoURL || avatarIcon}
             alt={'avatar'}
             referrerPolicy={'no-referrer'}
-            width={30}
-            height={30}
+            width={60}
+            height={60}
           />
           <Hamburger
             userData={props.userData}

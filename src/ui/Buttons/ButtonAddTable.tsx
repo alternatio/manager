@@ -1,23 +1,21 @@
-import { addItem } from '../../helpers/editItems'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
-import { Dispatch, FC, memo, SetStateAction } from 'react'
-import { sessionsDataILegacy } from '../../../data/sessionsData'
+import { FC, memo } from 'react'
 import { crossIcon } from '../../helpers/importIcons'
+import { sessionInterface } from '../../helpers/interfaces'
+import { addTable } from '../../helpers/firestore'
 
 interface ButtonAddTable {
-  data: sessionsDataILegacy[]
-  setData: Dispatch<SetStateAction<sessionsDataILegacy[]>>
+  session: sessionInterface
 }
 
-const ButtonAddTable: FC<ButtonAddTable> = memo((props) => {
+const ButtonAddTable: FC<ButtonAddTable> = memo(({ session }) => {
   return (
     <>
-      {props.data.length <= 20 && (
+      {session.tables.length <= 20 && (
         <div
-          onClick={() => {
-            // @ts-ignore
-            addItem(props.setData, props.data)
+          onClick={async () => {
+            await addTable(session)
           }}
           className={style.addTable}
         >
