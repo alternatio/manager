@@ -6,12 +6,12 @@ import { commonAnimation, commonTransition } from '../../ui/animations/commonAni
 import IconButton from '../../ui/Buttons/IconButton'
 import Image from 'next/image'
 import {
-  blockIcon,
+  blockIcon, blockIconWithoutDot,
   columnIcon,
   editIcon,
   eyeIcon,
   tableIcon,
-  trashIcon,
+  trashIcon
 } from '../../helpers/importIcons'
 import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
@@ -168,7 +168,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
             <span className={style.counterText}>{getLengthOfColumns()}</span>
           </div>
           <div className={style.counter}>
-            <Image className={style.counterIcon} src={blockIcon} alt={'block'} />
+            <Image className={style.counterIcon} src={blockIconWithoutDot} alt={'block'} />
             <span className={style.counterText}>{getLengthOfBlocks()}</span>
           </div>
         </div>
