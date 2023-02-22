@@ -2,14 +2,14 @@ import { Dispatch, FC, memo, SetStateAction } from 'react'
 import { motion } from 'framer-motion'
 import { getRandomColor } from '../../helpers/global'
 import style from '/styles/pages/Organization.module.scss'
-import { sessionDataBlockI } from '../../../data/sessionsData'
+import { sessionDataBlockILegacy } from '../../../data/sessionsData'
 import { addBlock } from '../../helpers/editItems'
 import Image from 'next/image'
 import { crossIcon } from '../../helpers/importIcons'
 
 interface ButtonAddBlockI {
-  blocks: sessionDataBlockI[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
+  blocks: sessionDataBlockILegacy[]
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
   idOfColumn: string
 }
 

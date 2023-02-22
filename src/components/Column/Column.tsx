@@ -1,5 +1,5 @@
 import { Dispatch, FC, memo, SetStateAction, useEffect, useRef, useState } from 'react'
-import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
+import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { motion, Variants } from 'framer-motion'
 import { KebabButton } from '../../ui/Kebab/Kebab'
 import style from '/styles/pages/Organization.module.scss'
@@ -12,15 +12,15 @@ import { renameIcon, trashIcon } from '../../helpers/importIcons'
 import { deleteColumn, renameItem } from '../../helpers/editItems'
 import { useOnClickOutside } from '../../helpers/customHooks'
 
-interface ColumnI extends sessionDataColumnI {
+interface ColumnI extends sessionDataColumnILegacy {
   id: string
   title: string
   index: number
   position: number
-  columns: sessionDataColumnI[]
-  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>
-  blocks: sessionDataBlockI[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
+  columns: sessionDataColumnILegacy[]
+  setColumns: Dispatch<SetStateAction<sessionDataColumnILegacy[]>>
+  blocks: sessionDataBlockILegacy[]
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
   corner: 'left' | 'right' | 'none' | null

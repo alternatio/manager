@@ -1,8 +1,8 @@
 import {
-  sessionDataBlockI,
-  sessionDataColumnI,
-  sessionDataTableI,
-  sessionsDataI,
+  sessionDataBlockILegacy,
+  sessionDataColumnILegacy,
+  sessionDataTableILegacy,
+  sessionsDataILegacy,
 } from '../../../data/sessionsData'
 import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
@@ -13,19 +13,19 @@ import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../../ui/Buttons/ButtonAddColumn'
 import EditField from '../../components/EditField/EditField'
 
-interface TableI extends sessionDataTableI {
+interface TableI extends sessionDataTableILegacy {
   id: string
   title: string
   index: number
-  data: sessionsDataI[]
-  setData: Dispatch<SetStateAction<sessionsDataI[]>>
+  data: sessionsDataILegacy[]
+  setData: Dispatch<SetStateAction<sessionsDataILegacy[]>>
 }
 
 const Table: FC<TableI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
   const [tableIsOpen, handleTableOpen] = useState<boolean>(true)
-  const [columns, setColumns] = useState<sessionDataColumnI[]>([])
-  const [blocks, setBlocks] = useState<sessionDataBlockI[]>([])
+  const [columns, setColumns] = useState<sessionDataColumnILegacy[]>([])
+  const [blocks, setBlocks] = useState<sessionDataBlockILegacy[]>([])
   const [blockIdEdit, setBlockIdEdit] = useState<string>('')
 
   const tableVariants: Variants = {

@@ -8,8 +8,8 @@ export const Cube: FC<{ color: Readonly<string>; index: Readonly<number> }> = me
 
     return (
       <div
-        onMouseEnter={() => handleHover(true)}
-        onMouseLeave={() => setTimeout(() => handleHover(false), 100)}
+        // onMouseEnter={() => handleHover(true)}
+        // onMouseLeave={() => setTimeout(() => handleHover(false), 100)}
         style={{ background: color, transform: `translateY(-${index * 6}rem)` }}
         className={style.cube}
       >

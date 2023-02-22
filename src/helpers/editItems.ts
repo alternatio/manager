@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction } from 'react'
 import { getCurrentDate, getRandomColor, getRandomId } from './global'
 import {
-  sessionDataBlockI,
-  sessionDataColumnI,
-  sessionDataTableI,
-  sessionsDataI,
+  sessionDataBlockILegacy,
+  sessionDataColumnILegacy,
+  sessionDataTableILegacy,
+  sessionsDataILegacy,
 } from '../../data/sessionsData'
 
 export const addItem = (
-  setData: Dispatch<SetStateAction<sessionsDataI[] | sessionDataTableI[]>>,
+  setData: Dispatch<SetStateAction<sessionsDataILegacy[] | sessionDataTableILegacy[]>>,
   data: any[],
   title: string = 'Table'
 ) => {
@@ -19,8 +19,8 @@ export const addItem = (
 }
 
 export const addColumn = (
-  setData: Dispatch<SetStateAction<sessionDataColumnI[]>>,
-  data: sessionDataColumnI[],
+  setData: Dispatch<SetStateAction<sessionDataColumnILegacy[]>>,
+  data: sessionDataColumnILegacy[],
   title: string = 'Column'
 ) => {
   const id = getRandomId(4)
@@ -31,8 +31,8 @@ export const addColumn = (
 
 // add block
 export const addBlock = (
-  setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
-  data: sessionDataBlockI[],
+  setData: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>,
+  data: sessionDataBlockILegacy[],
   status: string,
   color: string = getRandomColor(),
   title: string = 'Block',
@@ -54,8 +54,8 @@ export const addBlock = (
 
 // delete item
 export const deleteBlock = (
-  setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
-  data: sessionDataBlockI[],
+  setData: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>,
+  data: sessionDataBlockILegacy[],
   id: string
 ) => {
   const resultData = data.filter((block) => block.id !== id)
@@ -63,11 +63,11 @@ export const deleteBlock = (
 }
 
 export const deleteColumn = (
-  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>,
-  columns: sessionDataColumnI[],
+  setColumns: Dispatch<SetStateAction<sessionDataColumnILegacy[]>>,
+  columns: sessionDataColumnILegacy[],
   id: string,
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>,
-  blocks: sessionDataBlockI[]
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>,
+  blocks: sessionDataBlockILegacy[]
 ) => {
   const resultColumns = columns.filter((column) => column.id !== id)
   const resultBlocks = blocks.filter((block) => block.status !== id)
@@ -76,8 +76,8 @@ export const deleteColumn = (
 }
 
 export const deleteTable = (
-  setTables: Dispatch<SetStateAction<sessionDataTableI[]>>,
-  tables: sessionDataTableI[],
+  setTables: Dispatch<SetStateAction<sessionDataTableILegacy[]>>,
+  tables: sessionDataTableILegacy[],
   id: string
 ) => {
   const resultTables = tables.filter((table) => table.id !== id)
@@ -98,11 +98,11 @@ export const renameItem = (
 
 // swap status of block
 export const swapStatus = (
-  setData: Dispatch<SetStateAction<sessionDataBlockI[]>>,
-  data: sessionDataBlockI[],
+  setData: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>,
+  data: sessionDataBlockILegacy[],
   direction: 'left' | 'right',
   id: string,
-  columns: sessionDataColumnI[]
+  columns: sessionDataColumnILegacy[]
 ) => {
   const resultData = [...data]
   const currentStatusOfBlock: string | undefined = resultData.find(

@@ -1,5 +1,5 @@
 // kanban block interface
-export interface sessionDataBlockI {
+export interface sessionDataBlockILegacy {
   id: string
   title: string
   // status is current column id
@@ -12,26 +12,26 @@ export interface sessionDataBlockI {
 }
 
 // kanban column interface
-export interface sessionDataColumnI {
+export interface sessionDataColumnILegacy {
   id: string
   title: string
-  blocks?: sessionDataBlockI[]
+  blocks?: sessionDataBlockILegacy[]
 }
 
 // kanban table interface
-export interface sessionDataTableI {
+export interface sessionDataTableILegacy {
   id: string
   title: string
-  columns?: sessionDataColumnI[]
+  columns?: sessionDataColumnILegacy[]
 }
 
 // kanban full data interface
-export interface sessionsDataI {
+export interface sessionsDataILegacy {
   id: string
   title: string
   password: string
-  tables?: sessionDataTableI[]
+  tables?: sessionDataTableILegacy[]
 }
 
 // kanban full data
-export const sessionsData: sessionsDataI[] = []
+export const sessionsData: sessionsDataILegacy[] = []

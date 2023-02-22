@@ -1,6 +1,6 @@
 import style from '/styles/pages/Organization.module.scss'
 import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
-import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
+import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
 import { deleteBlock, swapStatus } from '../../helpers/editItems'
@@ -8,7 +8,7 @@ import IconButton from '../../ui/Buttons/IconButton'
 import { arrowIcon, editIcon, trashIcon } from '../../helpers/importIcons'
 import { randomColors } from '../../helpers/global'
 
-interface BlockI extends sessionDataBlockI {
+interface BlockI extends sessionDataBlockILegacy {
   id: string
   title: string
   status: string
@@ -17,9 +17,9 @@ interface BlockI extends sessionDataBlockI {
   isUrgent: boolean
   text: string
   dateToComplete: string
-  columns: sessionDataColumnI[]
-  blocks: sessionDataBlockI[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
+  columns: sessionDataColumnILegacy[]
+  blocks: sessionDataBlockILegacy[]
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
   isSelected?: boolean

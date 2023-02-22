@@ -9,6 +9,7 @@ import {
   userInterfaceWithRole,
 } from './interfaces'
 import { getRandomId } from './global'
+import { NextRouter } from 'next/router'
 
 // get doc in firestore
 export const getDocInFirestore = async (collectionName: string, docName: string) => {
@@ -59,16 +60,23 @@ export const signOutWithGooglePopup = async (
   }
 }
 
+// get link on session
+export const getLink = (ownerId: string, orgId: string) => {
+  return `organization/${ownerId}&${orgId}`
+}
+
 // create organization
 export const createOrganization = async (
   userData: User | null,
   nameOfOrganization: string,
-  passwordOfOrganization: string
+  passwordOfOrganization: string,
+  router: NextRouter
 ) => {
   if (nameOfOrganization && passwordOfOrganization && userData?.uid) {
     const data = await getDocInFirestore('sessions', userData.uid)
     const preparedData = data.data() as sessionsInterface | undefined
-    const id = getRandomId()
+    const id = getRandomId(8)
+    const link = getLink(userData.uid, id)
 
     const preparedUser: userInterfaceWithRole = {
       uid: userData.uid,
@@ -95,12 +103,14 @@ export const createOrganization = async (
 
       if (isValid) {
         await setItemInFirestore('sessions', preparedUser.uid, resultData)
+        await router.push(link)
       }
     } else {
       const resultData: sessionsInterface = {
         sessions: [resultObject],
       }
       await setItemInFirestore('sessions', preparedUser.uid, resultData)
+      await router.push(link)
     }
   }
 }

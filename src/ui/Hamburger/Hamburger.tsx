@@ -1,5 +1,5 @@
-import { Dispatch, FC, memo, SetStateAction } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { Dispatch, FC, memo, ReactNode, SetStateAction } from 'react'
+import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import style from './styles/Hamburger.module.scss'
 import Link from 'next/link'
 import { commonAnimation, transitionSpringMedium } from '../animations/commonAnimations'
@@ -16,6 +16,12 @@ interface HamburgerInterface {
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
   handleWarningPopup: Dispatch<SetStateAction<boolean>>
   handleEnterInSessionPopup: Dispatch<SetStateAction<boolean>>
+}
+
+interface buttonI {
+  onClick: CallableFunction
+  children: ReactNode
+  isRedButton?: boolean
 }
 
 export const Hamburger: FC<HamburgerInterface> = memo((props) => {
@@ -61,6 +67,18 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
     },
   ]
 
+  const Button: FC<buttonI> = (props) => {
+    return (
+      <button
+        onClick={() => props.onClick()}
+        style={{ color: props.isRedButton ? '#f03' : '#000' }}
+        className={style.button}
+      >
+        {props.children}
+      </button>
+    )
+  }
+
   return (
     <AnimatePresence>
       {props.hamburgerIsOpen && (
@@ -70,57 +88,29 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
           transition={transitionSpringMedium}
           className={style.hamburger}
         >
-          {hamburgerButtons.map((button, index) => {
-            if (button.userDataRequired === null) {
-              return (
-                <Button
-                  key={index}
-                  onClick={button.onClick}
-                  backgroundColor={'transparent'}
-                  textColor={button.redButton ? '#f03' : '#000'}
-                  // width={'100%'}
-                  layout={{
-                    backgroundLayoutColor: '#eee',
-                    backgroundLayoutID: 'hamburgerButton',
-                  }}
-                >
-                  {button.children}
-                </Button>
-              )
-            } else if (button.userDataRequired === (props.userData !== null)) {
-              return (
-                <Button
-                  key={index}
-                  onClick={button.onClick}
-                  backgroundColor={'transparent'}
-                  textColor={button.redButton ? '#f03' : '#000'}
-                  // width={'100%'}
-                  layout={{
-                    backgroundLayoutColor: '#eee',
-                    backgroundLayoutID: 'hamburgerButton',
-                  }}
-                >
-                  {button.children}
-                </Button>
-              )
-            } else if (button.userDataRequired !== (props.userData === null)) {
-              return (
-                <Button
-                  key={index}
-                  onClick={button.onClick}
-                  backgroundColor={'transparent'}
-                  textColor={button.redButton ? '#f03' : '#000'}
-                  // width={'100%'}
-                  layout={{
-                    backgroundLayoutColor: '#eee',
-                    backgroundLayoutID: 'hamburgerButton',
-                  }}
-                >
-                  {button.children}
-                </Button>
-              )
-            }
-          })}
+          <AnimateSharedLayout>
+            {hamburgerButtons.map((button, index) => {
+              if (button.userDataRequired === null) {
+                return (
+                  <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
+                    {button.children}
+                  </Button>
+                )
+              } else if (button.userDataRequired === (props.userData !== null)) {
+                return (
+                  <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
+                    {button.children}
+                  </Button>
+                )
+              } else if (button.userDataRequired !== (props.userData === null)) {
+                return (
+                  <Button key={index} onClick={button.onClick} isRedButton={button.redButton}>
+                    {button.children}
+                  </Button>
+                )
+              }
+            })}
+          </AnimateSharedLayout>
         </motion.div>
       )}
     </AnimatePresence>

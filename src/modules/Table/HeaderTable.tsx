@@ -1,7 +1,7 @@
 import { Dispatch, FC, memo, SetStateAction, useRef, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
-import { sessionsDataI } from '../../../data/sessionsData'
+import { sessionsDataILegacy } from '../../../data/sessionsData'
 
 import { KebabButton } from '../../ui/Kebab/Kebab'
 import { motion } from 'framer-motion'
@@ -16,9 +16,9 @@ interface HeaderTableI {
   index: number
   popupIsOpen: boolean
   tableIsOpen: boolean
-  data: sessionsDataI[]
+  data: sessionsDataILegacy[]
   handlePopup: Dispatch<SetStateAction<boolean>>
-  setData: Dispatch<SetStateAction<sessionsDataI[]>>
+  setData: Dispatch<SetStateAction<sessionsDataILegacy[]>>
   handleTableOpen: Dispatch<SetStateAction<boolean>>
 }
 

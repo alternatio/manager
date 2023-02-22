@@ -5,7 +5,7 @@ import Head from 'next/head'
 import style from '/styles/pages/Organization.module.scss'
 import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
 import { Header } from '../../src/modules/Header/Header'
-import { sessionDataTableI } from '../../data/sessionsData'
+import { sessionDataTableILegacy } from '../../data/sessionsData'
 import Table from '../../src/modules/Table/Table'
 import ButtonAddTable from '../../src/ui/Buttons/ButtonAddTable'
 import { User } from '@firebase/auth'
@@ -13,7 +13,7 @@ import { AnimatePresence } from 'framer-motion'
 import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
 
 const Organization: NextPage = memo(() => {
-  const [data, setData] = useState<sessionDataTableI[]>([])
+  const [data, setData] = useState<sessionDataTableILegacy[]>([])
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
   const [userData, setUserData] = useState<User | null>(null)
   const router = useRouter()

@@ -10,6 +10,7 @@ import { createOrganization } from '../../../helpers/firestore'
 import Button from '../../../ui/Button/Button'
 import Text from '../../../ui/Text/Text'
 import { User } from '@firebase/auth'
+import { useRouter } from 'next/router'
 
 interface AddSessionPopupProps {
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
@@ -19,6 +20,7 @@ interface AddSessionPopupProps {
 export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
   const [nameOfOrganization, setName] = useState<string>('')
   const [passwordOfOrganization, setPassword] = useState<string>('')
+  const router = useRouter()
 
   const closePopup = () => {
     props.handleAddSessionPopup(false)
@@ -27,7 +29,8 @@ export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
   const keyDown = async (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        await createOrganization(props.userData, nameOfOrganization, passwordOfOrganization)
+        await createOrganization(props.userData, nameOfOrganization, passwordOfOrganization, router)
+        closePopup()
         break
       case 'Escape':
         closePopup()
@@ -71,9 +74,15 @@ export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
         </Text>
         <Button
           width={'100%'}
-          onClick={() =>
-            createOrganization(props.userData, nameOfOrganization, passwordOfOrganization)
-          }
+          onClick={async () => {
+            await createOrganization(
+              props.userData,
+              nameOfOrganization,
+              passwordOfOrganization,
+              router
+            )
+            closePopup()
+          }}
         >
           Создать
         </Button>

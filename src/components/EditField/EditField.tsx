@@ -1,13 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Dispatch, FC, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
-import { sessionDataBlockI, sessionDataColumnI } from '../../../data/sessionsData'
+import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import Block from '../Block/Block'
 
 interface EditFieldI {
-  columns: sessionDataColumnI[]
-  blocks: sessionDataBlockI[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockI[]>>
+  columns: sessionDataColumnILegacy[]
+  blocks: sessionDataBlockILegacy[]
+  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
   blockId: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
 }

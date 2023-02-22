@@ -1,13 +1,13 @@
 import { Dispatch, FC, memo, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
-import { sessionDataColumnI } from '../../../data/sessionsData'
+import { sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { addColumn, addItem } from '../../helpers/editItems'
 import Image from 'next/image'
 import { crossIcon } from '../../helpers/importIcons'
 
 interface ButtonAddColumnI {
-  columns: sessionDataColumnI[]
-  setColumns: Dispatch<SetStateAction<sessionDataColumnI[]>>
+  columns: sessionDataColumnILegacy[]
+  setColumns: Dispatch<SetStateAction<sessionDataColumnILegacy[]>>
 }
 
 const ButtonAddColumn: FC<ButtonAddColumnI> = memo((props) => {
