@@ -1,36 +1,28 @@
-import { Dispatch, FC, memo, SetStateAction } from 'react'
+import { FC, memo } from 'react'
 import { motion } from 'framer-motion'
-import { getRandomColor } from '../../helpers/global'
 import style from '/styles/pages/Organization.module.scss'
-import { sessionDataBlockILegacy } from '../../../data/sessionsData'
-import { addBlock } from '../../helpers/editItems'
 import Image from 'next/image'
 import { crossIcon } from '../../helpers/importIcons'
+import { addBlock } from '../../helpers/firestore'
+import { sessionInterface } from '../../helpers/interfaces'
 
 interface ButtonAddBlockI {
-  blocks: sessionDataBlockILegacy[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
+  session: sessionInterface
+  indexOfTable: number
   idOfColumn: string
 }
 
 const ButtonAddBlock: FC<ButtonAddBlockI> = memo((props) => {
+  const rawBlocksLength = props.session.tables[props.indexOfTable]?.columns
+  const blocksLength = rawBlocksLength ? rawBlocksLength.length : 0
+
   return (
     <>
-      {props.blocks.length <= 300 && (
+      {blocksLength <= 300 && (
         <motion.div
           style={{ order: 100000 }}
-          onClick={() => {
-            addBlock(
-              props.setBlocks,
-              props.blocks,
-              props.idOfColumn,
-              getRandomColor(),
-              'Новый блок',
-              false,
-              false,
-              'Задание которое кто-то напишет, а кто-то выполнит.',
-              undefined
-            )
+          onClick={async () => {
+            await addBlock(props.session, props.indexOfTable, props.idOfColumn)
           }}
           className={style.addBlock}
         >

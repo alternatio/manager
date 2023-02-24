@@ -9,22 +9,21 @@ import ButtonAddBlock from '../../ui/Buttons/ButtonAddBlock'
 import Popup from '../Popups/smallPopup/Popup'
 import PopupButton from '../Popups/smallPopup/PopupButton'
 import { renameIcon, trashIcon } from '../../helpers/importIcons'
-import { deleteColumn, renameItem } from '../../helpers/editItems'
 import { useOnClickOutside } from '../../helpers/customHooks'
+import { sessionInterface } from '../../helpers/interfaces'
+import { deleteColumn } from '../../helpers/firestore'
 
-interface ColumnI extends sessionDataColumnILegacy {
+interface ColumnI {
   id: string
   title: string
   index: number
   position: number
-  columns: sessionDataColumnILegacy[]
-  setColumns: Dispatch<SetStateAction<sessionDataColumnILegacy[]>>
-  blocks: sessionDataBlockILegacy[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
   corner: 'left' | 'right' | 'none' | null
-  forceUpdate?: Function
+
+  session: sessionInterface
+  indexOfTable: number
 }
 
 const Column: FC<ColumnI> = memo((props) => {
@@ -32,6 +31,10 @@ const Column: FC<ColumnI> = memo((props) => {
   const [rename, handleRename] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
   const ref = useRef(null)
+
+  const sessionBlocks = props.session.tables[props.indexOfTable]?.blocks
+  const sessionBlocksInCurrentColumn =
+    sessionBlocks && sessionBlocks.filter((block) => block.columnId === props.id)
 
   const columnVariants: Variants = {
     open: {
@@ -44,21 +47,11 @@ const Column: FC<ColumnI> = memo((props) => {
     },
   }
 
-  // const keyEvent = (event: KeyboardEvent) => {
-  //   if (event.key === 'Enter' && rename) {
-  //     renameItem(props.setColumns, props.columns, props.id, title)
-  //     handleRename(false)
-  //   }
-  // }
-  //
-  // useEffect(() => {
-  //   document.addEventListener('keypress', (event) => keyEvent(event))
-  // }, [rename, title])
-
-  useOnClickOutside(ref, () => {
-    renameItem(props.setColumns, props.columns, props.id, title)
-    handleRename(false)
-  })
+  // useOnClickOutside(ref, () => {
+  //   renameItem(props.setColumns, props.columns, props.id, title)
+  //   handleRename(false)
+  // })
+  console.log(sessionBlocks)
 
   return (
     <motion.div
@@ -88,46 +81,50 @@ const Column: FC<ColumnI> = memo((props) => {
         </div>
         <div className={style.columnRightPart}>
           <div className={style.columnBlockCounter}>
-            {props.blocks.filter((obj) => obj.status === props.id).length}
+            {sessionBlocksInCurrentColumn && sessionBlocksInCurrentColumn.length}
           </div>
           <KebabButton handlePopup={handlePopup} />
           <Popup position={'left'} handlePopup={handlePopup} popupVisible={popupIsOpen}>
             <PopupButton onClickCallback={() => handleRename(true)} icon={renameIcon}>
               Переименовать колонку
             </PopupButton>
-            <PopupButton onClickCallback={() => deleteColumn(props.setColumns, props.columns, props.id, props.setBlocks, props.blocks)} icon={trashIcon}>
+            <PopupButton
+              onClickCallback={() => {
+                deleteColumn(props.session, props.session.tables[props.indexOfTable].id, props.id)
+              }}
+              icon={trashIcon}
+            >
               Удалить колонку
             </PopupButton>
           </Popup>
         </div>
       </motion.div>
-      <motion.main className={style.columnMain} layout={'size'}>
-        {props.blocks
-          .filter((obj) => obj.status === props.id)
-          .map((block, index) => {
-            return (
-              <Block
-                key={index}
-                id={block.id}
-                title={block.title}
-                status={block.id}
-                color={block.color}
-                isRequired={block.isRequired}
-                isUrgent={block.isUrgent}
-                text={block.text}
-                dateToComplete={block.dateToComplete}
-                blocks={props.blocks}
-                setBlocks={props.setBlocks}
-                blockIdEdit={props.blockIdEdit}
-                setBlockIdEdit={props.setBlockIdEdit}
-                columns={props.columns}
-                forceUpdate={props.forceUpdate}
-                corner={props.corner}
-                index={index}
-              />
-            )
-          })}
-        <ButtonAddBlock blocks={props.blocks} setBlocks={props.setBlocks} idOfColumn={props.id} />
+      <motion.main
+        className={style.columnMain}
+        // layout={true}
+      >
+        {sessionBlocks &&
+          sessionBlocks
+            .filter((obj) => obj.columnId === props.id)
+            .map((block, index) => {
+              return (
+                <Block
+                  key={index}
+                  blockIdEdit={props.blockIdEdit}
+                  setBlockIdEdit={props.setBlockIdEdit}
+                  corner={props.corner}
+                  index={index}
+                  block={block}
+                  session={props.session}
+                  idOfTable={props.session.tables[props.indexOfTable].id}
+                />
+              )
+            })}
+        <ButtonAddBlock
+          idOfColumn={props.id}
+          indexOfTable={props.indexOfTable}
+          session={props.session}
+        />
       </motion.main>
     </motion.div>
   )

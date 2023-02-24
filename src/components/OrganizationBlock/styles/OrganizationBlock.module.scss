@@ -9,7 +9,7 @@
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 0.5rem rgba($black, 0.1);
   font-size: 1rem;
-  width: min(21rem, 100%);
+  min-width: 21rem;
   border: $black solid 0.3rem;
   height: fit-content;
   & * {
@@ -44,6 +44,10 @@
 .title {
   font-weight: 700;
   font-size: 1.1rem;
+}
+
+.value {
+  width: 100%;
 }
 
 .password {

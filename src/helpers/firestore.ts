@@ -3,6 +3,7 @@ import { db, provider } from '../../data/firebase/firebase'
 import { Dispatch, SetStateAction } from 'react'
 import { addDoc, collection, doc, DocumentSnapshot, getDoc, setDoc } from '@firebase/firestore'
 import {
+  blockInterface,
   columnInterface,
   sessionInterface,
   sessionsInterface,
@@ -10,7 +11,7 @@ import {
   userInterface,
   userInterfaceWithRole,
 } from './interfaces'
-import { getRandomId } from './global'
+import { getCurrentDate, getRandomColor, getRandomId } from './global'
 import { NextRouter } from 'next/router'
 
 // get doc in firestore
@@ -63,8 +64,8 @@ export const signOutWithGooglePopup = async (
 }
 
 // get link on session
-export const getLink = (ownerId: string, orgId: string) => {
-  return `/organization/${ownerId}&${orgId}`
+export const getLink = (orgId: string) => {
+  return `/organization/${orgId}`
 }
 
 // create organization
@@ -77,8 +78,8 @@ export const createOrganization = async (
   if (nameOfOrganization && passwordOfOrganization && userData?.uid) {
     const data = await getDocInFirestore('sessions', userData.uid)
     const preparedData = data.data() as sessionsInterface | undefined
-    const id = getRandomId(8)
-    const link = getLink(userData.uid, id)
+    const id = `${userData.uid}&${getRandomId(6)}`
+    const link = getLink(id)
 
     const preparedUser: userInterfaceWithRole = {
       uid: userData.uid,
@@ -165,6 +166,11 @@ export const getSession = async (
   return null
 }
 
+// get doc index in session
+const getItemIndex = (object: { id: string }[], objectID: string) => {
+  return object.findIndex((item) => item.id === objectID)
+}
+
 // add table
 export const addTable = async (currentSession: sessionInterface) => {
   const doc = await getDocInFirestore('sessions', currentSession.owner)
@@ -178,9 +184,14 @@ export const addTable = async (currentSession: sessionInterface) => {
     blocks: [],
   }
 
-  preparedDoc.sessions
-    .find((session) => session.id === currentSession.id)
-    ?.tables.find((item) => item.id === table.id) && (await addTable(currentSession))
+  if (
+    preparedDoc.sessions
+      .find((session) => session.id === currentSession.id)
+      ?.tables.find((item) => item.id === table.id)
+  ) {
+    await addTable(currentSession)
+    return
+  }
   preparedDoc.sessions.find((session) => session.id === currentSession.id)?.tables.push(table)
   await setItemInFirestore('sessions', currentSession.owner, preparedDoc)
 }
@@ -194,14 +205,113 @@ export const addColumn = async (currentSession: sessionInterface, indexOfTable: 
     id: getRandomId(),
     title: 'Новая колонка',
   }
+  // console.log(preparedDoc.sessions.find((session) => session.id === currentSession.id)?.tables[indexOfTable].columns)
 
-  preparedDoc.sessions
-    .find((session) => session.id === currentSession.id)
-    ?.tables[indexOfTable].columns?.find((item) => item.id === column.id) &&
-    (await addColumn(currentSession, indexOfTable))
+  if (
+    preparedDoc.sessions
+      .find((session) => session.id === currentSession.id)
+      ?.tables[indexOfTable].columns?.find((item) => item.id === column.id)
+  ) {
+    await addColumn(currentSession, indexOfTable)
+    return
+  }
   preparedDoc.sessions
     .find((session) => session.id === currentSession.id)
     ?.tables[indexOfTable].columns?.push(column)
+  await setItemInFirestore('sessions', currentSession.owner, preparedDoc)
 }
 
-// todo: add block
+// add block
+export const addBlock = async (
+  currentSession: sessionInterface,
+  indexOfTable: number,
+  currentColumnID: string
+) => {
+  const doc = await getDocInFirestore('sessions', currentSession.owner)
+  let prepareDoc = doc.data() as sessionsInterface
+
+  const sessions = prepareDoc.sessions
+  const sessionIndex = getItemIndex(sessions, currentSession.id)
+
+  const block: blockInterface = {
+    id: getRandomId(),
+    title: 'Новый блок',
+    task: 'Задача',
+    dateToComplete: getCurrentDate(),
+    columnId: currentColumnID,
+    status: 'start',
+    steps: [],
+    isRequired: false,
+    isUrgent: false,
+    color: getRandomColor(),
+  }
+
+  if (sessions[sessionIndex].tables[indexOfTable].blocks?.find((item) => item.id === block.id)) {
+    await addBlock(currentSession, indexOfTable, currentColumnID)
+    return
+  }
+
+  prepareDoc.sessions[sessionIndex].tables[indexOfTable].blocks?.push(block)
+  await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+}
+
+// delete table
+export const deleteTable = async (currentSession: sessionInterface, idOfTable: string) => {
+  const doc = await getDocInFirestore('sessions', currentSession.owner)
+  let prepareDoc = doc.data() as sessionsInterface
+
+  const sessions = prepareDoc.sessions
+  const sessionIndex = getItemIndex(sessions, currentSession.id)
+
+  const tables = prepareDoc.sessions[sessionIndex].tables
+  const tableIndex = getItemIndex(tables, idOfTable)
+
+  prepareDoc.sessions[sessionIndex].tables.splice(tableIndex, 1)
+  await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+}
+
+// delete column
+export const deleteColumn = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  idOfColumn: string
+) => {
+  const doc = await getDocInFirestore('sessions', currentSession.owner)
+  let prepareDoc = doc.data() as sessionsInterface
+
+  const sessions = prepareDoc.sessions
+  const sessionIndex = getItemIndex(sessions, currentSession.id)
+
+  const tables = prepareDoc.sessions[sessionIndex].tables
+  const tableIndex = getItemIndex(tables, idOfTable)
+
+  const columns = prepareDoc.sessions[sessionIndex].tables[tableIndex].columns
+  if (columns) {
+    const columnIndex = getItemIndex(columns, idOfColumn)
+    prepareDoc.sessions[sessionIndex].tables[tableIndex].columns?.splice(columnIndex, 1)
+    await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+  }
+}
+
+// delete block
+export const deleteBlock = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  idOfBlock: string
+) => {
+  const doc = await getDocInFirestore('sessions', currentSession.owner)
+  let prepareDoc = doc.data() as sessionsInterface
+
+  const sessions = prepareDoc.sessions
+  const sessionIndex = getItemIndex(sessions, currentSession.id)
+
+  const tables = prepareDoc.sessions[sessionIndex].tables
+  const tableIndex = getItemIndex(tables, idOfTable)
+
+  const blocks = prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks
+  if (blocks) {
+    const blockIndex = getItemIndex(blocks, idOfBlock)
+    prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks?.splice(blockIndex, 1)
+    await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+  }
+}

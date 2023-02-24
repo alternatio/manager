@@ -1,9 +1,5 @@
-import {
-  sessionDataBlockILegacy,
-  sessionDataColumnILegacy,
-  sessionDataTableILegacy,
-} from '../../../data/sessionsData'
-import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
+import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
+import { FC, memo, useEffect, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Column from '../../components/Column/Column'
 import { AnimatePresence, AnimateSharedLayout, motion, Variants } from 'framer-motion'
@@ -11,22 +7,40 @@ import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../../ui/Buttons/ButtonAddColumn'
 import EditField from '../../components/EditField/EditField'
-import { tableInterface } from '../../helpers/interfaces'
+import { sessionInterface, tableInterface } from '../../helpers/interfaces'
 
-interface TableI extends sessionDataTableILegacy {
+interface TableI {
   id: string
   title: string
   index: number
-  data: tableInterface[]
-  setData: Dispatch<SetStateAction<tableInterface[]>>
+  session: sessionInterface
 }
 
 const Table: FC<TableI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
-  const [tableIsOpen, handleTableOpen] = useState<boolean>(true)
-  const [columns, setColumns] = useState<sessionDataColumnILegacy[]>([])
-  const [blocks, setBlocks] = useState<sessionDataBlockILegacy[]>([])
+  const [tableIsOpen, handleTableOpen] = useState<boolean>(false)
   const [blockIdEdit, setBlockIdEdit] = useState<string>('')
+
+  const tableIsOpenLocalName = `table${props.id}TableIsOpen`
+
+  const getLocalData = () => {
+    const rawTableIsOpen = localStorage.getItem(tableIsOpenLocalName)
+    if (rawTableIsOpen) {
+      const tableIsOpen = JSON.parse(rawTableIsOpen) as boolean
+      handleTableOpen(tableIsOpen)
+    }
+  }
+
+  useEffect(() => {
+    getLocalData()
+  }, [])
+
+  const handleTableIsOpenWithSave = (value: boolean) => {
+    handleTableOpen(value)
+    localStorage.setItem(tableIsOpenLocalName, JSON.stringify(value))
+  }
+
+  const sessionColumns = props.session.tables[props.index]?.columns
 
   const tableVariants: Variants = {
     visible: {
@@ -44,22 +58,20 @@ const Table: FC<TableI> = memo((props) => {
   return (
     <motion.div initial={{ height: '0' }} animate={{ height: 'auto' }} className={style.table}>
       <HeaderTable
-        data={props.data}
         index={props.index}
-        setData={props.setData}
         handlePopup={handlePopup}
-        handleTableOpen={handleTableOpen}
+        handleTableOpen={handleTableIsOpenWithSave}
         popupIsOpen={popupIsOpen}
         tableIsOpen={tableIsOpen}
         id={props.id}
+        session={props.session}
       />
       <AnimateSharedLayout>
         <EditField
           blockId={blockIdEdit}
-          blocks={blocks}
-          setBlocks={setBlocks}
           setBlockIdEdit={setBlockIdEdit}
-          columns={columns}
+          session={props.session}
+          indexOfTable={props.index}
         />
         <AnimatePresence>
           {tableIsOpen && (
@@ -72,37 +84,34 @@ const Table: FC<TableI> = memo((props) => {
               className={style.tableMain}
             >
               <motion.div className={style.tableMainInner} layout={'size'}>
-                {columns.map((column, index) => {
-                  let corner: 'left' | 'right' | 'none' | null = null
-                  if (index === 0) {
-                    corner = 'left'
-                  }
-                  if (index === columns.length - 1 && columns.length !== 1) {
-                    corner = 'right'
-                  }
-                  if (index === 0 && (index === columns.length - 1)) {
-                    corner = 'none'
-                  }
-                  console.log(columns.length)
-                  return (
-                    <Column
-                      key={index}
-                      id={column.id}
-                      title={column.title}
-                      blocks={blocks}
-                      setBlocks={setBlocks}
-                      index={index}
-                      blockIdEdit={blockIdEdit}
-                      setBlockIdEdit={setBlockIdEdit}
-                      columns={columns}
-                      corner={corner}
-                      // forceUpdate={forceUpdateTable}
-                      setColumns={setColumns}
-                      position={index}
-                    />
-                  )
-                })}
-                <ButtonAddColumn columns={columns} setColumns={setColumns} />
+                {sessionColumns &&
+                  sessionColumns.map((column, index) => {
+                    let corner: 'left' | 'right' | 'none' | null = null
+                    if (index === 0) {
+                      corner = 'left'
+                    }
+                    if (index === sessionColumns.length - 1 && sessionColumns.length !== 1) {
+                      corner = 'right'
+                    }
+                    if (index === 0 && index === sessionColumns.length - 1) {
+                      corner = 'none'
+                    }
+                    return (
+                      <Column
+                        key={index}
+                        id={column.id}
+                        title={column.title}
+                        index={index}
+                        blockIdEdit={blockIdEdit}
+                        setBlockIdEdit={setBlockIdEdit}
+                        corner={corner}
+                        position={index}
+                        indexOfTable={props.index}
+                        session={props.session}
+                      />
+                    )
+                  })}
+                <ButtonAddColumn session={props.session} indexOfTable={props.index} />
               </motion.div>
             </motion.main>
           )}

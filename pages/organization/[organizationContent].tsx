@@ -5,13 +5,12 @@ import Head from 'next/head'
 import style from '/styles/pages/Organization.module.scss'
 import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
 import { Header } from '../../src/modules/Header/Header'
-import { sessionDataTableILegacy } from '../../data/sessionsData'
 import Table from '../../src/modules/Table/Table'
 import ButtonAddTable from '../../src/ui/Buttons/ButtonAddTable'
 import { User } from '@firebase/auth'
 import { AnimatePresence } from 'framer-motion'
 import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
-import { getDocInFirestore, getSession, getUser } from '../../src/helpers/firestore'
+import { getSession, getUser } from '../../src/helpers/firestore'
 import { sessionInterface, sessionsInterface, tableInterface } from '../../src/helpers/interfaces'
 import { doc, onSnapshot } from '@firebase/firestore'
 import { db } from '../../data/firebase/firebase'
@@ -25,10 +24,6 @@ const Organization: NextPage = memo(() => {
   const router = useRouter()
 
   const errors = ['ОГО вас нет в списках']
-
-  useEffect(() => {
-    console.log(sessionData, tables)
-  }, [sessionData, tables])
 
   const initial = async () => {
     const user = getUser(setUserData)
@@ -81,34 +76,18 @@ const Organization: NextPage = memo(() => {
             {sessionData.tables.map((table, index) => {
               console.log(table, index)
               return (
-                <Table key={index} id={table.id} title={table.title} index={index} data={tables} setData={setTables} />
+                <Table
+                  key={index}
+                  id={table.id}
+                  title={table.title}
+                  index={index}
+                  session={sessionData}
+                />
               )
             })}
             <ButtonAddTable session={sessionData} />
           </main>
         )}
-        {/*<main className={style.main}>*/}
-        {/*  {sessionData.map((table, index) => {*/}
-        {/*    return (*/}
-        {/*      <Table*/}
-        {/*        key={index}*/}
-        {/*        title={table.title}*/}
-        {/*        index={index}*/}
-        {/*        // @ts-ignore*/}
-        {/*        data={sessionData}*/}
-        {/*        // @ts-ignore*/}
-        {/*        setData={setSessionData}*/}
-        {/*        id={table.id}*/}
-        {/*      />*/}
-        {/*    )*/}
-        {/*  })}*/}
-        {/*  <ButtonAddTable*/}
-        {/*    // @ts-ignore*/}
-        {/*    data={sessionData}*/}
-        {/*    // @ts-ignore*/}
-        {/*    setData={setSessionData}*/}
-        {/*  />*/}
-        {/*</main>*/}
       </Wrapper>
     </>
   )

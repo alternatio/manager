@@ -6,12 +6,13 @@ import { commonAnimation, commonTransition } from '../../ui/animations/commonAni
 import IconButton from '../../ui/Buttons/IconButton'
 import Image from 'next/image'
 import {
-  blockIcon, blockIconWithoutDot,
+  blockIcon,
+  blockIconWithoutDot,
   columnIcon,
   editIcon,
   eyeIcon,
   tableIcon,
-  trashIcon
+  trashIcon,
 } from '../../helpers/importIcons'
 import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
@@ -120,7 +121,10 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         transition={commonTransition(props.index)}
         className={style.organizationBlock}
       >
-        <h3 className={style.organizationTitle}>ID: {props.session.id}</h3>
+        <div className={style.label}>
+          <span className={style.title}>ID:</span>
+          <span className={style.value}>{props.session.id}</span>
+        </div>
         <div className={style.label}>
           <span className={style.title}>Имя: </span>
           <span className={style.value}>{props.session.title}</span>
@@ -189,7 +193,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
             }}
             className={style.button}
           >
-            <Link href={getLink(props.session.owner, props.session.id)}>Смотреть</Link>
+            <Link href={getLink(props.session.id)}>Смотреть</Link>
           </button>
         </div>
       </motion.div>

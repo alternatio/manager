@@ -3,16 +3,19 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import Block from '../Block/Block'
+import { sessionInterface } from '../../helpers/interfaces'
 
 interface EditFieldI {
-  columns: sessionDataColumnILegacy[]
-  blocks: sessionDataBlockILegacy[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
   blockId: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
+
+  indexOfTable: number
+  session: sessionInterface
 }
 
 const EditField: FC<EditFieldI> = (props) => {
+  const sessionBlocks = props.session.tables[props.indexOfTable]?.blocks
+
   return (
     <AnimatePresence>
       {props.blockId && (
@@ -28,30 +31,23 @@ const EditField: FC<EditFieldI> = (props) => {
 
           {/*</div>*/}
           <motion.div className={style.editBlock}>
-            {props.blocks
-              .filter((block) => block.id === props.blockId)
-              .map((block, index) => {
-                return (
-                  <Block
-                    key={index}
-                    id={block.id}
-                    title={block.title}
-                    status={block.status}
-                    color={block.color}
-                    isRequired={block.isRequired}
-                    isUrgent={block.isUrgent}
-                    text={block.text}
-                    dateToComplete={block.dateToComplete}
-                    blocks={props.blocks}
-                    setBlocks={props.setBlocks}
-                    setBlockIdEdit={props.setBlockIdEdit}
-                    blockIdEdit={props.blockId}
-                    isSelected={true}
-                    columns={props.columns}
-                    index={index}
-                  />
-                )
-              })}
+            {sessionBlocks &&
+              sessionBlocks
+                .filter((block) => block.id === props.blockId)
+                .map((block, index) => {
+                  return (
+                    <Block
+                      key={index}
+                      setBlockIdEdit={props.setBlockIdEdit}
+                      blockIdEdit={props.blockId}
+                      isSelected={true}
+                      index={index}
+                      block={block}
+                      idOfTable={props.session.tables[props.indexOfTable].id}
+                      session={props.session}
+                    />
+                  )
+                })}
           </motion.div>
         </motion.div>
       )}

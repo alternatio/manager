@@ -1,7 +1,6 @@
 import { Dispatch, FC, memo, SetStateAction, useRef, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
-import { sessionsDataILegacy } from '../../../data/sessionsData'
 
 import { KebabButton } from '../../ui/Kebab/Kebab'
 import { motion } from 'framer-motion'
@@ -9,18 +8,18 @@ import Popup from '../../components/Popups/smallPopup/Popup'
 import PopupButton from '../../components/Popups/smallPopup/PopupButton'
 import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../helpers/importIcons'
 import { useOnClickOutside } from '../../helpers/customHooks'
-import { deleteTable, renameItem } from '../../helpers/editItems'
-import { tableInterface } from '../../helpers/interfaces'
+import { sessionInterface, tableInterface } from '../../helpers/interfaces'
+import { deleteTable } from '../../helpers/firestore'
 
 interface HeaderTableI {
   id: string
   index: number
   popupIsOpen: boolean
   tableIsOpen: boolean
-  data: tableInterface[]
   handlePopup: Dispatch<SetStateAction<boolean>>
-  setData: Dispatch<SetStateAction<tableInterface[]>>
-  handleTableOpen: Dispatch<SetStateAction<boolean>>
+  handleTableOpen: Function
+
+  session: sessionInterface
 }
 
 const HeaderTable: FC<HeaderTableI> = memo((props) => {
@@ -28,10 +27,10 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
   const [title, setTitle] = useState<string>('')
   const ref = useRef(null)
 
-  useOnClickOutside(ref, () => {
-    renameItem(props.setData, props.data, props.data[props.index].id, title)
-    handleRename(false)
-  })
+  // useOnClickOutside(ref, () => {
+  //   renameItem(props.setData, props.data, props.data[props.index].id, title)
+  //   handleRename(false)
+  // })
 
   return (
     <motion.header
@@ -51,7 +50,7 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
             />
           </label>
         ) : (
-          <span className={style.headerTitle}>{props.data[props.index]?.title}</span>
+          <span className={style.headerTitle}>{props.session.tables[props.index]?.title}</span>
         )}
         <button className={style.buttonWithIcon}>
           <Image className={style.icon} src={searchIcon} alt={'search'} />
@@ -61,16 +60,17 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
           <PopupButton icon={renameIcon} onClickCallback={() => handleRename(true)}>
             Переименовать таблицу
           </PopupButton>
-          <PopupButton icon={trashIcon} onClickCallback={() => deleteTable(
-            // @ts-ignore
-            props.setData, props.data, props.id)}>
+          <PopupButton
+            icon={trashIcon}
+            onClickCallback={() => deleteTable(props.session, props.id)}
+          >
             Удалить таблицу
           </PopupButton>
         </Popup>
       </div>
       <button
         onClick={() => {
-          props.handleTableOpen((prevState) => !prevState)
+          props.handleTableOpen(!props.tableIsOpen)
         }}
         className={`${style.arrow} ${style.buttonWithIcon}`}
       >

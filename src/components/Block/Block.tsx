@@ -3,43 +3,35 @@ import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
 import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
-import { deleteBlock, swapStatus } from '../../helpers/editItems'
 import IconButton from '../../ui/Buttons/IconButton'
 import { arrowIcon, editIcon, trashIcon } from '../../helpers/importIcons'
 import { randomColors } from '../../helpers/global'
+import { blockInterface, sessionInterface } from '../../helpers/interfaces'
+import { deleteBlock } from '../../helpers/firestore'
 
-interface BlockI extends sessionDataBlockILegacy {
-  id: string
-  title: string
-  status: string
-  color: string
-  isRequired: boolean
-  isUrgent: boolean
-  text: string
-  dateToComplete: string
-  columns: sessionDataColumnILegacy[]
-  blocks: sessionDataBlockILegacy[]
-  setBlocks: Dispatch<SetStateAction<sessionDataBlockILegacy[]>>
+interface BlockI {
   blockIdEdit: string
   setBlockIdEdit: Dispatch<SetStateAction<string>>
   isSelected?: boolean
-  forceUpdate?: Function
   corner?: 'left' | 'right' | 'none' | null
   index: number
+  block: blockInterface
+  session: sessionInterface
+  idOfTable: string
 }
 
 const Block: FC<BlockI> = memo((props) => {
-  const [title, setTitle] = useState<string>(props.title)
-  const [text, setText] = useState<string>(props.text)
-  const [color, setColor] = useState<string>(props.color)
-  const [isRequired, handleIsRequired] = useState<boolean>(props.isRequired)
-  const [isUrgent, handleIsUrgent] = useState<boolean>(props.isUrgent)
-  const [dateToComplete, setDateToComplete] = useState<string>(props.dateToComplete)
+  const [title, setTitle] = useState<string>(props.block.title)
+  const [text, setText] = useState<string>(props.block.task)
+  const [color, setColor] = useState<string>(props.block.color)
+  const [isRequired, handleIsRequired] = useState<boolean>(props.block.isRequired)
+  const [isUrgent, handleIsUrgent] = useState<boolean>(props.block.isUrgent)
+  const [dateToComplete, setDateToComplete] = useState<string>(props.block.dateToComplete)
 
   const blockVariants: Variants = {
     open: {
       opacity: 1,
-      borderTop: `${props.isSelected ? color : props.color} solid ${
+      borderTop: `${props.isSelected ? color : props.block.color} solid ${
         props.isSelected ? '.75rem' : '.5rem'
       }`,
       // minHeight: '13rem',
@@ -47,7 +39,7 @@ const Block: FC<BlockI> = memo((props) => {
     },
     close: {
       opacity: 0,
-      borderTop: `${props.isSelected ? color : props.color} solid ${
+      borderTop: `${props.isSelected ? color : props.block.color} solid ${
         props.isSelected ? '.75rem' : '.5rem'
       }`,
       // minHeight: '0rem',
@@ -59,18 +51,18 @@ const Block: FC<BlockI> = memo((props) => {
 
   return (
     <AnimatePresence>
-      {(props.blockIdEdit !== props.id || props.isSelected) && (
+      {(props.blockIdEdit !== props.block.id || props.isSelected) && (
         <motion.div
           initial={'close'}
           animate={'open'}
           exit={'close'}
           style={
-            props.isRequired || props.isUrgent
-              ? props.isRequired && props.isUrgent
+            props.block.isRequired || props.block.isUrgent
+              ? props.block.isRequired && props.block.isUrgent
                 ? { order: -1100 }
                 : { order: -1099 }
               : { order: props.index }
-              // : { }
+            // : { }
           }
           variants={blockVariants}
           transition={{ duration: 0.4 }}
@@ -81,7 +73,7 @@ const Block: FC<BlockI> = memo((props) => {
           {/*<div>{Math.random()}</div>*/}
           <div className={style.blockInnerWrapper}>
             {!props.isSelected ? (
-              <div className={style.blockTitle}>{props.title}</div>
+              <div className={style.blockTitle}>{props.block.title}</div>
             ) : (
               <label className={style.label}>
                 <input
@@ -93,10 +85,10 @@ const Block: FC<BlockI> = memo((props) => {
                 />
               </label>
             )}
-            {!props.isSelected && (props.isRequired || props.isUrgent) && (
+            {!props.isSelected && (props.block.isRequired || props.block.isUrgent) && (
               <div className={style.statesOfBlock}>
-                {props.isRequired && <div className={style.isRequiredBlock}>Важно</div>}
-                {props.isUrgent && <div className={style.isUrgentBlock}>Срочно</div>}
+                {props.block.isRequired && <div className={style.isRequiredBlock}>Важно</div>}
+                {props.block.isUrgent && <div className={style.isUrgentBlock}>Срочно</div>}
               </div>
             )}
             {props.isSelected && (
@@ -131,7 +123,7 @@ const Block: FC<BlockI> = memo((props) => {
                       <label key={index} className={style.labelRadio}>
                         <input
                           className={style.inputRadio}
-                          defaultChecked={value === props.color}
+                          defaultChecked={value === props.block.color}
                           type='radio'
                           style={{ background: value }}
                           checked={color === value}
@@ -153,7 +145,7 @@ const Block: FC<BlockI> = memo((props) => {
                 // animate={}
                 className={style.blockBody}
               >
-                {props.text}
+                {props.block.task}
               </motion.div>
             ) : (
               <label className={`${style.label} ${style.textareaLabel}`}>
@@ -178,24 +170,26 @@ const Block: FC<BlockI> = memo((props) => {
                 </label>
               </div>
             ) : (
-              <div className={style.blockTime}>до {props.dateToComplete}</div>
+              <div className={style.blockTime}>до {props.block.dateToComplete}</div>
             )}
             <div className={style.controller}>
               {!props.isSelected && (
                 <>
                   <IconButton
-                    onClickCallback={() => deleteBlock(props.setBlocks, props.blocks, props.id)}
+                    onClickCallback={() => {
+                      deleteBlock(props.session, props.idOfTable, props.block.id)
+                    }}
                   >
                     <Image className={style.icon} src={trashIcon} alt={'trash'} />
                   </IconButton>
-                  <IconButton onClickCallback={() => props.setBlockIdEdit(props.id)}>
+                  <IconButton onClickCallback={() => props.setBlockIdEdit(props.block.id)}>
                     <Image className={style.icon} src={editIcon} alt={'edit'} />
                   </IconButton>
 
                   {(props.corner === 'right' || props.corner === null) && (
                     <IconButton
                       onClickCallback={() => {
-                        swapStatus(props.setBlocks, props.blocks, 'left', props.id, props.columns)
+                        // swapStatus(props.setBlocks, props.blocks, 'left', props.id, props.columns)
                       }}
                     >
                       <Image className={style.icon} src={arrowIcon} alt={'arrow left'} />
@@ -204,7 +198,7 @@ const Block: FC<BlockI> = memo((props) => {
                   {(props.corner === 'left' || props.corner === null) && (
                     <IconButton
                       onClickCallback={() => {
-                        swapStatus(props.setBlocks, props.blocks, 'right', props.id, props.columns)
+                        // swapStatus(props.setBlocks, props.blocks, 'right', props.id, props.columns)
                       }}
                     >
                       <div
@@ -229,24 +223,24 @@ const Block: FC<BlockI> = memo((props) => {
                   </button>
                   <button
                     onClick={() => {
-                      let resultData = props.blocks
-                      let currentBlock = resultData.find((block) => block.id === props.id)
-                      if (currentBlock) {
-                        currentBlock = {
-                          id: props.id,
-                          status: props.status,
-                          title,
-                          isUrgent,
-                          isRequired,
-                          text,
-                          dateToComplete,
-                          color,
-                        }
-                        resultData = resultData.filter((block) => block.id !== props.id)
-                        resultData.push(currentBlock)
-                        props.setBlocks(resultData)
-                        props.setBlockIdEdit('')
-                      }
+                      // let resultData = props.blocks
+                      // let currentBlock = resultData.find((block) => block.id === props.id)
+                      // if (currentBlock) {
+                      //   currentBlock = {
+                      //     id: props.id,
+                      //     status: props.status,
+                      //     title,
+                      //     isUrgent,
+                      //     isRequired,
+                      //     text,
+                      //     dateToComplete,
+                      //     color,
+                      //   }
+                      //   resultData = resultData.filter((block) => block.id !== props.id)
+                      //   resultData.push(currentBlock)
+                      //   props.setBlocks(resultData)
+                      //   props.setBlockIdEdit('')
+                      // }
                     }}
                     className={`${style.button} ${style.blockBottomButton}`}
                   >

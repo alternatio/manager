@@ -1,22 +1,25 @@
-import { Dispatch, FC, memo, SetStateAction } from 'react'
+import { FC, memo } from 'react'
 import style from '/styles/pages/Organization.module.scss'
-import { sessionDataColumnILegacy } from '../../../data/sessionsData'
-import { addColumn, addItem } from '../../helpers/editItems'
 import Image from 'next/image'
 import { crossIcon } from '../../helpers/importIcons'
+import { sessionInterface } from '../../helpers/interfaces'
+import { addColumn } from '../../helpers/firestore'
 
 interface ButtonAddColumnI {
-  columns: sessionDataColumnILegacy[]
-  setColumns: Dispatch<SetStateAction<sessionDataColumnILegacy[]>>
+  session: sessionInterface
+  indexOfTable: number
 }
 
 const ButtonAddColumn: FC<ButtonAddColumnI> = memo((props) => {
+  const rawColumnsLength = props.session.tables[props.indexOfTable]?.columns
+  const columnsLength = rawColumnsLength ? rawColumnsLength.length : 0
+
   return (
     <>
-      {props.columns.length <= 19 && (
+      {columnsLength <= 19 && (
         <div
-          onClick={() => {
-            addColumn(props.setColumns, props.columns)
+          onClick={async () => {
+            await addColumn(props.session, props.indexOfTable)
           }}
           className={style.addColumn}
           style={{ order: 50 }}
