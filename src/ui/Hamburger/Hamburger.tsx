@@ -1,4 +1,4 @@
-import { Dispatch, FC, memo, ReactNode, SetStateAction } from 'react'
+import { Dispatch, FC, memo, ReactNode, SetStateAction, useRef } from 'react'
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import style from './styles/Hamburger.module.scss'
 import Link from 'next/link'
@@ -8,11 +8,13 @@ import { User } from '@firebase/auth'
 import { signInWithGooglePopup } from '../../helpers/firestore'
 import { hamburgerButtonsDataInterface } from '../../helpers/interfaces'
 import Button from '../Button/Button'
+import { useOnClickOutside } from '../../helpers/customHooks'
 
 interface HamburgerInterface {
   userData: User | null
   setUserData: Dispatch<SetStateAction<User | null>>
   hamburgerIsOpen: boolean
+  handleHamburger: Dispatch<SetStateAction<boolean>>
   handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
   handleWarningPopup: Dispatch<SetStateAction<boolean>>
   handleEnterInSessionPopup: Dispatch<SetStateAction<boolean>>
@@ -25,6 +27,12 @@ interface buttonI {
 }
 
 export const Hamburger: FC<HamburgerInterface> = memo((props) => {
+
+  const popupRef = useRef(null)
+  // useOnClickOutside(popupRef, () => {
+  //   props.handleHamburger(false)
+  // }, true)
+
   const hamburgerButtons: hamburgerButtonsDataInterface[] = [
     {
       children: (
@@ -87,6 +95,7 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
           {...commonAnimation}
           transition={transitionSpringMedium}
           className={style.hamburger}
+          ref={popupRef}
         >
           {hamburgerButtons.map((button, index) => {
             if (button.userDataRequired === null) {

@@ -57,6 +57,7 @@ export const Header: FC<HeaderInterface> = memo((props) => {
             hamburgerIsOpen={hamburgerIsOpen}
             setUserData={props.setUserData}
             handleEnterInSessionPopup={handleEnterInSessionPopup}
+            handleHamburger={handleHamburger}
           />
           <HamburgerButton hamburgerIsOpen={hamburgerIsOpen} handleHamburger={handleHamburger} />
         </div>

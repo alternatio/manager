@@ -1,5 +1,5 @@
 import { FC, memo, ReactNode } from 'react'
-import style from '/styles/pages/Organization.module.scss'
+import style from '../styles/Popup.module.scss'
 import Image from 'next/image'
 
 interface PopupButtonI {

@@ -1,4 +1,3 @@
-import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { FC, memo, useEffect, useState } from 'react'
 import style from '/styles/pages/Organization.module.scss'
 import Column from '../../components/Column/Column'

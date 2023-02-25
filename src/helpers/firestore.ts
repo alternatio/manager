@@ -255,16 +255,56 @@ export const addBlock = async (
   await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
 }
 
-// delete table
-export const deleteTable = async (currentSession: sessionInterface, idOfTable: string) => {
-  const doc = await getDocInFirestore('sessions', currentSession.owner)
-  let prepareDoc = doc.data() as sessionsInterface
+const initializeData = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  idOfColumn?: string,
+  idOfBlock?: string
+) => {
+  const doc = (await getDocInFirestore(
+    'sessions',
+    currentSession.owner
+  )) as DocumentSnapshot<sessionsInterface>
+  const prepareDoc = doc.data() as sessionsInterface
 
   const sessions = prepareDoc.sessions
   const sessionIndex = getItemIndex(sessions, currentSession.id)
 
   const tables = prepareDoc.sessions[sessionIndex].tables
   const tableIndex = getItemIndex(tables, idOfTable)
+
+  const columns = prepareDoc.sessions[sessionIndex].tables[tableIndex].columns
+  let columnIndex: number | null = null
+  if (columns && idOfColumn) {
+    columnIndex = getItemIndex(columns, idOfColumn)
+  }
+
+  const blocks = prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks
+  let blockIndex: number | null = null
+  if (blocks && idOfBlock) {
+    blockIndex = getItemIndex(blocks, idOfBlock)
+  }
+
+  return {
+    doc,
+    prepareDoc,
+    sessions,
+    sessionIndex,
+    tables,
+    tableIndex,
+    columns,
+    columnIndex,
+    blocks,
+    blockIndex,
+  }
+}
+
+// delete table
+export const deleteTable = async (currentSession: sessionInterface, idOfTable: string) => {
+  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex } = await initializeData(
+    currentSession,
+    idOfTable
+  )
 
   prepareDoc.sessions[sessionIndex].tables.splice(tableIndex, 1)
   await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
@@ -276,18 +316,10 @@ export const deleteColumn = async (
   idOfTable: string,
   idOfColumn: string
 ) => {
-  const doc = await getDocInFirestore('sessions', currentSession.owner)
-  let prepareDoc = doc.data() as sessionsInterface
+  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex, columns, columnIndex } =
+    await initializeData(currentSession, idOfTable, idOfColumn)
 
-  const sessions = prepareDoc.sessions
-  const sessionIndex = getItemIndex(sessions, currentSession.id)
-
-  const tables = prepareDoc.sessions[sessionIndex].tables
-  const tableIndex = getItemIndex(tables, idOfTable)
-
-  const columns = prepareDoc.sessions[sessionIndex].tables[tableIndex].columns
-  if (columns) {
-    const columnIndex = getItemIndex(columns, idOfColumn)
+  if (columnIndex !== null) {
     prepareDoc.sessions[sessionIndex].tables[tableIndex].columns?.splice(columnIndex, 1)
     await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
   }
@@ -299,19 +331,32 @@ export const deleteBlock = async (
   idOfTable: string,
   idOfBlock: string
 ) => {
-  const doc = await getDocInFirestore('sessions', currentSession.owner)
-  let prepareDoc = doc.data() as sessionsInterface
+  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex, blocks, blockIndex } =
+    await initializeData(currentSession, idOfTable, undefined, idOfBlock)
 
-  const sessions = prepareDoc.sessions
-  const sessionIndex = getItemIndex(sessions, currentSession.id)
-
-  const tables = prepareDoc.sessions[sessionIndex].tables
-  const tableIndex = getItemIndex(tables, idOfTable)
-
-  const blocks = prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks
-  if (blocks) {
-    const blockIndex = getItemIndex(blocks, idOfBlock)
+  if (blockIndex !== null) {
     prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks?.splice(blockIndex, 1)
     await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+  }
+}
+
+// update block
+export const updateBlock = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  idOfBlock: string,
+  newBlock: blockInterface
+) => {
+  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex, blocks, blockIndex } =
+    await initializeData(currentSession, idOfTable, undefined, idOfBlock)
+
+  if (blocks && blockIndex !== null) {
+    const preparedBlocks = prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks
+    if (preparedBlocks) {
+      preparedBlocks[blockIndex] = newBlock
+      prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks = preparedBlocks
+
+      await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+    }
   }
 }

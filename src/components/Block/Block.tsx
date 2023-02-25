@@ -7,7 +7,7 @@ import IconButton from '../../ui/Buttons/IconButton'
 import { arrowIcon, editIcon, trashIcon } from '../../helpers/importIcons'
 import { randomColors } from '../../helpers/global'
 import { blockInterface, sessionInterface } from '../../helpers/interfaces'
-import { deleteBlock } from '../../helpers/firestore'
+import { deleteBlock, updateBlock } from '../../helpers/firestore'
 
 interface BlockI {
   blockIdEdit: string
@@ -176,8 +176,8 @@ const Block: FC<BlockI> = memo((props) => {
               {!props.isSelected && (
                 <>
                   <IconButton
-                    onClickCallback={() => {
-                      deleteBlock(props.session, props.idOfTable, props.block.id)
+                    onClickCallback={async () => {
+                      await deleteBlock(props.session, props.idOfTable, props.block.id)
                     }}
                   >
                     <Image className={style.icon} src={trashIcon} alt={'trash'} />
@@ -222,25 +222,25 @@ const Block: FC<BlockI> = memo((props) => {
                     Отмена
                   </button>
                   <button
-                    onClick={() => {
-                      // let resultData = props.blocks
-                      // let currentBlock = resultData.find((block) => block.id === props.id)
-                      // if (currentBlock) {
-                      //   currentBlock = {
-                      //     id: props.id,
-                      //     status: props.status,
-                      //     title,
-                      //     isUrgent,
-                      //     isRequired,
-                      //     text,
-                      //     dateToComplete,
-                      //     color,
-                      //   }
-                      //   resultData = resultData.filter((block) => block.id !== props.id)
-                      //   resultData.push(currentBlock)
-                      //   props.setBlocks(resultData)
-                      //   props.setBlockIdEdit('')
-                      // }
+                    onClick={async () => {
+                      const resultBlock: blockInterface = {
+                        ...props.block,
+                        title,
+                        task: text,
+                        color,
+                        isUrgent,
+                        isRequired,
+                        dateToComplete,
+                      }
+
+                      await updateBlock(
+                        props.session,
+                        props.idOfTable,
+                        props.blockIdEdit,
+                        resultBlock
+                      )
+
+                      props.setBlockIdEdit('')
                     }}
                     className={`${style.button} ${style.blockBottomButton}`}
                   >

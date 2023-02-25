@@ -74,7 +74,7 @@ const Organization: NextPage = memo(() => {
         {sessionData && tables && (
           <main className={style.main}>
             {sessionData.tables.map((table, index) => {
-              console.log(table, index)
+              // console.log(table, index)
               return (
                 <Table
                   key={index}

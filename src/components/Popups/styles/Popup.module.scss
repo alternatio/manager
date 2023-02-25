@@ -89,6 +89,38 @@
   padding: .5rem;
 }
 
+.smallPopup {
+  position: absolute;
+  background: $white;
+  padding: .5rem;
+  top: 0;
+  //border: $black solid .2rem;
+  border-radius: .5rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 .3rem .75rem rgba($black, .1);
+}
+
+.popupButton {
+  width: 100%;
+  display: flex;
+  gap: .5rem;
+  white-space: nowrap;
+  padding: .5rem;
+  border-radius: .25rem;
+
+  &:hover {
+    background: $almost-white;
+    transform: none;
+  }
+}
+
+.icon {
+  height: 1.5rem;
+  width: 1rem;
+}
+
 .description {
   color: $gray;
   font-weight: 400;

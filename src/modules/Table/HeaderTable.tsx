@@ -10,6 +10,7 @@ import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../helpers/i
 import { useOnClickOutside } from '../../helpers/customHooks'
 import { sessionInterface, tableInterface } from '../../helpers/interfaces'
 import { deleteTable } from '../../helpers/firestore'
+import IconButton from '../../ui/Buttons/IconButton'
 
 interface HeaderTableI {
   id: string
@@ -55,6 +56,9 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
         <button className={style.buttonWithIcon}>
           <Image className={style.icon} src={searchIcon} alt={'search'} />
         </button>
+        {/*<IconButton onClickCallback={() => deleteTable(props.session, props.id)}>*/}
+        {/*  <Image src={trashIcon} alt={'trash'} />*/}
+        {/*</IconButton>*/}
         <KebabButton handlePopup={props.handlePopup} />
         <Popup popupVisible={props.popupIsOpen} handlePopup={props.handlePopup} position={'right'}>
           <PopupButton icon={renameIcon} onClickCallback={() => handleRename(true)}>

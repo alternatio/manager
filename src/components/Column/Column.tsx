@@ -1,5 +1,4 @@
 import { Dispatch, FC, memo, SetStateAction, useEffect, useRef, useState } from 'react'
-import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { motion, Variants } from 'framer-motion'
 import { KebabButton } from '../../ui/Kebab/Kebab'
 import style from '/styles/pages/Organization.module.scss'
@@ -47,10 +46,10 @@ const Column: FC<ColumnI> = memo((props) => {
     },
   }
 
-  // useOnClickOutside(ref, () => {
-  //   renameItem(props.setColumns, props.columns, props.id, title)
-  //   handleRename(false)
-  // })
+  useOnClickOutside(ref, () => {
+    // renameItem(props.setColumns, props.columns, props.id, title)
+    handleRename(false)
+  })
   console.log(sessionBlocks)
 
   return (
@@ -89,8 +88,8 @@ const Column: FC<ColumnI> = memo((props) => {
               Переименовать колонку
             </PopupButton>
             <PopupButton
-              onClickCallback={() => {
-                deleteColumn(props.session, props.session.tables[props.indexOfTable].id, props.id)
+              onClickCallback={async () => {
+                await deleteColumn(props.session, props.session.tables[props.indexOfTable].id, props.id)
               }}
               icon={trashIcon}
             >

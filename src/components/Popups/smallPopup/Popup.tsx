@@ -26,7 +26,7 @@ const Popup: FC<PopupI> = (props) => {
           {...commonAnimation}
           transition={commonTransition()}
           style={props.position === 'left' ? { right: '2rem' } : { left: 'calc(100% + .5rem)' }}
-          className={style.popup}
+          className={style.smallPopup}
         >
           {props.children}
         </motion.div>
