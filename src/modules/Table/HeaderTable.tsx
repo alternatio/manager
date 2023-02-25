@@ -9,7 +9,7 @@ import PopupButton from '../../components/Popups/smallPopup/PopupButton'
 import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../helpers/importIcons'
 import { useOnClickOutside } from '../../helpers/customHooks'
 import { sessionInterface, tableInterface } from '../../helpers/interfaces'
-import { deleteTable } from '../../helpers/firestore'
+import { deleteTable, updateTable } from '../../helpers/firestore'
 import IconButton from '../../ui/Buttons/IconButton'
 
 interface HeaderTableI {
@@ -25,13 +25,17 @@ interface HeaderTableI {
 
 const HeaderTable: FC<HeaderTableI> = memo((props) => {
   const [rename, handleRename] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>('')
+  const [title, setTitle] = useState<string>(props.session.tables[props.index].title)
   const ref = useRef(null)
 
-  // useOnClickOutside(ref, () => {
-  //   renameItem(props.setData, props.data, props.data[props.index].id, title)
-  //   handleRename(false)
-  // })
+  useOnClickOutside(ref, async () => {
+    const newTable: tableInterface = {
+      ...props.session.tables[props.index],
+      title
+    }
+    await updateTable(props.session, props.id, newTable)
+    handleRename(false)
+  })
 
   return (
     <motion.header

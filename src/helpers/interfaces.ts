@@ -56,13 +56,22 @@ export interface sessionInterface {
   owner: string
   title: string
   password: string
-  users: userInterface[]
+  users: userInterfaceWithRole[]
   tables: tableInterface[]
+}
+
+// public session
+export interface sessionInterfacePublic {
+  id: string
+  owner: string
+  title: string
+  password: string
 }
 
 // prepared session
 export interface sessionsInterface {
   sessions: sessionInterface[]
+  publicSessions: sessionInterfacePublic[]
 }
 
 // hamburger buttons data

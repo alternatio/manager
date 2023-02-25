@@ -9,8 +9,8 @@ import Popup from '../Popups/smallPopup/Popup'
 import PopupButton from '../Popups/smallPopup/PopupButton'
 import { renameIcon, trashIcon } from '../../helpers/importIcons'
 import { useOnClickOutside } from '../../helpers/customHooks'
-import { sessionInterface } from '../../helpers/interfaces'
-import { deleteColumn } from '../../helpers/firestore'
+import { columnInterface, sessionInterface } from '../../helpers/interfaces'
+import { deleteColumn, updateColumn } from '../../helpers/firestore'
 
 interface ColumnI {
   id: string
@@ -23,12 +23,13 @@ interface ColumnI {
 
   session: sessionInterface
   indexOfTable: number
+  idOfTable: string
 }
 
 const Column: FC<ColumnI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
   const [rename, handleRename] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>('')
+  const [title, setTitle] = useState<string>(props.title)
   const ref = useRef(null)
 
   const sessionBlocks = props.session.tables[props.indexOfTable]?.blocks
@@ -46,11 +47,14 @@ const Column: FC<ColumnI> = memo((props) => {
     },
   }
 
-  useOnClickOutside(ref, () => {
-    // renameItem(props.setColumns, props.columns, props.id, title)
+  useOnClickOutside(ref, async () => {
+    const newColumn: columnInterface = {
+      id: props.id,
+      title
+    }
+    await updateColumn(props.session, props.idOfTable, props.id, newColumn)
     handleRename(false)
   })
-  console.log(sessionBlocks)
 
   return (
     <motion.div
@@ -116,6 +120,7 @@ const Column: FC<ColumnI> = memo((props) => {
                   block={block}
                   session={props.session}
                   idOfTable={props.session.tables[props.indexOfTable].id}
+                  idOfColumn={props.id}
                 />
               )
             })}

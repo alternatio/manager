@@ -6,7 +6,7 @@ import { Intro } from '../src/modules/Intro/Intro'
 import { Percents } from '../src/modules/Percents/Percents'
 import { Trader } from '../src/modules/Trader/Trader'
 import Footer from '../src/modules/Footer/Footer'
-import { AddSessionPopup } from '../src/components/Popups/AddSessionPopup/AddSessionPopup'
+import { CreateSessionPopup } from '../src/components/Popups/CreateSessionPopup/CreateSessionPopup'
 import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
 import { NextPage } from 'next'
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
 
       <AnimatePresence>
         {addSessionPopup && (
-          <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
+          <CreateSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
         )}
       </AnimatePresence>
 

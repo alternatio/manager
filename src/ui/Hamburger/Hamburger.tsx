@@ -27,7 +27,6 @@ interface buttonI {
 }
 
 export const Hamburger: FC<HamburgerInterface> = memo((props) => {
-
   const popupRef = useRef(null)
   // useOnClickOutside(popupRef, () => {
   //   props.handleHamburger(false)
@@ -64,7 +63,7 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
     },
     {
       children: 'Присоединиться к доске',
-      onClick: () => {},
+      onClick: () => props.handleEnterInSessionPopup(true),
       userDataRequired: true,
     },
     {

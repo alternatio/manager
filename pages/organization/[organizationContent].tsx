@@ -9,7 +9,7 @@ import Table from '../../src/modules/Table/Table'
 import ButtonAddTable from '../../src/ui/Buttons/ButtonAddTable'
 import { User } from '@firebase/auth'
 import { AnimatePresence } from 'framer-motion'
-import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
+import { CreateSessionPopup } from '../../src/components/Popups/CreateSessionPopup/CreateSessionPopup'
 import { getSession, getUser } from '../../src/helpers/firestore'
 import { sessionInterface, sessionsInterface, tableInterface } from '../../src/helpers/interfaces'
 import { doc, onSnapshot } from '@firebase/firestore'
@@ -28,9 +28,9 @@ const Organization: NextPage = memo(() => {
   const initial = async () => {
     const user = getUser(setUserData)
     if (user) {
-      const session = await getSession(setSessionData, user.uid)
+      const session = await getSession(setSessionData)
       if (session) {
-        onSnapshot(doc(db, 'sessions', user.uid), (doc) => {
+        onSnapshot(doc(db, 'sessions', session.owner), (doc) => {
           const data = doc.data() as sessionsInterface
           if (data) {
             const preparedData = data.sessions.find((item) => item.id === session.id)
@@ -58,7 +58,7 @@ const Organization: NextPage = memo(() => {
 
       <AnimatePresence>
         {addSessionPopup && (
-          <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
+          <CreateSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
         )}
       </AnimatePresence>
 

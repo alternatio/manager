@@ -5,7 +5,7 @@ import { Header } from '../../src/modules/Header/Header'
 import { User } from '@firebase/auth'
 import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
-import { AddSessionPopup } from '../../src/components/Popups/AddSessionPopup/AddSessionPopup'
+import { CreateSessionPopup } from '../../src/components/Popups/CreateSessionPopup/CreateSessionPopup'
 import { getUser } from '../../src/helpers/firestore'
 
 const Index: NextPage = () => {
@@ -25,7 +25,7 @@ const Index: NextPage = () => {
 
       <AnimatePresence>
         {addSessionPopup && (
-          <AddSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
+          <CreateSessionPopup handleAddSessionPopup={handleAddSessionPopup} userData={userData} />
         )}
       </AnimatePresence>
 

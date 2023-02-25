@@ -107,6 +107,7 @@ const Table: FC<TableI> = memo((props) => {
                         position={index}
                         indexOfTable={props.index}
                         session={props.session}
+                        idOfTable={props.id}
                       />
                     )
                   })}

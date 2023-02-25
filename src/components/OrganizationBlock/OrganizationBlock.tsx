@@ -1,7 +1,11 @@
-import { FC, memo, SetStateAction, useEffect, useState } from 'react'
+import { FC, memo, useEffect, useState } from 'react'
 import style from './styles/OrganizationBlock.module.scss'
 import { motion } from 'framer-motion'
-import { sessionInterface } from '../../helpers/interfaces'
+import {
+  sessionInterface,
+  sessionInterfacePublic,
+  sessionsInterface,
+} from '../../helpers/interfaces'
 import { commonAnimation, commonTransition } from '../../ui/animations/commonAnimations'
 import IconButton from '../../ui/Buttons/IconButton'
 import Image from 'next/image'
@@ -16,24 +20,25 @@ import {
 } from '../../helpers/importIcons'
 import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
-import Input from '../../ui/Input/Input'
 import UpdatePopup from '../Popups/UpdatePopup/UpdatePopup'
-import { staterArrayOfProjectsI } from '../../../pages/myOrganizations'
 import { User } from '@firebase/auth'
-import { getLink, setItemInFirestore } from '../../helpers/firestore'
+import { getDocInFirestore, getLink, setItemInFirestore } from '../../helpers/firestore'
+import { DocumentSnapshot } from '@firebase/firestore'
 
 interface OrganizationBlockProps {
-  session: sessionInterface
+  session: sessionInterface | sessionInterfacePublic
   deleteOrganization: Function
   index: number
   refreshData: Function
-  staterArrayOfProjects: staterArrayOfProjectsI
   userData: User | null
 }
 
 const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
   const [isCheckPassword, handleIsCheckPassword] = useState<boolean>(false)
   const [warningPopup, handleWarningPopup] = useState<boolean>(false)
+
+  const [innerData, setInnerData] = useState<sessionInterface | null>(null)
+  // const [innerDataLoaded, handleInnerDataLoaded] = useState<boolean>(false)
 
   const [popupIsVisible, handlePopupVisible] = useState<boolean>(false)
   const [title, setTitle] = useState<string>(props.session.title)
@@ -48,33 +53,55 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
   }
 
   const functionOnUpdate = async () => {
-    if (props.userData?.uid && props.staterArrayOfProjects.arrayOfProjects) {
-      const resultArray = [...props.staterArrayOfProjects.arrayOfProjects.sessions]
-      console.log(props.staterArrayOfProjects.arrayOfProjects.sessions)
-      resultArray[props.index].title = title
-      resultArray[props.index].password = password
+    // if (props.userData?.uid && props.staterArrayOfProjects.arrayOfProjects) {
+    //   const resultArray = props.session
+    //   console.log(props.staterArrayOfProjects.arrayOfProjects.sessions)
+    //   resultArray[props.index].title = title
+    //   resultArray[props.index].password = password
+    //
+    //   const resultData = {
+    //     owner: props.userData.uid,
+    //     sessions: resultArray,
+    //   }
+    //
+    //   await setItemInFirestore('sessions', props.userData.uid, resultData)
+    //   // props.refreshData()
+    // }
+  }
 
-      const resultData = {
-        owner: props.userData.uid,
-        sessions: resultArray,
+  const getSessionData = async (session: sessionInterfacePublic) => {
+    const rawData = (await getDocInFirestore(
+      'sessions',
+      session.owner
+    )) as DocumentSnapshot<sessionsInterface>
+    const data = rawData.data()
+    if (data) {
+      const sessionIndex = data.sessions.findIndex((item) => item.id === session.id)
+      if (sessionIndex !== -1) {
+        const innerData = data.sessions[sessionIndex]
+        setInnerData(innerData)
+        return innerData
       }
-
-      await setItemInFirestore('sessions', props.userData.uid, resultData)
-      // props.refreshData()
     }
   }
 
+  useEffect(() => {
+    if (props.session) {
+      getSessionData(props.session)
+    }
+  }, [])
+
   const getOwner = () => {
-    return props.session.users.find((item) => item.uid === props.session.owner)
+    return innerData?.users.find((item) => item.uid === props.session.owner)
   }
 
-  const getLengthOfTables = () => {
-    return props.session.tables.length
+  const getLengthOfTables = (session: sessionInterface) => {
+    return session.tables.length
   }
 
-  const getLengthOfColumns = () => {
+  const getLengthOfColumns = (session: sessionInterface) => {
     let lengthOfColumns = 0
-    props.session.tables.forEach((table) => {
+    session.tables.forEach((table) => {
       if (table.columns) {
         lengthOfColumns += table.columns.length
       }
@@ -82,9 +109,9 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
     return lengthOfColumns
   }
 
-  const getLengthOfBlocks = () => {
+  const getLengthOfBlocks = (session: sessionInterface) => {
     let lengthOfBlocks = 0
-    props.session.tables.forEach((table) => {
+    session.tables.forEach((table) => {
       if (table.blocks) {
         lengthOfBlocks += table.blocks.length
       }
@@ -148,14 +175,16 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         <div className={style.label}>
           <span className={style.title}>Создатель: </span>
           <div className={style.owner}>
-            <Image
-              className={style.avatarOwner}
-              referrerPolicy={'no-referrer'}
-              width={60}
-              height={60}
-              src={getOwner()?.avatar || 'none'}
-              alt={'avatarOwner'}
-            />
+            {getOwner()?.avatar &&
+              <Image
+                className={style.avatarOwner}
+                referrerPolicy={'no-referrer'}
+                width={60}
+                height={60}
+                src={getOwner()?.avatar || ''}
+                alt={'avatarOwner'}
+              />
+            }
             <div className={style.ownerText}>
               <span className={style.value}>{getOwner()?.name}</span>
               <span className={style.value}>{getOwner()?.email}</span>
@@ -165,15 +194,15 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         <div className={style.blockOfCounters}>
           <div className={style.counter}>
             <Image className={style.counterIcon} src={tableIcon} alt={'table'} />
-            <span className={style.counterText}>{getLengthOfTables()}</span>
+            <span className={style.counterText}>{innerData && getLengthOfTables(innerData)}</span>
           </div>
           <div className={style.counter}>
             <Image className={style.counterIcon} src={columnIcon} alt={'column'} />
-            <span className={style.counterText}>{getLengthOfColumns()}</span>
+            <span className={style.counterText}>{innerData && getLengthOfColumns(innerData)}</span>
           </div>
           <div className={style.counter}>
             <Image className={style.counterIcon} src={blockIconWithoutDot} alt={'block'} />
-            <span className={style.counterText}>{getLengthOfBlocks()}</span>
+            <span className={style.counterText}>{innerData && getLengthOfBlocks(innerData)}</span>
           </div>
         </div>
         <div className={style.buttons}>
@@ -189,7 +218,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
           )}
           <button
             onClick={() => {
-              localStorage.setItem('organization', JSON.stringify(props.session))
+              localStorage.setItem('organization', JSON.stringify(innerData))
             }}
             className={style.button}
           >

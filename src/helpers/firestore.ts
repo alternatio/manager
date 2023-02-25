@@ -6,6 +6,7 @@ import {
   blockInterface,
   columnInterface,
   sessionInterface,
+  sessionInterfacePublic,
   sessionsInterface,
   tableInterface,
   userInterface,
@@ -13,6 +14,7 @@ import {
 } from './interfaces'
 import { getCurrentDate, getRandomColor, getRandomId } from './global'
 import { NextRouter } from 'next/router'
+import { string } from 'prop-types'
 
 // get doc in firestore
 export const getDocInFirestore = async (collectionName: string, docName: string) => {
@@ -106,6 +108,7 @@ export const createOrganization = async (
       if (isValid) {
         const resultData: sessionsInterface = {
           sessions: [...preparedData.sessions, resultObject],
+          publicSessions: preparedData.publicSessions || [],
         }
         await setItemInFirestore('sessions', preparedUser.uid, resultData)
         await router.push(link)
@@ -113,11 +116,100 @@ export const createOrganization = async (
     } else {
       const resultData: sessionsInterface = {
         sessions: [resultObject],
+        publicSessions: [],
       }
       await setItemInFirestore('sessions', preparedUser.uid, resultData)
       await router.push(link)
     }
     return resultObject
+  }
+}
+
+// add organization
+export const addOrganization = async (
+  userData: User,
+  idOfOrganization: string,
+  owner: string,
+  passwordOfOrganization: string,
+  router: NextRouter
+) => {
+  // owner data
+  const ownerDoc = (await getDocInFirestore(
+    'sessions',
+    owner
+  )) as DocumentSnapshot<sessionsInterface>
+  const ownerDocPrepared = ownerDoc.data()
+
+  // user data
+  const userDoc = (await getDocInFirestore(
+    'sessions',
+    userData.uid
+  )) as DocumentSnapshot<sessionsInterface>
+  let userDocPrepared = userDoc.data()
+
+  if (ownerDocPrepared) {
+    const valid = ownerDocPrepared.sessions.find(
+      (item) => item.id === idOfOrganization && item.password === passwordOfOrganization
+    )
+    if (valid) {
+      // owner ---
+      const currentUserObject: userInterfaceWithRole = {
+        uid: userData.uid,
+        name: userData.displayName,
+        email: userData.email,
+        avatar: userData.photoURL,
+        role: 'User',
+      }
+      const ownerSessionIndex = getItemIndex(ownerDocPrepared.sessions, idOfOrganization)
+      const ownerSessionUsers = ownerDocPrepared.sessions[ownerSessionIndex].users
+
+      const presentUserIndex = ownerSessionUsers.findIndex(
+        (user) => user.uid === currentUserObject.uid
+      )
+
+      // put new data and save old role
+      if (ownerSessionUsers[presentUserIndex] && presentUserIndex !== -1) {
+        currentUserObject.role = ownerSessionUsers[presentUserIndex].role
+        ownerSessionUsers[presentUserIndex] = currentUserObject
+        console.log('present!', currentUserObject)
+      } else {
+        ownerSessionUsers.push(currentUserObject)
+        console.log('not present!', currentUserObject)
+      }
+
+      ownerDocPrepared.sessions[ownerSessionIndex].users = ownerSessionUsers
+
+      // user ---
+      const userPublicSessions: sessionInterfacePublic = {
+        id: ownerDocPrepared.sessions[ownerSessionIndex].id,
+        title: ownerDocPrepared.sessions[ownerSessionIndex].title,
+        password: passwordOfOrganization,
+        owner,
+      }
+
+      if (!userDocPrepared) {
+        userDocPrepared = {
+          sessions: [],
+          publicSessions: [],
+        }
+      }
+
+      if (userDocPrepared.publicSessions.length > 0) {
+        console.log('old updated')
+        userDocPrepared.publicSessions = [...userDocPrepared.publicSessions, userPublicSessions]
+      } else {
+        console.log('new created')
+        userDocPrepared.publicSessions = [userPublicSessions]
+      }
+
+      // final ---
+      await setItemInFirestore('sessions', owner, ownerDocPrepared)
+      await setItemInFirestore('sessions', currentUserObject.uid, userDocPrepared)
+      console.log(ownerDocPrepared, userDocPrepared)
+      console.log('valid')
+    } else {
+      console.log('invalid')
+    }
   }
 }
 
@@ -133,33 +225,39 @@ export const getUser = (setUserData: Dispatch<SetStateAction<User | null>>) => {
 
 // get tables
 export const getSession = async (
-  setTables: Dispatch<SetStateAction<sessionInterface | null>>,
-  userID: string
+  setTables: Dispatch<SetStateAction<sessionInterface | null>>
 ) => {
   const localData = localStorage.getItem('organization')
-  const firestoreData = (await getDocInFirestore(
-    'sessions',
-    userID
-  )) as DocumentSnapshot<sessionsInterface>
-  const preparedFirestoreData = firestoreData.data()
+  const userData = localStorage.getItem('user')
 
-  if (localData && preparedFirestoreData) {
+  if (localData && userData) {
     const preparedLocalData = JSON.parse(localData) as sessionInterface
-    const result = preparedFirestoreData.sessions.find((item) => item.id === preparedLocalData.id)
+    const preparedUserData = JSON.parse(userData) as User
 
-    if (!result) {
-      setTables(null)
-      return null
+    const firestoreData = (await getDocInFirestore(
+      'sessions',
+      preparedLocalData.owner
+    )) as DocumentSnapshot<sessionsInterface>
+    const preparedFirestoreData = firestoreData.data()
+
+    if (preparedFirestoreData) {
+      const result = preparedFirestoreData.sessions.find((item) => item.id === preparedLocalData.id)
+
+      console.log(result, preparedFirestoreData)
+      if (!result) {
+        setTables(null)
+        return null
+      }
+      const resultWithUser = result.users.find((item) => item.uid === preparedUserData.uid)
+
+      if (!resultWithUser) {
+        setTables(null)
+        return null
+      }
+
+      setTables(result)
+      return result
     }
-    const resultWithUser = result.users.find((item) => item.uid === userID)
-
-    if (!resultWithUser) {
-      setTables(null)
-      return null
-    }
-
-    setTables(result)
-    return result
   }
 
   setTables(null)
@@ -205,7 +303,6 @@ export const addColumn = async (currentSession: sessionInterface, indexOfTable: 
     id: getRandomId(),
     title: 'Новая колонка',
   }
-  // console.log(preparedDoc.sessions.find((session) => session.id === currentSession.id)?.tables[indexOfTable].columns)
 
   if (
     preparedDoc.sessions
@@ -299,15 +396,48 @@ const initializeData = async (
   }
 }
 
+// update table
+export const updateTable = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  newTable: tableInterface
+) => {
+  const { prepareDoc, sessionIndex, tableIndex } = await initializeData(currentSession, idOfTable)
+
+  prepareDoc.sessions[sessionIndex].tables[tableIndex] = newTable
+  await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+}
+
 // delete table
 export const deleteTable = async (currentSession: sessionInterface, idOfTable: string) => {
-  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex } = await initializeData(
-    currentSession,
-    idOfTable
-  )
+  const { prepareDoc, sessionIndex, tableIndex } = await initializeData(currentSession, idOfTable)
 
   prepareDoc.sessions[sessionIndex].tables.splice(tableIndex, 1)
   await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+}
+
+// update column
+export const updateColumn = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  idOfColumn: string,
+  newColumn: columnInterface
+) => {
+  const { prepareDoc, sessionIndex, tableIndex, columns, columnIndex } = await initializeData(
+    currentSession,
+    idOfTable,
+    idOfColumn
+  )
+
+  if (columns && columnIndex !== null) {
+    const preparedColumns = prepareDoc.sessions[sessionIndex].tables[tableIndex].columns
+    if (preparedColumns) {
+      preparedColumns[columnIndex] = newColumn
+      prepareDoc.sessions[sessionIndex].tables[tableIndex].columns = preparedColumns
+
+      await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+    }
+  }
 }
 
 // delete column
@@ -316,8 +446,11 @@ export const deleteColumn = async (
   idOfTable: string,
   idOfColumn: string
 ) => {
-  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex, columns, columnIndex } =
-    await initializeData(currentSession, idOfTable, idOfColumn)
+  const { prepareDoc, sessionIndex, tableIndex, columnIndex } = await initializeData(
+    currentSession,
+    idOfTable,
+    idOfColumn
+  )
 
   if (columnIndex !== null) {
     prepareDoc.sessions[sessionIndex].tables[tableIndex].columns?.splice(columnIndex, 1)
@@ -331,8 +464,12 @@ export const deleteBlock = async (
   idOfTable: string,
   idOfBlock: string
 ) => {
-  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex, blocks, blockIndex } =
-    await initializeData(currentSession, idOfTable, undefined, idOfBlock)
+  const { prepareDoc, sessionIndex, tableIndex, blockIndex } = await initializeData(
+    currentSession,
+    idOfTable,
+    undefined,
+    idOfBlock
+  )
 
   if (blockIndex !== null) {
     prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks?.splice(blockIndex, 1)
@@ -347,8 +484,12 @@ export const updateBlock = async (
   idOfBlock: string,
   newBlock: blockInterface
 ) => {
-  const { doc, prepareDoc, sessions, sessionIndex, tables, tableIndex, blocks, blockIndex } =
-    await initializeData(currentSession, idOfTable, undefined, idOfBlock)
+  const { prepareDoc, sessionIndex, tableIndex, blocks, blockIndex } = await initializeData(
+    currentSession,
+    idOfTable,
+    undefined,
+    idOfBlock
+  )
 
   if (blocks && blockIndex !== null) {
     const preparedBlocks = prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks
@@ -356,6 +497,30 @@ export const updateBlock = async (
       preparedBlocks[blockIndex] = newBlock
       prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks = preparedBlocks
 
+      await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+    }
+  }
+}
+
+// swap status of block
+export const swapColumnID = async (
+  currentSession: sessionInterface,
+  idOfTable: string,
+  idOfColumn: string,
+  idOfBlock: string,
+  direction: 'left' | 'right'
+) => {
+  const { prepareDoc, sessionIndex, tableIndex, columns, columnIndex, blocks, blockIndex } =
+    await initializeData(currentSession, idOfTable, idOfColumn, idOfBlock)
+
+  if (blocks !== null && blockIndex !== null && columns !== null && columnIndex !== null) {
+    if (direction === 'left') {
+      blocks[blockIndex].columnId = columns[columnIndex - 1].id
+      prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks = blocks
+      await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
+    } else if (direction === 'right') {
+      blocks[blockIndex].columnId = columns[columnIndex + 1].id
+      prepareDoc.sessions[sessionIndex].tables[tableIndex].blocks = blocks
       await setItemInFirestore('sessions', currentSession.owner, prepareDoc)
     }
   }

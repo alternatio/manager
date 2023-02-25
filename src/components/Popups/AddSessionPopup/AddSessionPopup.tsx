@@ -1,44 +1,53 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FC, memo, SetStateAction, useEffect, useState } from 'react'
 import style from '../styles/Popup.module.scss'
-import { motion } from 'framer-motion'
-import Input from '../../../ui/Input/Input'
-import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
-import { popupV } from '../../../ui/animations/variants'
-import { createOrganization } from '../../../helpers/firestore'
-import Button from '../../../ui/Button/Button'
-import Text from '../../../ui/Text/Text'
-import { User } from '@firebase/auth'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
+import { addOrganization, createOrganization, getUser } from '../../../helpers/firestore'
+import { popupV } from '../../../ui/animations/variants'
+import { commonAnimation, commonTransition } from '../../../ui/animations/commonAnimations'
+import Input from '../../../ui/Input/Input'
+import Text from '../../../ui/Text/Text'
+import Button from '../../../ui/Button/Button'
+import { User } from '@firebase/auth'
 
 interface AddSessionPopupProps {
-  handleAddSessionPopup: Dispatch<SetStateAction<boolean>>
-  userData: User | null
+  popupIsOpen: boolean
+  handlePopup: Dispatch<SetStateAction<boolean>>
 }
 
-export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
-  const [nameOfOrganization, setName] = useState<string>('')
-  const [passwordOfOrganization, setPassword] = useState<string>('')
+const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
+  const [idOfSession, setIdOfSession] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   const errors = [
-    'Недостаточная длина имени (минимальная длина 4)',
+    'Недостаточная длина ID (минимальная длина 30)',
     'Недостаточная длина пароля (минимальная длина 6)',
     'Что-то произошло. Попробуйте ещё раз',
   ]
 
   const closePopup = () => {
-    props.handleAddSessionPopup(false)
+    props.handlePopup(false)
   }
 
-  const createWithValid = async () => {
-    if (nameOfOrganization.length >= 4 && passwordOfOrganization.length >= 6) {
-      closePopup()
-      const orgObject = await createOrganization(props.userData, nameOfOrganization, passwordOfOrganization, router)
-      localStorage.setItem('organization', JSON.stringify(orgObject))
-    } else if (nameOfOrganization.length < 4) {
+  const addWithValid = async () => {
+    if (idOfSession.length >= 30 && password.length >= 6) {
+      const owner = idOfSession.slice(0, idOfSession.indexOf('&'))
+      const session = idOfSession.slice(idOfSession.indexOf('&') + 1)
+      const user = getUser(setUser)
+
+      if (user) {
+        await addOrganization(user, idOfSession, owner, password, router)
+      }
+
+
+
+      // closePopup()
+    } else if (idOfSession.length < 30) {
       setError(errors[0])
-    } else if (passwordOfOrganization.length < 6) {
+    } else if (password.length < 6) {
       setError(errors[1])
     }
   }
@@ -46,7 +55,7 @@ export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
   const keyDown = async (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        await createWithValid()
+        await addWithValid()
         break
       case 'Escape':
         closePopup()
@@ -62,54 +71,61 @@ export const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
   }, [])
 
   return (
-    <motion.div
-      variants={popupV}
-      {...commonAnimation}
-      transition={commonTransition()}
-      className={style.wrapper}
-    >
-      <div className={style.body}>
-        <Input
-          value={nameOfOrganization}
-          setValue={setName}
-          placeholder={'Название организации'}
-          autoFocus={true}
-          maxLength={20}
-          setError={setError}
-        />
-        <Input
-          maxLength={20}
-          value={passwordOfOrganization}
-          setValue={setPassword}
-          placeholder={'Пароль'}
-          setError={setError}
-        />
-        {error ? (
-          <Text
-            color={'#f03'}
-            fontSize={'.9rem'}
-            fontWeight={'400'}
-            width={'17rem'}
-            align={'center'}
-          >
-            {error}
-          </Text>
-        ) : (
-          <Text
-            fontSize={'.9rem'}
-            fontWeight={'400'}
-            color={'#888'}
-            width={'17rem'}
-            align={'center'}
-          >
-            Если у вас есть организация, выберите в пункте меню -Мои доски-
-          </Text>
-        )}
-        <Button width={'100%'} onClick={async () => await createWithValid()}>
-          Создать
-        </Button>
-      </div>
-      <div onClick={() => closePopup()} className={style.backgroundClose} />
-    </motion.div>
+    <AnimatePresence>
+      {props.popupIsOpen && (
+        <motion.div
+          variants={popupV}
+          {...commonAnimation}
+          transition={commonTransition()}
+          className={style.wrapper}
+        >
+          <div className={style.body}>
+            <Input
+              value={idOfSession}
+              setValue={setIdOfSession}
+              placeholder={'ID'}
+              autoFocus={true}
+              maxLength={40}
+              setError={setError}
+            />
+            <Input
+              maxLength={20}
+              value={password}
+              setValue={setPassword}
+              placeholder={'Пароль'}
+              setError={setError}
+            />
+            {error ? (
+              <Text
+                color={'#f03'}
+                fontSize={'.9rem'}
+                fontWeight={'400'}
+                width={'17rem'}
+                align={'center'}
+              >
+                {error}
+              </Text>
+            ) : (
+              <Text
+                fontSize={'.9rem'}
+                fontWeight={'400'}
+                color={'#888'}
+                width={'17rem'}
+                align={'center'}
+              >
+                Если у вас есть организация, выберите в пункте меню -Мои доски-
+              </Text>
+            )}
+            <Button width={'100%'} onClick={async () => await addWithValid()}>
+              Войти
+            </Button>
+          </div>
+          <div onClick={() => closePopup()} className={style.backgroundClose} />
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
+
+AddSessionPopup.displayName = 'AddSessionPopup'
+export default memo(AddSessionPopup)

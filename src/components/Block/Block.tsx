@@ -1,13 +1,12 @@
 import style from '/styles/pages/Organization.module.scss'
 import { Dispatch, FC, memo, SetStateAction, useState } from 'react'
-import { sessionDataBlockILegacy, sessionDataColumnILegacy } from '../../../data/sessionsData'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import Image from 'next/image'
 import IconButton from '../../ui/Buttons/IconButton'
 import { arrowIcon, editIcon, trashIcon } from '../../helpers/importIcons'
 import { randomColors } from '../../helpers/global'
 import { blockInterface, sessionInterface } from '../../helpers/interfaces'
-import { deleteBlock, updateBlock } from '../../helpers/firestore'
+import { deleteBlock, swapColumnID, updateBlock } from '../../helpers/firestore'
 
 interface BlockI {
   blockIdEdit: string
@@ -18,6 +17,7 @@ interface BlockI {
   block: blockInterface
   session: sessionInterface
   idOfTable: string
+  idOfColumn?: string
 }
 
 const Block: FC<BlockI> = memo((props) => {
@@ -188,8 +188,15 @@ const Block: FC<BlockI> = memo((props) => {
 
                   {(props.corner === 'right' || props.corner === null) && (
                     <IconButton
-                      onClickCallback={() => {
-                        // swapStatus(props.setBlocks, props.blocks, 'left', props.id, props.columns)
+                      onClickCallback={async () => {
+                        props.idOfColumn &&
+                          (await swapColumnID(
+                            props.session,
+                            props.idOfTable,
+                            props.idOfColumn,
+                            props.block.id,
+                            'left'
+                          ))
                       }}
                     >
                       <Image className={style.icon} src={arrowIcon} alt={'arrow left'} />
@@ -197,8 +204,15 @@ const Block: FC<BlockI> = memo((props) => {
                   )}
                   {(props.corner === 'left' || props.corner === null) && (
                     <IconButton
-                      onClickCallback={() => {
-                        // swapStatus(props.setBlocks, props.blocks, 'right', props.id, props.columns)
+                      onClickCallback={async () => {
+                        props.idOfColumn &&
+                          (await swapColumnID(
+                            props.session,
+                            props.idOfTable,
+                            props.idOfColumn,
+                            props.block.id,
+                            'right'
+                          ))
                       }}
                     >
                       <div
@@ -233,12 +247,7 @@ const Block: FC<BlockI> = memo((props) => {
                         dateToComplete,
                       }
 
-                      await updateBlock(
-                        props.session,
-                        props.idOfTable,
-                        props.blockIdEdit,
-                        resultBlock
-                      )
+                      await updateBlock(props.session, props.idOfTable, props.block.id, resultBlock)
 
                       props.setBlockIdEdit('')
                     }}
