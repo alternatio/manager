@@ -131,13 +131,15 @@ export const updateOrganization = async (
   idOfOrganization: string,
   owner: string,
   name: string,
-  password: string,
+  password: string
 ) => {
-  const doc = await getDocInFirestore('sessions', owner) as DocumentSnapshot<sessionsInterface>
+  const doc = (await getDocInFirestore('sessions', owner)) as DocumentSnapshot<sessionsInterface>
   const docPrepared = doc.data()
 
   if (docPrepared) {
-    const sessionIndex = docPrepared.sessions.findIndex(session => session.id === idOfOrganization)
+    const sessionIndex = docPrepared.sessions.findIndex(
+      (session) => session.id === idOfOrganization
+    )
 
     if (sessionIndex !== -1) {
       docPrepared.sessions[sessionIndex].title = name
@@ -219,7 +221,9 @@ export const addOrganization = async (
       }
 
       if (userDocPrepared.publicSessions.length > 0) {
-        const sessionIsPresent = userDocPrepared.publicSessions.findIndex(item => item.id === userPublicSessions.id)
+        const sessionIsPresent = userDocPrepared.publicSessions.findIndex(
+          (item) => item.id === userPublicSessions.id
+        )
         if (sessionIsPresent !== -1) {
           userDocPrepared.publicSessions[sessionIsPresent] = userPublicSessions
           console.log('old updated')
@@ -245,11 +249,32 @@ export const addOrganization = async (
   }
 }
 
+// delete organization
+export const deleteOrganization = async (
+  userData: User,
+  idOfOrganization: string,
+  owner: string
+) => {
+  const doc = (await getDocInFirestore('sessions', owner)) as DocumentSnapshot<sessionsInterface>
+  const preparedDoc = doc.data()
+
+  if (preparedDoc) {
+    const sessionIndex = preparedDoc.sessions.findIndex(
+      (session) => session.id === idOfOrganization
+    )
+
+    if (sessionIndex !== -1) {
+      preparedDoc.sessions.splice(sessionIndex, 1)
+      await setItemInFirestore('sessions', owner, preparedDoc)
+    }
+  }
+}
+
 // delete organization in public
 export const deleteOrganizationInPublic = async (
   userData: User,
   idOfOrganization: string,
-  owner: string,
+  owner: string
 ) => {
   // owner data
   const ownerDoc = (await getDocInFirestore(
@@ -266,14 +291,20 @@ export const deleteOrganizationInPublic = async (
   let userDocPrepared = userDoc.data()
 
   if (ownerDocPrepared && userDocPrepared) {
-    const userSessionIndex = userDocPrepared.publicSessions.findIndex(item => item.id === idOfOrganization)
-    const ownerSessionIndex = ownerDocPrepared.sessions.findIndex(item => item.id === idOfOrganization)
+    const userSessionIndex = userDocPrepared.publicSessions.findIndex(
+      (item) => item.id === idOfOrganization
+    )
+    const ownerSessionIndex = ownerDocPrepared.sessions.findIndex(
+      (item) => item.id === idOfOrganization
+    )
 
-    if ((userSessionIndex !== -1) && (ownerSessionIndex !== -1)) {
+    if (userSessionIndex !== -1 && ownerSessionIndex !== -1) {
       userDocPrepared.publicSessions.splice(userSessionIndex, 1)
       const ownerSession = ownerDocPrepared.sessions[ownerSessionIndex]
       if (ownerSession) {
-        const ownerSessionCurrentUserIndex = ownerSession.users.findIndex(user => user.uid === userData.uid)
+        const ownerSessionCurrentUserIndex = ownerSession.users.findIndex(
+          (user) => user.uid === userData.uid
+        )
         if (ownerSessionCurrentUserIndex !== -1) {
           ownerSession.users.splice(ownerSessionCurrentUserIndex, 1)
           ownerDocPrepared.sessions[ownerSessionIndex].users = ownerSession.users
@@ -299,9 +330,7 @@ export const getUser = (setUserData: Dispatch<SetStateAction<User | null>>) => {
 }
 
 // get tables
-export const getSession = async (
-  setTables: Dispatch<SetStateAction<sessionInterface | null>>
-) => {
+export const getSession = async (setTables: Dispatch<SetStateAction<sessionInterface | null>>) => {
   const localData = localStorage.getItem('organization')
   const userData = localStorage.getItem('user')
 

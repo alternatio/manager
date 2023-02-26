@@ -22,7 +22,14 @@ import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
 import UpdatePopup from '../Popups/UpdatePopup/UpdatePopup'
 import { User } from '@firebase/auth'
-import { deleteOrganizationInPublic, getDocInFirestore, getLink, setItemInFirestore, updateOrganization } from '../../helpers/firestore'
+import {
+  deleteOrganization,
+  deleteOrganizationInPublic,
+  getDocInFirestore,
+  getLink,
+  setItemInFirestore,
+  updateOrganization,
+} from '../../helpers/firestore'
 import { DocumentSnapshot } from '@firebase/firestore'
 
 interface OrganizationBlockProps {
@@ -55,7 +62,13 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
 
   const functionOnUpdate = async () => {
     if (props.userData) {
-      await updateOrganization(props.userData, props.session.id, props.session.owner, title, password)
+      await updateOrganization(
+        props.userData,
+        props.session.id,
+        props.session.owner,
+        title,
+        password
+      )
       props.refreshData()
     }
   }
@@ -114,12 +127,16 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
     <>
       <Popup
         callback={async () => {
-          if (isPublicDelete) {
-            if (props.userData) {
-              await deleteOrganizationInPublic(props.userData, props.session.id, props.session.owner)
+          if (props.userData) {
+            if (isPublicDelete) {
+              await deleteOrganizationInPublic(
+                props.userData,
+                props.session.id,
+                props.session.owner
+              )
+            } else {
+              await deleteOrganization(props.userData, props.session.id, props.session.owner)
             }
-          } else {
-            props.deleteOrganization(props.index)
           }
           props.refreshData()
         }}
@@ -173,7 +190,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         <div className={style.label}>
           <span className={style.title}>Создатель: </span>
           <div className={style.owner}>
-            {getOwner()?.avatar &&
+            {getOwner()?.avatar && (
               <Image
                 className={style.avatarOwner}
                 referrerPolicy={'no-referrer'}
@@ -182,7 +199,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
                 src={getOwner()?.avatar || ''}
                 alt={'avatarOwner'}
               />
-            }
+            )}
             <div className={style.ownerText}>
               <span className={style.value}>{getOwner()?.name}</span>
               <span className={style.value}>{getOwner()?.email}</span>
@@ -205,14 +222,16 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         </div>
         <div className={style.buttons}>
           <div className={style.iconButtons}>
-            <IconButton onClickCallback={() => {
-              handleWarningPopup(true)
-              if (props.userData?.uid !== props.session.owner) {
-                handlePublicDelete(true)
-              } else {
-                handlePublicDelete(false)
-              }
-            }}>
+            <IconButton
+              onClickCallback={() => {
+                handleWarningPopup(true)
+                if (props.userData?.uid !== props.session.owner) {
+                  handlePublicDelete(true)
+                } else {
+                  handlePublicDelete(false)
+                }
+              }}
+            >
               <Image className={'icon'} src={trashIcon} alt={'trash'} />
             </IconButton>
             {props.userData?.uid === props.session.owner && (
