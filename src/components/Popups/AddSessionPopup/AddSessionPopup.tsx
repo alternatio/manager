@@ -40,9 +40,8 @@ const AddSessionPopup: FC<AddSessionPopupProps> = (props) => {
 
       if (user) {
         await addOrganization(user, idOfSession, owner, password, router)
+        closePopup()
       }
-
-
 
       // closePopup()
     } else if (idOfSession.length < 30) {

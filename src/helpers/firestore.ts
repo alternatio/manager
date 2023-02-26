@@ -151,6 +151,7 @@ export const addOrganization = async (
     const valid = ownerDocPrepared.sessions.find(
       (item) => item.id === idOfOrganization && item.password === passwordOfOrganization
     )
+    console.log(valid)
     if (valid) {
       // owner ---
       const currentUserObject: userInterfaceWithRole = {
@@ -195,16 +196,24 @@ export const addOrganization = async (
       }
 
       if (userDocPrepared.publicSessions.length > 0) {
-        console.log('old updated')
-        userDocPrepared.publicSessions = [...userDocPrepared.publicSessions, userPublicSessions]
+        const sessionIsPresent = userDocPrepared.publicSessions.findIndex(item => item.id === userPublicSessions.id)
+        if (sessionIsPresent !== -1) {
+          userDocPrepared.publicSessions[sessionIsPresent] = userPublicSessions
+          console.log('old updated')
+        } else {
+          userDocPrepared.publicSessions = [...userDocPrepared.publicSessions, userPublicSessions]
+          console.log('updated')
+        }
       } else {
-        console.log('new created')
         userDocPrepared.publicSessions = [userPublicSessions]
+        console.log('new created')
       }
 
       // final ---
       await setItemInFirestore('sessions', owner, ownerDocPrepared)
       await setItemInFirestore('sessions', currentUserObject.uid, userDocPrepared)
+      // localStorage.setItem('organization', JSON.stringify(ownerDocPrepared))
+      await router.push(`/myOrganizations`)
       console.log(ownerDocPrepared, userDocPrepared)
       console.log('valid')
     } else {
