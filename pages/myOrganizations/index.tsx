@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { Dispatch, memo, SetStateAction, useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { User } from '@firebase/auth'
 import { Wrapper } from '../../src/ui/Wrapper/Wrapper'
 import Head from 'next/head'
@@ -11,7 +11,7 @@ import {
   sessionInterfacePublic,
   sessionsInterface,
 } from '../../src/helpers/interfaces'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { CreateSessionPopup } from '../../src/components/Popups/CreateSessionPopup/CreateSessionPopup'
 import OrganizationBlock from '../../src/components/OrganizationBlock/OrganizationBlock'
 import IconButton from '../../src/ui/Buttons/IconButton'
@@ -112,26 +112,6 @@ const Index: NextPage = () => {
                     меню
                   </span>
                 )}
-
-                {/*{ownerProjects?.sessions &&*/}
-                {/*  ownerProjects.sessions.map((session, index) => {*/}
-                {/*    return (*/}
-                {/*      <OrganizationBlock*/}
-                {/*        key={index}*/}
-                {/*        session={session}*/}
-                {/*        deleteOrganization={deleteOrganization}*/}
-                {/*        index={index}*/}
-                {/*        refreshData={refreshData}*/}
-                {/*        staterArrayOfProjects={staterArrayOfProjects}*/}
-                {/*        userData={userData}*/}
-                {/*      />*/}
-                {/*    )*/}
-                {/*  })}*/}
-                {/*{!ownerProjects?.sessions.length && !loading && (*/}
-                {/*  <p className={style.description}>*/}
-                {/*    У вас нет досок. Может создать или присоединиться? Это можно сделать в меню сверху*/}
-                {/*  </p>*/}
-                {/*)}*/}
               </div>
               <h2 className={style.title}>
                 <span>Мои присоединённые организации</span>

@@ -33,15 +33,15 @@ export const Hamburger: FC<HamburgerInterface> = memo((props) => {
   // }, true)
 
   const hamburgerButtons: hamburgerButtonsDataInterface[] = [
-    {
-      children: (
-        <Link className={style.link} href={'/about'}>
-          О компании
-        </Link>
-      ),
-      onClick: () => {},
-      userDataRequired: null,
-    },
+    // {
+    //   children: (
+    //     <Link className={style.link} href={'/about'}>
+    //       О компании
+    //     </Link>
+    //   ),
+    //   onClick: () => {},
+    //   userDataRequired: null,
+    // },
     {
       children: 'Войти в аккаунт',
       onClick: () => signInWithGooglePopup(props.setUserData),

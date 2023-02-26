@@ -22,7 +22,7 @@ import Popup from '../Popups/warningPopup/Popup'
 import Link from 'next/link'
 import UpdatePopup from '../Popups/UpdatePopup/UpdatePopup'
 import { User } from '@firebase/auth'
-import { getDocInFirestore, getLink, setItemInFirestore } from '../../helpers/firestore'
+import { deleteOrganizationInPublic, getDocInFirestore, getLink, setItemInFirestore, updateOrganization } from '../../helpers/firestore'
 import { DocumentSnapshot } from '@firebase/firestore'
 
 interface OrganizationBlockProps {
@@ -36,6 +36,7 @@ interface OrganizationBlockProps {
 const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
   const [isCheckPassword, handleIsCheckPassword] = useState<boolean>(false)
   const [warningPopup, handleWarningPopup] = useState<boolean>(false)
+  const [isPublicDelete, handlePublicDelete] = useState<boolean>(false)
 
   const [innerData, setInnerData] = useState<sessionInterface | null>(null)
   // const [innerDataLoaded, handleInnerDataLoaded] = useState<boolean>(false)
@@ -53,20 +54,10 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
   }
 
   const functionOnUpdate = async () => {
-    // if (props.userData?.uid && props.staterArrayOfProjects.arrayOfProjects) {
-    //   const resultArray = props.session
-    //   console.log(props.staterArrayOfProjects.arrayOfProjects.sessions)
-    //   resultArray[props.index].title = title
-    //   resultArray[props.index].password = password
-    //
-    //   const resultData = {
-    //     owner: props.userData.uid,
-    //     sessions: resultArray,
-    //   }
-    //
-    //   await setItemInFirestore('sessions', props.userData.uid, resultData)
-    //   // props.refreshData()
-    // }
+    if (props.userData) {
+      await updateOrganization(props.userData, props.session.id, props.session.owner, title, password)
+      props.refreshData()
+    }
   }
 
   const getSessionData = async (session: sessionInterfacePublic) => {
@@ -122,8 +113,14 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
   return (
     <>
       <Popup
-        callback={() => {
-          props.deleteOrganization(props.index)
+        callback={async () => {
+          if (isPublicDelete) {
+            if (props.userData) {
+              await deleteOrganizationInPublic(props.userData, props.session.id, props.session.owner)
+            }
+          } else {
+            props.deleteOrganization(props.index)
+          }
           props.refreshData()
         }}
         warningPopup={warningPopup}
@@ -147,6 +144,7 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
         {...commonAnimation}
         transition={commonTransition(props.index)}
         className={style.organizationBlock}
+        layout={true}
       >
         <div className={style.label}>
           <span className={style.title}>ID:</span>
@@ -206,16 +204,23 @@ const OrganizationBlock: FC<OrganizationBlockProps> = (props) => {
           </div>
         </div>
         <div className={style.buttons}>
-          {props.userData?.uid === props.session.owner && (
-            <div className={style.iconButtons}>
-              <IconButton onClickCallback={() => handleWarningPopup(true)}>
-                <Image className={'icon'} src={trashIcon} alt={'trash'} />
-              </IconButton>
+          <div className={style.iconButtons}>
+            <IconButton onClickCallback={() => {
+              handleWarningPopup(true)
+              if (props.userData?.uid !== props.session.owner) {
+                handlePublicDelete(true)
+              } else {
+                handlePublicDelete(false)
+              }
+            }}>
+              <Image className={'icon'} src={trashIcon} alt={'trash'} />
+            </IconButton>
+            {props.userData?.uid === props.session.owner && (
               <IconButton onClickCallback={() => handlePopupVisible((prev) => !prev)}>
                 <Image className={'icon'} src={editIcon} alt={'edit'} />
               </IconButton>
-            </div>
-          )}
+            )}
+          </div>
           <button
             onClick={() => {
               localStorage.setItem('organization', JSON.stringify(innerData))

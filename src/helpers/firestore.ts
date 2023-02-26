@@ -125,6 +125,29 @@ export const createOrganization = async (
   }
 }
 
+// update organization
+export const updateOrganization = async (
+  userData: User,
+  idOfOrganization: string,
+  owner: string,
+  name: string,
+  password: string,
+) => {
+  const doc = await getDocInFirestore('sessions', owner) as DocumentSnapshot<sessionsInterface>
+  const docPrepared = doc.data()
+
+  if (docPrepared) {
+    const sessionIndex = docPrepared.sessions.findIndex(session => session.id === idOfOrganization)
+
+    if (sessionIndex !== -1) {
+      docPrepared.sessions[sessionIndex].title = name
+      docPrepared.sessions[sessionIndex].password = password
+
+      await setItemInFirestore('sessions', owner, docPrepared)
+    }
+  }
+}
+
 // add organization
 export const addOrganization = async (
   userData: User,
@@ -218,6 +241,49 @@ export const addOrganization = async (
       console.log('valid')
     } else {
       console.log('invalid')
+    }
+  }
+}
+
+// delete organization in public
+export const deleteOrganizationInPublic = async (
+  userData: User,
+  idOfOrganization: string,
+  owner: string,
+) => {
+  // owner data
+  const ownerDoc = (await getDocInFirestore(
+    'sessions',
+    owner
+  )) as DocumentSnapshot<sessionsInterface>
+  const ownerDocPrepared = ownerDoc.data()
+
+  // user data
+  const userDoc = (await getDocInFirestore(
+    'sessions',
+    userData.uid
+  )) as DocumentSnapshot<sessionsInterface>
+  let userDocPrepared = userDoc.data()
+
+  if (ownerDocPrepared && userDocPrepared) {
+    const userSessionIndex = userDocPrepared.publicSessions.findIndex(item => item.id === idOfOrganization)
+    const ownerSessionIndex = ownerDocPrepared.sessions.findIndex(item => item.id === idOfOrganization)
+
+    if ((userSessionIndex !== -1) && (ownerSessionIndex !== -1)) {
+      userDocPrepared.publicSessions.splice(userSessionIndex, 1)
+      const ownerSession = ownerDocPrepared.sessions[ownerSessionIndex]
+      if (ownerSession) {
+        const ownerSessionCurrentUserIndex = ownerSession.users.findIndex(user => user.uid === userData.uid)
+        if (ownerSessionCurrentUserIndex !== -1) {
+          ownerSession.users.splice(ownerSessionCurrentUserIndex, 1)
+          ownerDocPrepared.sessions[ownerSessionIndex].users = ownerSession.users
+
+          // final ---
+          console.log(userDocPrepared, ownerDocPrepared)
+          await setItemInFirestore('sessions', owner, ownerDocPrepared)
+          await setItemInFirestore('sessions', userData.uid, userDocPrepared)
+        }
+      }
     }
   }
 }

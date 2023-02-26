@@ -25,7 +25,7 @@ const UpdatePopup: FC<UpdatePopupProps> = (props) => {
                   value={props.arrayOfValues[index]}
                   setValue={func}
                   placeholder={props.arrayOfPlaceholders[index]}
-                  maxLength={16}
+                  maxLength={24}
                 />
               )
             })}
