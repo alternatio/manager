@@ -14,7 +14,6 @@ import {
 } from './interfaces'
 import { getCurrentDate, getRandomColor, getRandomId } from './global'
 import { NextRouter } from 'next/router'
-import { string } from 'prop-types'
 
 // get doc in firestore
 export const getDocInFirestore = async (collectionName: string, docName: string) => {
