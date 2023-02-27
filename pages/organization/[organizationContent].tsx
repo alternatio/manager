@@ -1,4 +1,4 @@
-import { memo, Suspense, useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import Head from 'next/head'
@@ -14,7 +14,6 @@ import { getSession, getUser } from '../../src/helpers/firestore'
 import { sessionInterface, sessionsInterface, tableInterface } from '../../src/helpers/interfaces'
 import { doc, onSnapshot } from '@firebase/firestore'
 import { db } from '../../data/firebase/firebase'
-import Loading from '../loading'
 
 const Organization: NextPage = memo(() => {
   const [sessionData, setSessionData] = useState<sessionInterface | null>(null)
@@ -64,33 +63,31 @@ const Organization: NextPage = memo(() => {
       </AnimatePresence>
 
       <Wrapper maxWidth={'110rem'}>
-        <Suspense fallback={<Loading />}>
-          <Header
-            organization={
-              typeof router.query.organizationName === 'string' ? router.query.organizationName : ''
-            }
-            handleAddSessionPopup={handleAddSessionPopup}
-            setUserData={setUserData}
-            userData={userData}
-          />
-          {sessionData && tables && (
-            <main className={style.main}>
-              {sessionData.tables.map((table, index) => {
-                // console.log(table, index)
-                return (
-                  <Table
-                    key={index}
-                    id={table.id}
-                    title={table.title}
-                    index={index}
-                    session={sessionData}
-                  />
-                )
-              })}
-              <ButtonAddTable session={sessionData} />
-            </main>
-          )}
-        </Suspense>
+        <Header
+          organization={
+            typeof router.query.organizationName === 'string' ? router.query.organizationName : ''
+          }
+          handleAddSessionPopup={handleAddSessionPopup}
+          setUserData={setUserData}
+          userData={userData}
+        />
+        {sessionData && tables && (
+          <main className={style.main}>
+            {sessionData.tables.map((table, index) => {
+              // console.log(table, index)
+              return (
+                <Table
+                  key={index}
+                  id={table.id}
+                  title={table.title}
+                  index={index}
+                  session={sessionData}
+                />
+              )
+            })}
+            <ButtonAddTable session={sessionData} />
+          </main>
+        )}
       </Wrapper>
     </>
   )
