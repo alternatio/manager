@@ -59,3 +59,31 @@ export const loadingV: Variants = {
     transition: {delay: custom * .1, duration: 1},
   })
 }
+
+export const searchV: Variants = {
+  on: {
+    width: '10rem',
+  },
+  off: {
+    width: '0rem',
+  }
+}
+
+export const svgImageV: Variants = {
+  on: {
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength: { type: "spring", duration: 1.5, bounce: 0 },
+      opacity: { duration: 0.01 }
+    }
+  },
+  off: {
+    pathLength: 0,
+    opacity: 0,
+    transition: {
+      pathLength: { type: "spring", duration: 1.5, bounce: 0 },
+      opacity: { duration: 0.01 }
+    }
+  }
+}

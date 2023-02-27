@@ -175,7 +175,7 @@ export const addOrganization = async (
     const valid = ownerDocPrepared.sessions.find(
       (item) => item.id === idOfOrganization && item.password === passwordOfOrganization
     )
-    console.log(valid)
+    // console.log(valid)
     if (valid) {
       // owner ---
       const currentUserObject: userInterfaceWithRole = {
@@ -196,10 +196,10 @@ export const addOrganization = async (
       if (ownerSessionUsers[presentUserIndex] && presentUserIndex !== -1) {
         currentUserObject.role = ownerSessionUsers[presentUserIndex].role
         ownerSessionUsers[presentUserIndex] = currentUserObject
-        console.log('present!', currentUserObject)
+        // console.log('present!', currentUserObject)
       } else {
         ownerSessionUsers.push(currentUserObject)
-        console.log('not present!', currentUserObject)
+        // console.log('not present!', currentUserObject)
       }
 
       ownerDocPrepared.sessions[ownerSessionIndex].users = ownerSessionUsers
@@ -225,14 +225,14 @@ export const addOrganization = async (
         )
         if (sessionIsPresent !== -1) {
           userDocPrepared.publicSessions[sessionIsPresent] = userPublicSessions
-          console.log('old updated')
+          // console.log('old updated')
         } else {
           userDocPrepared.publicSessions = [...userDocPrepared.publicSessions, userPublicSessions]
-          console.log('updated')
+          // console.log('updated')
         }
       } else {
         userDocPrepared.publicSessions = [userPublicSessions]
-        console.log('new created')
+        // console.log('new created')
       }
 
       // final ---
@@ -240,10 +240,10 @@ export const addOrganization = async (
       await setItemInFirestore('sessions', currentUserObject.uid, userDocPrepared)
       // localStorage.setItem('organization', JSON.stringify(ownerDocPrepared))
       await router.push(`/myOrganizations`)
-      console.log(ownerDocPrepared, userDocPrepared)
-      console.log('valid')
+      // console.log(ownerDocPrepared, userDocPrepared)
+      // console.log('valid')
     } else {
-      console.log('invalid')
+      // console.log('invalid')
     }
   }
 }
@@ -309,7 +309,7 @@ export const deleteOrganizationInPublic = async (
           ownerDocPrepared.sessions[ownerSessionIndex].users = ownerSession.users
 
           // final ---
-          console.log(userDocPrepared, ownerDocPrepared)
+          // console.log(userDocPrepared, ownerDocPrepared)
           await setItemInFirestore('sessions', owner, ownerDocPrepared)
           await setItemInFirestore('sessions', userData.uid, userDocPrepared)
         }
@@ -346,7 +346,7 @@ export const getSession = async (setTables: Dispatch<SetStateAction<sessionInter
     if (preparedFirestoreData) {
       const result = preparedFirestoreData.sessions.find((item) => item.id === preparedLocalData.id)
 
-      console.log(result, preparedFirestoreData)
+      // console.log(result, preparedFirestoreData)
       if (!result) {
         setTables(null)
         return null

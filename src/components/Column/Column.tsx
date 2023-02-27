@@ -24,6 +24,7 @@ interface ColumnI {
   session: sessionInterface
   indexOfTable: number
   idOfTable: string
+  search: string
 }
 
 const Column: FC<ColumnI> = memo((props) => {
@@ -109,6 +110,9 @@ const Column: FC<ColumnI> = memo((props) => {
         {sessionBlocks &&
           sessionBlocks
             .filter((obj) => obj.columnId === props.id)
+            .filter((item) => {
+              return !item.title.toLocaleLowerCase().search(`${props.search.toLocaleLowerCase()}`)
+            })
             .map((block, index) => {
               return (
                 <Block

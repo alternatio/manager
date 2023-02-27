@@ -59,8 +59,8 @@ const Index: NextPage = () => {
         owner: owner,
         sessions: resultArray,
       }
-      console.log(resultObject)
-      console.log(indexOfOrganization)
+      // console.log(resultObject)
+      // console.log(indexOfOrganization)
       await setItemInFirestore('sessions', owner, resultObject)
     }
   }

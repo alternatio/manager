@@ -6,11 +6,16 @@ import { KebabButton } from '../../ui/Kebab/Kebab'
 import { motion } from 'framer-motion'
 import Popup from '../../components/Popups/smallPopup/Popup'
 import PopupButton from '../../components/Popups/smallPopup/PopupButton'
-import { renameIcon, searchIcon, topArrowIcon, trashIcon } from '../../helpers/importIcons'
+import {
+  cross45Icon,
+  renameIcon,
+  searchIcon,
+  topArrowIcon,
+  trashIcon,
+} from '../../helpers/importIcons'
 import { useOnClickOutside } from '../../helpers/customHooks'
 import { sessionInterface, tableInterface } from '../../helpers/interfaces'
 import { deleteTable, updateTable } from '../../helpers/firestore'
-import IconButton from '../../ui/Buttons/IconButton'
 
 interface HeaderTableI {
   id: string
@@ -21,17 +26,20 @@ interface HeaderTableI {
   handleTableOpen: Function
 
   session: sessionInterface
+  search: string
+  setSearch: Dispatch<SetStateAction<string>>
 }
 
 const HeaderTable: FC<HeaderTableI> = memo((props) => {
   const [rename, handleRename] = useState<boolean>(false)
   const [title, setTitle] = useState<string>(props.session.tables[props.index].title)
+  const [isSearch, handleSearch] = useState<boolean>(false)
   const ref = useRef(null)
 
   useOnClickOutside(ref, async () => {
     const newTable: tableInterface = {
       ...props.session.tables[props.index],
-      title
+      title,
     }
     await updateTable(props.session, props.id, newTable)
     handleRename(false)
@@ -57,12 +65,31 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
         ) : (
           <span className={style.headerTitle}>{props.session.tables[props.index]?.title}</span>
         )}
-        <button className={style.buttonWithIcon}>
-          <Image className={style.icon} src={searchIcon} alt={'search'} />
-        </button>
-        {/*<IconButton onClickCallback={() => deleteTable(props.session, props.id)}>*/}
-        {/*  <Image src={trashIcon} alt={'trash'} />*/}
-        {/*</IconButton>*/}
+        {!isSearch ? (
+          <button onClick={() => handleSearch(true)} className={style.buttonWithIcon}>
+            <Image className={style.icon} src={searchIcon} alt={'search'} />
+          </button>
+        ) : (
+          <>
+            <label className={style.label}>
+              <input
+                onKeyDown={(key) => {
+                  if (key.key === 'Escape') {
+                    handleSearch(false)
+                  }
+                }}
+                value={props.search}
+                onChange={(e) => props.setSearch(e.target.value)}
+                className={style.input}
+                type='text'
+                autoFocus={true}
+              />
+            </label>
+            <button onClick={() => handleSearch(false)} className={style.buttonWithIcon}>
+              <Image className={style.icon} src={cross45Icon} alt={'search'} />
+            </button>
+          </>
+        )}
         <KebabButton handlePopup={props.handlePopup} />
         <Popup popupVisible={props.popupIsOpen} handlePopup={props.handlePopup} position={'right'}>
           <PopupButton icon={renameIcon} onClickCallback={() => handleRename(true)}>

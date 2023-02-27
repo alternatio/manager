@@ -6,7 +6,7 @@ import { cubicBezier } from 'popmotion'
 import HeaderTable from './HeaderTable'
 import ButtonAddColumn from '../../ui/Buttons/ButtonAddColumn'
 import EditField from '../../components/EditField/EditField'
-import { sessionInterface, tableInterface } from '../../helpers/interfaces'
+import { sessionInterface } from '../../helpers/interfaces'
 
 interface TableI {
   id: string
@@ -19,6 +19,7 @@ const Table: FC<TableI> = memo((props) => {
   const [popupIsOpen, handlePopup] = useState<boolean>(false)
   const [tableIsOpen, handleTableOpen] = useState<boolean>(false)
   const [blockIdEdit, setBlockIdEdit] = useState<string>('')
+  const [search, setSearch] = useState<string>('')
 
   const tableIsOpenLocalName = `table${props.id}TableIsOpen`
 
@@ -64,6 +65,8 @@ const Table: FC<TableI> = memo((props) => {
         tableIsOpen={tableIsOpen}
         id={props.id}
         session={props.session}
+        search={search}
+        setSearch={setSearch}
       />
       <AnimateSharedLayout>
         <EditField
@@ -84,33 +87,35 @@ const Table: FC<TableI> = memo((props) => {
             >
               <motion.div className={style.tableMainInner} layout={'size'}>
                 {sessionColumns &&
-                  sessionColumns.map((column, index) => {
-                    let corner: 'left' | 'right' | 'none' | null = null
-                    if (index === 0) {
-                      corner = 'left'
-                    }
-                    if (index === sessionColumns.length - 1 && sessionColumns.length !== 1) {
-                      corner = 'right'
-                    }
-                    if (index === 0 && index === sessionColumns.length - 1) {
-                      corner = 'none'
-                    }
-                    return (
-                      <Column
-                        key={index}
-                        id={column.id}
-                        title={column.title}
-                        index={index}
-                        blockIdEdit={blockIdEdit}
-                        setBlockIdEdit={setBlockIdEdit}
-                        corner={corner}
-                        position={index}
-                        indexOfTable={props.index}
-                        session={props.session}
-                        idOfTable={props.id}
-                      />
-                    )
-                  })}
+                  sessionColumns
+                    .map((column, index) => {
+                      let corner: 'left' | 'right' | 'none' | null = null
+                      if (index === 0) {
+                        corner = 'left'
+                      }
+                      if (index === sessionColumns.length - 1 && sessionColumns.length !== 1) {
+                        corner = 'right'
+                      }
+                      if (index === 0 && index === sessionColumns.length - 1) {
+                        corner = 'none'
+                      }
+                      return (
+                        <Column
+                          key={index}
+                          id={column.id}
+                          title={column.title}
+                          index={index}
+                          blockIdEdit={blockIdEdit}
+                          setBlockIdEdit={setBlockIdEdit}
+                          corner={corner}
+                          position={index}
+                          indexOfTable={props.index}
+                          session={props.session}
+                          idOfTable={props.id}
+                          search={search}
+                        />
+                      )
+                    })}
                 <ButtonAddColumn session={props.session} indexOfTable={props.index} />
               </motion.div>
             </motion.main>
