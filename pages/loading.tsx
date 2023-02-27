@@ -62,7 +62,7 @@ const Loading: NextPage = () => {
       <div className={style.loading}>
         {loadingData.map((value, index) => {
           return (
-            <LoadingItem value={value} index={index}/>
+            <LoadingItem key={index} value={value} index={index}/>
           )
         })}
       </div>
