@@ -120,10 +120,20 @@
   position: relative;
 }
 
+.searchBlock {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
 .label {
   padding: 0.33rem;
   border-radius: 0.5rem;
   background: $almost-white;
+}
+
+.labelSearch {
+  width: 100%;
 }
 
 .input {

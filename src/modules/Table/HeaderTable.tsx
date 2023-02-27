@@ -3,7 +3,7 @@ import style from '/styles/pages/Organization.module.scss'
 import Image from 'next/image'
 
 import { KebabButton } from '../../ui/Kebab/Kebab'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Popup from '../../components/Popups/smallPopup/Popup'
 import PopupButton from '../../components/Popups/smallPopup/PopupButton'
 import {
@@ -16,6 +16,8 @@ import {
 import { useOnClickOutside } from '../../helpers/customHooks'
 import { sessionInterface, tableInterface } from '../../helpers/interfaces'
 import { deleteTable, updateTable } from '../../helpers/firestore'
+import { commonAnimation, commonTransition } from '../../ui/animations/commonAnimations'
+import { searchV } from '../../ui/animations/variants'
 
 interface HeaderTableI {
   id: string
@@ -70,25 +72,29 @@ const HeaderTable: FC<HeaderTableI> = memo((props) => {
             <Image className={style.icon} src={searchIcon} alt={'search'} />
           </button>
         ) : (
-          <>
-            <label className={style.label}>
-              <input
-                onKeyDown={(key) => {
-                  if (key.key === 'Escape') {
-                    handleSearch(false)
-                  }
-                }}
-                value={props.search}
-                onChange={(e) => props.setSearch(e.target.value)}
-                className={style.input}
-                type='text'
-                autoFocus={true}
-              />
-            </label>
+          <div className={style.searchBlock}>
+            <AnimatePresence>
+              <motion.div {...commonAnimation} variants={searchV} transition={commonTransition()}>
+                <label className={`${style.label} ${style.labelSearch}`}>
+                  <input
+                    onKeyDown={(key) => {
+                      if (key.key === 'Escape') {
+                        handleSearch(false)
+                      }
+                    }}
+                    value={props.search}
+                    onChange={(e) => props.setSearch(e.target.value)}
+                    className={style.input}
+                    type='text'
+                    autoFocus={true}
+                  />
+                </label>
+              </motion.div>
+            </AnimatePresence>
             <button onClick={() => handleSearch(false)} className={style.buttonWithIcon}>
               <Image className={style.icon} src={cross45Icon} alt={'search'} />
             </button>
-          </>
+          </div>
         )}
         <KebabButton handlePopup={props.handlePopup} />
         <Popup popupVisible={props.popupIsOpen} handlePopup={props.handlePopup} position={'right'}>
