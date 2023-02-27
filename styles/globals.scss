@@ -83,8 +83,8 @@ img {
   -webkit-user-drag: none;
 }
 
-//@media (max-width: 650px) {
-//  html {
-//    font-size: 2.76vw;
-//  }
-//}
+@media (max-width: 370px) {
+  html {
+    font-size: 4vw;
+  }
+}

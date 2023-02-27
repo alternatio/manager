@@ -1,0 +1,16 @@
+@import '/styles/variables';
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.loadingItem {
+  width: 15rem;
+  aspect-ratio: 1/1;
+  background: $almost-white;
+  border-radius: .5rem;
+  position: absolute;
+}

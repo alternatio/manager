@@ -12,6 +12,8 @@ import { AnimatePresence } from 'framer-motion'
 import { NextPage } from 'next'
 import { User } from '@firebase/auth'
 import { getUser } from '../src/helpers/firestore'
+import { Suspense } from 'react'
+import Loading from './loading'
 
 const Home: NextPage = () => {
   const [addSessionPopup, handleAddSessionPopup] = useState<boolean>(false)
@@ -35,21 +37,23 @@ const Home: NextPage = () => {
       </AnimatePresence>
 
       <Wrapper maxWidth={'66rem'}>
-        <Header
-          userData={userData}
-          setUserData={setUserData}
-          handleAddSessionPopup={handleAddSessionPopup}
-        />
-        <div className={style.content}>
-          <Intro />
-          <Percents />
-          <Trader
-            handleAddSessionPopup={handleAddSessionPopup}
-            setUserData={setUserData}
+        <Suspense fallback={<Loading />}>
+          <Header
             userData={userData}
+            setUserData={setUserData}
+            handleAddSessionPopup={handleAddSessionPopup}
           />
-          <Footer />
-        </div>
+          <div className={style.content}>
+            <Intro />
+            <Percents />
+            <Trader
+              handleAddSessionPopup={handleAddSessionPopup}
+              setUserData={setUserData}
+              userData={userData}
+            />
+            <Footer />
+          </div>
+        </Suspense>
       </Wrapper>
     </>
   )

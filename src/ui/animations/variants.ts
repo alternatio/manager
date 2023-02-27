@@ -1,4 +1,5 @@
 import { Variants } from 'framer-motion'
+import { transitionSpringMedium } from './commonAnimations'
 
 export const validationV: Variants = {
   on: {
@@ -42,4 +43,19 @@ export const smallPopupV: Variants = {
     opacity: 0,
     transform: 'translateY(-.5rem) scale(.9)',
   }
+}
+
+export const loadingV: Variants = {
+  on: custom => ({
+    x: `-${custom * 2}0%`,
+    y: `${custom}0%`,
+    opacity: 1,
+    transition: {...transitionSpringMedium}
+  }),
+  off: custom => ({
+    x: '100%',
+    y: `${custom}0%`,
+    opacity: 0,
+    transition: {delay: custom * .1, duration: 1},
+  })
 }
