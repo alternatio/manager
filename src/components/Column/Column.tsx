@@ -111,7 +111,7 @@ const Column: FC<ColumnI> = memo((props) => {
           sessionBlocks
             .filter((obj) => obj.columnId === props.id)
             .filter((item) => {
-              return !item.title.toLocaleLowerCase().search(`${props.search.toLocaleLowerCase()}`)
+              return item.title.toLocaleLowerCase().includes(`${props.search.toLocaleLowerCase()}`)
             })
             .map((block, index) => {
               return (
